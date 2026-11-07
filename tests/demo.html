@@ -355,8 +355,10 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       for (let i = 0; i < 30 && !$(w, "#doc h1"); i++) await sleep(100);
       assert($(w, "#doc h1"), "no title rendered (markdown or marked.js failed to load)");
       eq($(w, "#doc h1").textContent, "Allow well-behaved agents to self identify", "title");
-      const h2s = $$(w, "#doc h2").map(h => h.textContent);
-      for (const want of ["The problem", "People are already working around this", "The ask", "Possible implementations"]) assert(h2s.includes(want), `missing section "${want}"`);
+      const words = $(w, "#doc").textContent.trim().split(/\s+/).length;
+      assert(words < 250, `request should be short like popular requests (${words} words)`);
+      assert(/Possible implementations/.test($(w, "#doc").textContent), "lists possible implementations");
+      eq($$(w, "#doc a[href*='github.com/']").length >= 5, true, "links the five workaround repos");
       eq($$(w, "#doc img").length, 0, "no screenshots in the request");
       assert(!$(w, "#doc pre"), "no code demo in the request");
       assert(!w.document.body.innerText.includes("SITE_URL"), "SITE_URL placeholder visible");
