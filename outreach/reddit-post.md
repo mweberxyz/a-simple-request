@@ -14,7 +14,7 @@ So I'm asking GitHub for one small thing: let well-behaved agents identify thems
 
 Projects are already rolling their own: signature lines, "AI-generated" footers, labels, separate bot accounts. Every project invents its own format, and none of them can mark an approval, a merge, or a close.
 
-If you'd want this, a 👍 on the request is what GitHub counts: **REQUEST_URL**
+If you'd want this, a 👍 on the request is what GitHub counts: **https://github.com/orgs/community/discussions/212317**
 
 (Claude helped me build the demo and draft this. I read every line before posting.)
 

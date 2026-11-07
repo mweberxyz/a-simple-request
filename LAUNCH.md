@@ -18,15 +18,15 @@ The site and the GitHub discussion need to link to each other, so the order matt
 - [x] Open https://mweberxyz.github.io/a-simple-request/ and play the demo once. That URL is **SITE_URL**.
 
 ## 2. File the feature request
-- [ ] Go to github.com/orgs/community/discussions → New discussion. Category: **💭 Other Feature Feedback, Questions, & Ideas** (under "Questions & Other Feedback"). The ask spans issues, PRs, reviews, and the API, so no single product category owns it, and similar cross-cutting requests live there. If the form asks for a feedback type, choose **Product Feedback**.
+- [x] Go to github.com/orgs/community/discussions → New discussion. Category: **💭 Other Feature Feedback, Questions, & Ideas** (under "Questions & Other Feedback"). The ask spans issues, PRs, reviews, and the API, so no single product category owns it, and similar cross-cutting requests live there. If the form asks for a feedback type, choose **Product Feedback**.
   - Avoid: *Apps, API and Webhooks* (frames it as an API feature), *Copilot Conversations* (reads as Copilot feedback; the request is vendor-neutral), *Repositories*, *Projects and Issues* (each covers only part of the problem).
-- [ ] Paste `request/feature-request.md`, and delete the HTML comment at the top. The demo link is already in it.
-- [ ] Post it. Write down the discussion URL (**REQUEST_URL**).
-- [ ] Reply in the pinned discussion "Which maintainer improvements would help you most?" (same category, started by GitHub staff) with a short note in your own words linking to the request. Don't paste the request there.
+- [x] Paste `request/feature-request.md`, and delete the HTML comment at the top. The demo link is already in it.
+- [x] Post it. Write down the discussion URL (**REQUEST_URL**: https://github.com/orgs/community/discussions/212317).
+- [x] Reply in the pinned discussion "Which maintainer improvements would help you most?" (same category, started by GitHub staff) with a short note in your own words linking to the request. Don't paste the request there.
 
 ## 3. Connect the site to the request
-- [ ] Set `REQUEST_URL` in `docs/index.html`, commit, and push. Pages redeploys on its own.
-- [ ] Open the live site and click both "Add your 👍" buttons to confirm they open the discussion.
+- [x] Set `REQUEST_URL` in `docs/index.html` (done; push it). Pages redeploys on its own.
+- [ ] Open the live site and click "Add your 👍" to confirm it opens the discussion.
 - [ ] Paste SITE_URL into a link-preview checker to confirm the image and title appear.
 
 ## 4. Go public

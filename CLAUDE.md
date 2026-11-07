@@ -109,8 +109,8 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 ## Placeholders still to fill
 
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
-- In `docs/index.html`: `REQUEST_URL`. (`og:image`/`og:url` already point at https://mweberxyz.github.io/a-simple-request/; change them if the repo gets another name.)
-- `REQUEST_URL` in `outreach/reddit-post.md` (SITE_URL is filled in).
+- (`REQUEST_URL` is set. `og:image`/`og:url` already point at https://mweberxyz.github.io/a-simple-request/; change them if the repo gets another name.)
+- None left in `outreach/reddit-post.md`.
 
 ## Progress
 
@@ -202,3 +202,4 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 - **2026-11-07:** Live on GitHub Pages at https://mweberxyz.github.io/a-simple-request/ (Matt created the public repo, pushed over HTTPS, and enabled Pages from `/docs`). Verified: page and og.png load, the live HTML matches `docs/index.html`, and the demo plays. `REQUEST_URL` is still the placeholder until the discussion is posted.
 - **2026-11-07:** Added the live demo link to the end of the request ("Interactive demo: https://mweberxyz.github.io/a-simple-request/") and removed the reminder to add it.
 - **2026-11-07:** Filled SITE_URL (https://mweberxyz.github.io/a-simple-request/) in the Reddit draft; only REQUEST_URL is left there.
+- **2026-11-07:** Matt posted the request: https://github.com/orgs/community/discussions/212317 (title without a prefix, category Other Feature Feedback, type Product Feedback, area Other). Set `REQUEST_URL` on the site so "Add your 👍" opens it, and filled it in the Reddit draft. Needs a push to go live.
