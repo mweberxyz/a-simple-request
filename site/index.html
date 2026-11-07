@@ -57,6 +57,10 @@ main.wrap { max-width: 1140px; }
 .prompt { margin: 8px 0 22px; }
 .prompt h1 { font-size: clamp(26px, 4.2vw, 40px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 10px; }
 .prompt p { margin: 0; color: var(--ink-2); font-size: clamp(16px, 2vw, 18px); }
+.prompt .you { font-style: normal; font-weight: 800; color: var(--ink); display: inline-block; padding: 0 .18em; margin: 0 .02em; transform: rotate(-2deg); border-radius: .35em .6em .3em .55em; background: linear-gradient(100deg, color-mix(in srgb, var(--brand) 55%, transparent), color-mix(in srgb, var(--brand) 40%, transparent)) 0 85% / 100% 55% no-repeat; animation: marker .55s cubic-bezier(.3,.7,.3,1) both; }
+.prompt .you + .you, .prompt .you:nth-of-type(2) { transform: rotate(1.5deg); animation-delay: .35s; }
+@keyframes marker { from { background-size: 0% 55%; } to { background-size: 100% 55%; } }
+@media (prefers-reduced-motion: reduce) { .prompt .you { animation: none; } }
 .prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
 .toolbar { display: flex; flex-wrap: nowrap; align-items: center; gap: 10px 14px; margin-bottom: 14px; }
 .toolbar .grp { display: flex; flex-direction: row; align-items: center; gap: 7px; position: relative; flex-shrink: 0; }
@@ -214,7 +218,7 @@ const pickable = () => s.mode === "today" && !s.guess;
 const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 10 minutes ago", "10m ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
 
 const PROMPTS = {
-  ask:     ["Two of these comments are from github-user-a. github-user-a never read one of them.", "That's GitHub today: an agent using github-user-a's token looks exactly like github-user-a. <b>Click the comment you think github-user-a actually wrote.</b>"],
+  ask:     ["Two of these comments are from github-user-a. github-user-a never read one of them.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. <b>Click the comment you think github-user-a actually wrote.</b>"],
   right:   ["You picked the right one, but you had to guess.", "With this proposal, nobody has to. The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, then try the controls."],
   wrong:   ["Nope. An agent posted that one with github-user-a's token.", "Nobody reviewed it, and today there's no way to tell. With this proposal, the token marks everything the agent posts, right next to github-user-a's name. Hover the tag, then try the controls."],
   shown:   ["Same thread, GitHub tomorrow.", "The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, switch to github-user-a's view to endorse it, or try the reader filter."],
