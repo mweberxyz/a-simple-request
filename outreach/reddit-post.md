@@ -2,7 +2,7 @@
 
 **Title:** A simple request to GitHub
 
-**Flair:** Built with Claude. (Rule 7: say what was built, how Claude helped in detail, and that it's free. Rule 10: never ask for Reddit upvotes. Posting needs more than 100 karma.)
+**Flair:** Built with Claude. (Rule 7: say what was built, how Claude helped in detail, and that it's free. Don't ask for votes or reactions of any kind, here or on GitHub: Reddit's sitewide spam filter removed the first attempt, which ended with "a 👍 on the request is what GitHub counts". Posting needs more than 100 karma.)
 
 **Type:** Text post (not a link post). Rule 7 needs the description, how Claude helped, and "free" in the post itself, not in a comment.
 
@@ -16,7 +16,7 @@ So I'm asking GitHub for one small thing: let well-behaved agents identify thems
 
 Projects are already rolling their own: signature lines, "AI-generated" footers, labels, separate bot accounts. Every project invents its own format, and none of them can mark an approval, a merge, or a close.
 
-If you'd want this, a 👍 on the request is what GitHub counts: **https://github.com/orgs/community/discussions/212317**
+The request is on GitHub Discussions, if you have thoughts on it: **https://github.com/orgs/community/discussions/212317**
 
 How Claude helped: I had the idea but no good way to show it, so I used Claude Code to visualize it. I described what I had in mind, and it turned that into something you can actually play with: first static mockups, then the interactive thread above. Iterating on the demo changed the idea too. Every time we simplified the demo, it got clearer, and that showed me the request itself could be much smaller than my first draft. Claude also helped draft this post, and I read every line before posting.
 
