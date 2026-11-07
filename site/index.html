@@ -176,8 +176,7 @@ footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align:
     <div class="prompt" id="prompt" aria-live="polite"></div>
 
     <div class="toolbar" aria-label="Demo controls">
-      <div class="grp"><span class="lbl">Show it as</span>
-        <div class="seg mode" data-key="mode"><button data-v="today">GitHub today</button><button data-v="proposal">With the proposal</button></div></div>
+      <div class="grp"><div class="seg mode" data-key="mode" aria-label="Show GitHub today or tomorrow"><button data-v="today">GitHub today</button><button data-v="proposal">GitHub tomorrow</button></div></div>
       <div class="grp js-p"><span class="lbl">Looking at it as</span>
         <div class="seg" data-key="viewer"><button data-v="reader">A reader</button><button data-v="author">github-user-a</button></div></div>
       <div class="grp js-p"><span class="lbl">Unreviewed agent posts</span>
@@ -291,8 +290,8 @@ const PROMPTS = {
   ask:     ["Two of these comments are from github-user-a. github-user-a never read one of them.", "That's GitHub today: an agent using github-user-a's token looks exactly like github-user-a. <b>Click the comment you think github-user-a actually wrote.</b>"],
   right:   ["You picked the right one, but you had to guess.", "With this proposal, nobody has to. The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, then try the controls."],
   wrong:   ["Nope. An agent posted that one with github-user-a's token.", "Nobody reviewed it, and today there's no way to tell. With this proposal, the token marks everything the agent posts, right next to github-user-a's name. Hover the tag, then try the controls."],
-  shown:   ["The same thread, with the proposal.", "The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, switch to github-user-a's view to endorse it, or try the reader filter."],
-  back:    ["Back to today. Which one did the agent write?", "Nobody reading the thread can tell either. <button class=\"again\" data-go=\"proposal\">Show it with the proposal →</button>"],
+  shown:   ["Same thread, GitHub tomorrow.", "The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, switch to github-user-a's view to endorse it, or try the reader filter."],
+  back:    ["Back to today. Which one did the agent write?", "Nobody reading the thread can tell either. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
   endorsed:["Endorsed. Now it really is github-user-a's.", "github-user-a reviewed the agent's comment and took responsibility for it. The tag is gone, and the timeline records it."],
 };
 function promptKey() {
