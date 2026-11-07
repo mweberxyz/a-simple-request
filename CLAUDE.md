@@ -173,3 +173,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** The marker next to the author's name is part of the core ask, not a next step (Matt). Moved it into the ask; "What comes next" (later renamed "What this would enable") is now muting/filtering and marking posts as reviewed.
 - **2026-11-06:** Renamed "What comes next" to "What this would enable" (Matt picked it from options): it shows what the ask makes possible without reading like a roadmap or extra scope.
 - **2026-11-06:** Added a third "What this would enable" item (Matt's idea): pinging someone's agent instead of the person, to cut their notification volume.
+- **2026-11-06:** Cut "This is for agents that want to behave well. It isn't detection, and it doesn't change what an agent is allowed to do." The title already says well-behaved, and the detection objection can be answered in replies. The ask is now one sentence.
