@@ -35,28 +35,14 @@ Each project picks its own format, and none of them can mark actions that have n
 
 ## The ask
 
-Give agents a standard way to say "an agent sent this request." The smallest version is a request header that GitHub records with whatever the request creates:
+Give agents a standard way to identify themselves when they act on GitHub, so that what an agent posted can be told apart from what the person reviewed.
 
-```sh
-gh api repos/acme/http-client/issues/4182/comments \
-  -H "X-GitHub-Agent: claude-code" \
-  -f body="I reproduced this with the attached script…"
-```
+This is for agents that want to behave well. It isn't detection, and it doesn't change what an agent is allowed to do.
 
-A well-behaved agent sends the header on every API request it makes. Most of them already go through `gh` or a GitHub SDK, so a single setting there would cover them.
+## Possible implementations
 
-What GitHub does with the signal, such as showing it next to the author's name or exposing it in the API, is up to GitHub. The first step is just having a place to put it.
-
-## What this isn't
-
-- **Not detection.** It only works for agents that choose to say so, and that's fine. The ones that want to behave well have no way to today.
-- **Not a restriction.** Requests with the header have the same permissions as requests without it.
-
-## Open questions
-
-- Header name and format: free text like `claude-code`, or a registered name?
-- Should `gh` and the official SDKs offer a setting that adds it to every request?
-- Commits: is the push enough, or does the commit itself need a marker?
+- **A request header** that agents send on every API call, recorded with whatever the request creates.
+- **A token setting**, chosen when the credential is created, that marks everything made with it.
 
 ---
 *I drafted this request with an AI agent, then reviewed every line before posting.*

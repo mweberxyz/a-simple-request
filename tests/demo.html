@@ -356,9 +356,9 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       assert($(w, "#doc h1"), "no title rendered (markdown or marked.js failed to load)");
       eq($(w, "#doc h1").textContent, "Allow well-behaved agents to self identify", "title");
       const h2s = $$(w, "#doc h2").map(h => h.textContent);
-      for (const want of ["The problem", "People are already working around this", "The ask"]) assert(h2s.includes(want), `missing section "${want}"`);
+      for (const want of ["The problem", "People are already working around this", "The ask", "Possible implementations"]) assert(h2s.includes(want), `missing section "${want}"`);
       eq($$(w, "#doc img").length, 0, "no screenshots in the request");
-      assert(/X-GitHub-Agent/.test($(w, "#doc pre").textContent), "the ask shows the header");
+      assert(!$(w, "#doc pre"), "no code demo in the request");
       assert(!w.document.body.innerText.includes("SITE_URL"), "SITE_URL placeholder visible");
       assert(!$(w, "#doc").innerHTML.includes("&lt;!--"), "HTML comment visible");
       assert($$(w, "#doc a[target=_blank]").every(a => /new tab/.test(a.textContent)), "new-tab links say so");
