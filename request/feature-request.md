@@ -2,7 +2,6 @@
   Where: github.com/orgs/community/discussions → New discussion.
   Category: "💭 Other Feature Feedback, Questions, & Ideas". Feedback type, if asked: "Product Feedback".
   Then reply briefly in the pinned "Which maintainer improvements would help you most?" discussion, linking here (see LAUNCH.md step 2).
-  After the site launches, add a link to it at the end.
 -->
 
 # Allow well-behaved agents to self identify
@@ -23,6 +22,8 @@ What this would enable:
 - Muting or filtering agents, the way [Allow to mute bots](https://github.com/orgs/community/discussions/5793) asks for bots
 - Letting the person mark an agent's post as reviewed
 - Pinging someone's agent instead of the person, which cuts down their notifications
+
+Interactive demo: https://mweberxyz.github.io/a-simple-request/
 
 ---
 *I drafted this with an AI agent and reviewed every line before posting.*

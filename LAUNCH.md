@@ -20,7 +20,7 @@ The site and the GitHub discussion need to link to each other, so the order matt
 ## 2. File the feature request
 - [ ] Go to github.com/orgs/community/discussions → New discussion. Category: **💭 Other Feature Feedback, Questions, & Ideas** (under "Questions & Other Feedback"). The ask spans issues, PRs, reviews, and the API, so no single product category owns it, and similar cross-cutting requests live there. If the form asks for a feedback type, choose **Product Feedback**.
   - Avoid: *Apps, API and Webhooks* (frames it as an API feature), *Copilot Conversations* (reads as Copilot feedback; the request is vendor-neutral), *Repositories*, *Projects and Issues* (each covers only part of the problem).
-- [ ] Paste `request/feature-request.md`, delete the HTML comment at the top, and add a link to the site at the end.
+- [ ] Paste `request/feature-request.md`, and delete the HTML comment at the top. The demo link is already in it.
 - [ ] Post it. Write down the discussion URL (**REQUEST_URL**).
 - [ ] Reply in the pinned discussion "Which maintainer improvements would help you most?" (same category, started by GitHub staff) with a short note in your own words linking to the request. Don't paste the request there.
 

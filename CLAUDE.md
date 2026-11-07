@@ -60,7 +60,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 
 | Path | What |
 |---|---|
-| `request/feature-request.md` | GitHub discussion text. No images. Add the site link at the end after launch. |
+| `request/feature-request.md` | GitHub discussion text. No images. Ends with the live demo link. |
 | `docs/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode under the headline **"Spot the slop."** Visitors click the comment they think the agent wrote, then the page reveals the answer and switches to "GitHub tomorrow" (the agent tag, plus one tag-style control). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, the switch row is the same height in both modes (the tag-style control keeps its space while hidden in today; Turbo has no picker, it cycles looks on its own, and the issue body reserves the height of the tallest conversation so swaps never move the page), and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). The only other control is **Boring | Turbo** (no label; screen readers get "Agent tag style"), at the right end of the switch row (its own line on phones), visible only in "tomorrow". Reset is next to the switch. The demo deliberately leaves out view-as, endorsing, and reader filters: they're in the full request, and in the demo they distracted from the puzzle. URLs and author are set in constants at the bottom of the file. |
 | `docs/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
 | `mockups/*.html`, `mock.css` | `og-card.html` is the source of `docs/og.png`. Mockups 1–4 are no longer used by the request (kept for now; they describe the old credential-based design). |
@@ -110,7 +110,7 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
 - In `docs/index.html`: `REQUEST_URL`. (`og:image`/`og:url` already point at https://mweberxyz.github.io/a-simple-request/; change them if the repo gets another name.)
-- Site link at the end of `request/feature-request.md` (after launch); `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
+`SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
 
 ## Progress
 
@@ -200,3 +200,4 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 - **2026-11-07:** Matt decided not to reference #203213 after all. Removed the sentence from the request; the duplicate-check findings above stay for context.
 - **2026-11-07:** Added `LICENSE`: CC0 1.0 Universal, Matt's choice, from the official Creative Commons plain-text copy.
 - **2026-11-07:** Live on GitHub Pages at https://mweberxyz.github.io/a-simple-request/ (Matt created the public repo, pushed over HTTPS, and enabled Pages from `/docs`). Verified: page and og.png load, the live HTML matches `docs/index.html`, and the demo plays. `REQUEST_URL` is still the placeholder until the discussion is posted.
+- **2026-11-07:** Added the live demo link to the end of the request ("Interactive demo: https://mweberxyz.github.io/a-simple-request/") and removed the reminder to add it.
