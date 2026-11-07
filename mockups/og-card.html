@@ -1,14 +1,20 @@
 <!doctype html><html><head><meta charset="utf-8"><style>
+/* Link-preview card (1200×630, rendered to docs/og.png). Previews already show the title and the
+   "looks exactly like you" line next to the image, so the image carries the hook instead:
+   the opening puzzle, two replies that look the same, no tag. */
 body{margin:0;width:1200px;height:630px;background:#fbfaf7;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1c1d21;display:flex;flex-direction:column;justify-content:center;padding:0 90px;box-sizing:border-box}
-.k{font-size:22px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6d3fd6;margin-bottom:22px}
-h1{font-size:76px;line-height:1.04;letter-spacing:-.03em;margin:0 0 44px}
-h1 em{font-style:normal;color:#6d3fd6}
-.row{display:flex;align-items:center;gap:14px;font-size:30px;color:#59636e;background:#fff;border:1px solid #d1d9e0;border-radius:14px;padding:22px 28px;width:max-content;box-shadow:0 12px 32px rgba(20,20,30,.08)}
-.row b{color:#1f2328}
-.tag{display:inline-flex;align-items:center;gap:8px;color:#8250df;border:2px solid #d8b9ff;background:#fbefff;border-radius:99px;padding:0 16px;font-size:26px;font-weight:600;line-height:40px}
-.tag svg{width:24px;height:24px;fill:currentColor}
+h1{font-size:92px;line-height:1;letter-spacing:-.035em;margin:0 0 18px}
+p{font-size:34px;line-height:1.3;color:#4a4e57;margin:0 0 44px}
+p b{color:#6d3fd6}
+.c{display:flex;align-items:center;gap:20px;margin-bottom:18px}
+.av{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none}
+.av svg{width:30px;height:30px;fill:#fff}
+.box{flex:1;display:flex;align-items:center;gap:14px;font-size:30px;color:#59636e;background:#fff;border:1px solid #d1d9e0;border-radius:14px;padding:20px 28px;box-shadow:0 10px 28px rgba(20,20,30,.07)}
+.box b{color:#1f2328}
+.role{margin-left:auto;border:1.5px solid #d1d9e0;border-radius:99px;padding:2px 16px;font-size:24px}
 </style></head><body>
-<div class="k">A simple request to GitHub</div>
-<h1><em>An agent</em> using your token<br>looks exactly like you.</h1>
-<div class="row"><b>github-user-a</b> <span class="tag"><svg viewBox="0 0 16 16"><path d="M7.25 1h1.5v2h3A2.25 2.25 0 0 1 14 5.25v6.5A2.25 2.25 0 0 1 11.75 14h-7.5A2.25 2.25 0 0 1 2 11.75v-6.5A2.25 2.25 0 0 1 4.25 3h3V1ZM4.25 4.5a.75.75 0 0 0-.75.75v6.5c0 .41.34.75.75.75h7.5a.75.75 0 0 0 .75-.75v-6.5a.75.75 0 0 0-.75-.75h-7.5ZM6 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>agent</span> commented 2 hours ago · via Claude Code</div>
+<h1>Spot the slop.</h1>
+<p>Two replies. <b>An agent wrote one of them.</b></p>
+<div class="c"><div class="av" style="background:#0969da"><svg viewBox="0 0 16 16"><path d="M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"/></svg></div><div class="box"><b>github-user-a</b> commented 2 hours ago <span class="role">Member</span></div></div>
+<div class="c"><div class="av" style="background:#8250df"><svg viewBox="0 0 16 16"><path d="M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"/></svg></div><div class="box"><b>github-user-b</b> commented 2 hours ago <span class="role">Member</span></div></div>
 </body></html>
