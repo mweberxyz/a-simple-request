@@ -50,11 +50,6 @@ code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: c
 .btn:hover { filter: brightness(1.05); }
 
 /* stage: the page opens on the demo */
-section { padding: 56px 0; }
-.sec-head { max-width: 40em; margin-bottom: 28px; }
-.sec-head .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.015em; margin: 6px 0 12px; }
-.sec-head p { color: var(--ink-2); margin: 0; }
 main.wrap { max-width: 1140px; }
 .stage { max-width: 1076px; margin: 0 auto; padding: 12px 0 40px; display: flex; flex-direction: column; }
 @media (max-width: 1150px) { .stage .toolbar { order: 3; margin: 16px 0 0; flex-wrap: wrap; align-items: flex-start; } .toolbar .modegrp { width: 100%; } .toolbar .grp { flex-wrap: wrap; flex-shrink: 1; max-width: 100%; } .toolbar .custom { position: static; box-shadow: none; border: 0; padding: 0; background: none; flex-basis: 100%; margin-left: 2px; } .toolbar .custom.off { display: none; } .stage .more { order: 4; } }
@@ -137,36 +132,13 @@ main.wrap { max-width: 1140px; }
 .flash { animation: flash 1s ease; }
 @keyframes flash { 0% { background: #fff8c5; } 100% { background: var(--gh-canvas); } }
 
-/* problem / how */
-.cards { display: grid; gap: 16px; grid-template-columns: 1fr; }
-@media (min-width: 760px) { .cards { grid-template-columns: repeat(3, 1fr); } }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
-.card h3 { margin: 0 0 8px; font-size: 18px; }
-.card p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
-.card .n { font-size: 13px; font-weight: 700; color: var(--brand); margin-bottom: 6px; }
-.quote { font-size: clamp(22px, 3vw, 30px); line-height: 1.3; letter-spacing: -.01em; max-width: 26em; margin: 0 auto; text-align: center; color: var(--ink); }
-.quote span { color: var(--ink-3); }
 
-.proof { display: grid; gap: 12px; grid-template-columns: 1fr; }
-@media (min-width: 760px) { .proof { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1000px) { .proof { grid-template-columns: repeat(3, 1fr); } }
-.proof a { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; color: var(--ink-2); text-decoration: none; font-size: 15px; line-height: 1.5; }
-.proof a:hover { border-color: var(--brand); }
-.proof .ref { display: block; font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand); margin-bottom: 6px; overflow-wrap: anywhere; }
 
 .more { margin: 24px 0 0; display: flex; align-items: center; gap: 16px 24px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
 .more p { margin: 0; flex: 1 1 300px; color: var(--ink-2); font-size: 15.5px; }
 .more p b { color: var(--ink); display: block; font-size: 17px; }
 .more .btn { flex: none; }
-.cta .small a { color: inherit; }
 
-/* cta */
-.cta { background: var(--brand); color: var(--brand-ink); border-radius: 22px; padding: 44px 24px; text-align: center; }
-.cta h2 { margin-top: 0; }
-.cta p { max-width: 34em; margin: 0 auto 24px; opacity: .9; }
-.cta .btn { background: var(--brand-ink); color: var(--brand); border: 0; font-size: 17px; padding: 14px 24px; }
-.cta .small { font-size: 14px; opacity: .8; margin: 18px auto 0; }
-footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align: center; }
 </style>
 </head>
 <body>
@@ -204,60 +176,11 @@ footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align:
   </div>
 </main>
 
-<section>
-  <div class="wrap">
-    <p class="quote">The useful question isn't <span>"did a machine type this?"</span><br>It's <b>"did the person named here actually look at this?"</b></p>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head"><div class="eyebrow">The problem</div><h2>Your name is only worth what you put behind it.</h2></div>
-    <div class="cards">
-      <div class="card"><h3>Trust gets used up quietly</h3><p>Peers learned that your name means you thought about something. Agent output nobody reviewed uses up that trust, and you don't see it happening.</p></div>
-      <div class="card"><h3>Reviewing everything defeats the point</h3><p>The only safe option today is to read every message before it goes out, which takes away most of the reason to delegate.</p></div>
-      <div class="card"><h3>So readers trust everything less</h3><p>When nobody can tell which comments got a person's attention, every comment gets less trust. That's part of why GitHub feels hostile lately.</p></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head"><div class="eyebrow">This is already happening</div><h2>Developers are working around it one repo at a time.</h2><p>Footers, signature lines, labels, separate bot accounts. Each project invents its own format and relies on the honor system, and none of them can mark an approval, a merge, or a label change.</p></div>
-    <div class="proof">
-      <a href="https://github.com/drivecore/mycoder/issues/368" target="_blank" rel="noopener"><span class="ref">drivecore/mycoder#368</span>The agent uses the maintainer's token, so it "can appear that I am talking to myself."</a>
-      <a href="https://github.com/kornia/kornia/pull/6223" target="_blank" rel="noopener"><span class="ref">kornia/kornia#6223</span>Agents must sign every post "Posted on behalf of @handle by Agent (model)."</a>
-      <a href="https://github.com/humlab-speech/visible-speech-deployment/pull/259" target="_blank" rel="noopener"><span class="ref">humlab-speech/…#259</span>Requires an "AI-generated" footer on anything an agent posts.</a>
-      <a href="https://github.com/Adam-S-Daniel/_agent-guidance/issues/319" target="_blank" rel="noopener"><span class="ref">Adam-S-Daniel/_agent-guidance#319</span>Uses a footer, a label, and a commit trailer, but merges and approvals still look human.</a>
-      <a href="https://github.com/noahdgrant/nightshift/issues/682" target="_blank" rel="noopener"><span class="ref">noahdgrant/nightshift#682</span>Moving agents to a separate identity so the person's own words can be verified.</a>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="cta">
-      <h2>If you want this, say so where GitHub will see it.</h2>
-      <p>The feature request is a GitHub Community discussion. Upvotes and short comments about how you'd use it are what get a request noticed.</p>
-      <a class="btn js-request" href="#">Support the request on GitHub ↗</a>
-      <p class="small">An upvote is enough. Comments that describe your own workflow help even more. <a href="request.html">Read the full request</a> first if you'd like.</p>
-    </div>
-  </div>
-</section>
-
-<footer class="wrap">
-  A proposal by <a class="js-author" href="https://github.com/github-user-a">Matt Weber</a>. Concept mockups only. Not affiliated with or endorsed by GitHub.<br>
-  Drafted with an AI agent and reviewed by a human, which is the workflow this proposal is meant to make visible.
-</footer>
-
 <script>
 // ---- Fill these in at launch ----
 const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
-const AUTHOR_URL  = "https://github.com/github-user-a";
-const AUTHOR_NAME = "Matt Weber";
 // ---------------------------------
 document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; });
-document.querySelectorAll(".js-author").forEach(a => { a.href = AUTHOR_URL; a.textContent = AUTHOR_NAME; });
 
 const COLORS = [
   { name: "grey",   fg: "#59636e", bd: "#d1d9e0", bg: "#f6f8fa" },

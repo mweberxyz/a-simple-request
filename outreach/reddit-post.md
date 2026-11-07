@@ -12,7 +12,7 @@ Now Claude Code (and other agents) post issues, comments, and PRs with my creden
 
 So I'm asking GitHub for one small thing: **let me mark a token or login as an agent session.** Anything created with it gets a small `agent` tag next to my name. I can "endorse" the items I review, which removes the tag. Readers can collapse unreviewed agent activity if they want.
 
-I'm not the only one dealing with this. Projects like kornia already require agents to sign posts "Posted on behalf of @handle by Agent," and others add AI-generated footers or move agents to separate bot accounts. Each project uses its own format, it all relies on the honor system, and none of it can mark an approval or a merge. The site links to five examples.
+I'm not the only one dealing with this. Projects like kornia already require agents to sign posts "Posted on behalf of @handle by Agent," and others add AI-generated footers or move agents to separate bot accounts. Each project uses its own format, it all relies on the honor system, and none of it can mark an approval or a merge. The full request links to five examples.
 
 It's not AI detection, not a penalty, and not a separate bot account. It just makes it visible whether the person named actually looked at something.
 
