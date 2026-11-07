@@ -23,7 +23,7 @@
 <script>
 // Loads the real site in iframes at several widths and checks the demo's behavior.
 // Run headless with tests/run.sh, or open /tests/demo.html from a server rooted at the repo.
-const SITE = "../site/index.html", DRAFT = "../request/feature-request.md";
+const SITE = "../docs/index.html", DRAFT = "../request/feature-request.md";
 const WIDTHS = [1280, 1024, 375, 360];  // 360 = common Android width
 const results = [];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -368,6 +368,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       const d = w.document, line = "An agent using your token looks exactly like you.";
       eq(d.title, "Spot the slop · A simple request to GitHub", "tab title");
       eq(meta(d, "og:title"), "A simple request to GitHub", "preview title");
+      assert(/^https:\/\/.+\/og\.png$/.test(meta(d, "og:image")), "preview image is a full URL (link previews need one)");
       assert(meta(d, "og:description").startsWith(line) && meta(d, "description") === meta(d, "og:description"), "preview and search text share the line");
       reset(w); assert(d.querySelector("#prompt").textContent.replace(/\s+/g, " ").includes("an agent using your token looks exactly like you"), "the page says the same thing");
     });

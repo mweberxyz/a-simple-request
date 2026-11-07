@@ -59,16 +59,16 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 | Path | What |
 |---|---|
 | `request/feature-request.md` | GitHub discussion text. No images. Add the site link at the end after launch. |
-| `site/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode under the headline **"Spot the slop."** Visitors click the comment they think the agent wrote, then the page reveals the answer and switches to "GitHub tomorrow" (the agent tag, plus one tag-style control). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, the switch row is the same height in both modes (the tag-style control keeps its space while hidden in today; Turbo has no picker, it cycles looks on its own, and the issue body reserves the height of the tallest conversation so swaps never move the page), and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). The only other control is **Boring | Turbo** (no label; screen readers get "Agent tag style"), at the right end of the switch row (its own line on phones), visible only in "tomorrow". Reset is next to the switch. The demo deliberately leaves out view-as, endorsing, and reader filters: they're in the full request, and in the demo they distracted from the puzzle. URLs and author are set in constants at the bottom of the file. |
-| `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
-| `mockups/*.html`, `mock.css` | `og-card.html` is the source of `site/og.png`. Mockups 1–4 are no longer used by the request (kept for now; they describe the old credential-based design). |
+| `docs/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode under the headline **"Spot the slop."** Visitors click the comment they think the agent wrote, then the page reveals the answer and switches to "GitHub tomorrow" (the agent tag, plus one tag-style control). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, the switch row is the same height in both modes (the tag-style control keeps its space while hidden in today; Turbo has no picker, it cycles looks on its own, and the issue body reserves the height of the tallest conversation so swaps never move the page), and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). The only other control is **Boring | Turbo** (no label; screen readers get "Agent tag style"), at the right end of the switch row (its own line on phones), visible only in "tomorrow". Reset is next to the switch. The demo deliberately leaves out view-as, endorsing, and reader filters: they're in the full request, and in the demo they distracted from the puzzle. URLs and author are set in constants at the bottom of the file. |
+| `docs/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
+| `mockups/*.html`, `mock.css` | `og-card.html` is the source of `docs/og.png`. Mockups 1–4 are no longer used by the request (kept for now; they describe the old credential-based design). |
 | `outreach/reddit-post.md` | Reddit post plus notes for r/github, HN, and social media. |
 | `tests/demo.html`, `tests/run.sh` | Behavior tests for the site (see "Run the tests"). Not part of the deployed site. |
 | `LAUNCH.md` | Launch checklist, step by step. |
 
 ## How to work on it
 
-- **Preview the site:** `python3 -m http.server 8765 --directory site` (also set up in `.claude/launch.json` as `site`).
+- **Preview the site:** `python3 -m http.server 8765 --directory docs` (also set up in `.claude/launch.json` as `site`, serving `docs/`).
 - **Re-render a mockup PNG** (2x) after editing its HTML. `$CHROME` is any Chrome or Chromium binary; set it in your own shell and never commit its value.
   ```bash
   "$CHROME" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1280,760 --screenshot="$PWD/mockups/1-comment-thread.png" "file://$PWD/mockups/1-comment-thread.html"
@@ -79,9 +79,20 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
   CHROME="$CHROME" tests/run.sh
   ```
   `tests/run.sh` runs the whole suite twice, in light mode and then dark (it pins the theme; headless Chrome otherwise follows the machine's system theme). `tests/demo.html` loads the real site in frames at 1280, 1024, 375, and 360 px and checks the demo: the opening puzzle, right and wrong guesses, guessing again after going back to today, **no layout shift between states**, no horizontal scroll or header overflow, the tag control's place and options, reset during the reveal, reduced motion, and that the full-request page renders with its four images. The runner serves the repo on `localhost:8799` and exits non-zero on failure. You can also open `/tests/demo.html` in a browser from a server rooted at the repo to see the results. When you add demo behavior, add a pointed test for it.
-- **Re-render the OG image** (1x, 1200×630) from `mockups/og-card.html` into `site/og.png`.
+- **Re-render the OG image** (1x, 1200×630) from `mockups/og-card.html` into `docs/og.png`.
 
-- **Motion:** the site respects `prefers-reduced-motion` with a single catch-all rule at the end of the `<style>` in `site/index.html` (no animation, transitions, or smooth scrolling), plus a check in the JS auto-scroll. New motion is covered automatically. Make sure every animated element still looks right in its final, unanimated state.
+- **Motion:** the site respects `prefers-reduced-motion` with a single catch-all rule at the end of the `<style>` in `docs/index.html` (no animation, transitions, or smooth scrolling), plus a check in the JS auto-scroll. New motion is covered automatically. Make sure every animated element still looks right in its final, unanimated state.
+
+## Deploying
+
+GitHub Pages serves `docs/` from `main`. Matt creates the repo and pushes; Claude never pushes. First time:
+
+```bash
+git remote add origin git@github.com:mweberxyz/a-simple-request.git
+git push -u origin main
+```
+
+Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that, every push to `main` redeploys.
 
 ## Working agreements
 
@@ -96,7 +107,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 ## Placeholders still to fill
 
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
-- In `site/index.html`: `REQUEST_URL` and an absolute `og:image` URL.
+- In `docs/index.html`: `REQUEST_URL`. (`og:image`/`og:url` already point at https://mweberxyz.github.io/a-simple-request/; change them if the repo gets another name.)
 - Site link at the end of `request/feature-request.md` (after launch); `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
 
 ## Progress
@@ -111,7 +122,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - [ ] Iterate on content and design with Matt. ← **current**
 - [x] Added `CLAUDE.local.md` (gitignored) for private, machine-specific context.
 - [ ] Duplicate check: GitHub changelog plus community discussions.
-- [ ] Decide on hosting. GitHub Pages serves from the repo root or `/docs` only, not `/site`, so either move the folder or use a Pages workflow. Either way, the deploy must **copy the symlinked files as real files** (e.g. `cp -RL site/ out/`), because hosts may not follow symlinks.
+- [x] Hosting: GitHub Pages from `docs/` (renamed from `site/`, since Pages serves only the root or `/docs`).
 - [ ] Fill placeholders, then launch per `LAUNCH.md`.
 
 ## Log
@@ -119,7 +130,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Initial mockups, site, request, outreach drafts. A side session researched prior art and the five workaround repos were verified and added.
 - **2026-11-06:** Added working agreements to commit proactively and keep CLAUDE.md current.
 - **2026-11-06:** Cut the "What this isn't" section from the site to make it punchier. The Non-goals section stays in the feature request.
-- **2026-11-06:** Added `site/request.html`, which renders the feature request live from the markdown via symlinks, so the site and the request can be reviewed together while iterating. The comparison table stacks on phones.
+- **2026-11-06:** Added `docs/request.html`, which renders the feature request live from the markdown via symlinks, so the site and the request can be reviewed together while iterating. The comparison table stacks on phones.
 - **2026-11-06:** Clarified with Matt that the GitHub email and handle are already public, so commit authorship is fine but they shouldn't be repeated in files. The real concern is machine, network, path, and environment details. Re-audited: the Chrome install path in the render commands (in earlier commits) was the only finding, and it's now `$CHROME`.
 - **2026-11-06:** The repo will be published on GitHub with full history. A privacy audit found nothing to fix; the only identifying detail is the commit author email. Added the public-repo warning section and a pre-commit check to the top of this file.
 - **2026-11-06:** Added a gitignored `CLAUDE.local.md` for private, cross-session context, and moved machine-specific notes into it.
@@ -178,7 +189,8 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** It's a request, not a proposal (Matt). The post-guess link now reads "Join the discussion →" ("Join the discussion ↗" at launch, when it points at GitHub). The request page's preview title says "the full request".
 - **2026-11-06:** Tests now run in both themes: `run.sh` does a light pass and a dark pass (via `--blink-settings=preferredColorScheme`). Until now the suite silently followed the machine's system theme. Added a contrast sweep that checks every visible text against the real background behind it, in each demo state and on the request page, with transitions off so it measures final colors. Confirmed it catches a deliberately faint color. 88 checks per theme.
 - **2026-11-06:** Dropped "The full request" from the landing page's top bar (Matt); only "Add your 👍 ↗" remains. The request page is still reached from "Join the discussion →" after a guess (it points there until launch).
-- **2026-11-06:** The discussion draft is done (Matt), so the site no longer shows it. Removed `site/request.html`, the `site/request.md` and `site/mockups` symlinks, and the "Join the discussion →" link after a guess. The only way off the landing page is now "Add your 👍 ↗". The draft lives only in `request/feature-request.md`; a test still checks it stays short, with no images or placeholders.
+- **2026-11-06:** The discussion draft is done (Matt), so the site no longer shows it. Removed `docs/request.html`, the `docs/request.md` and `docs/mockups` symlinks, and the "Join the discussion →" link after a guess. The only way off the landing page is now "Add your 👍 ↗". The draft lives only in `request/feature-request.md`; a test still checks it stays short, with no images or placeholders.
 - **2026-11-06:** Undid the revert (Matt): the request page, its symlinks, and the "Join the discussion" link are removed again. Matt says he's ready to launch.
 - **2026-11-07:** Rewrote history to remove the Chrome install path from the early commits (now `"$CHROME"` everywhere). Every commit re-signed; the latest files are unchanged. Re-ran the privacy check across every commit: nothing else found.
 - **2026-11-07:** Rewrote the Reddit draft for the current ask and demo: a self-identification request (no endorse/collapse/credential details), the "spot it" demo link near the top, "a 👍 on the request is what GitHub counts", and a one-line disclosure. Updated the r/github, HN, and social lines to match.
+- **2026-11-07:** Hosting is GitHub Pages (Matt). Renamed `site/` to `docs/` (Pages serves only the root or `/docs`), set `og:image` and `og:url` to the full https://mweberxyz.github.io/a-simple-request/ URLs, and added a test that `og:image` is a full URL. LAUNCH.md step 1 now covers creating the repo, pushing, and turning on Pages.
