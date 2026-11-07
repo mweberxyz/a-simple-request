@@ -272,8 +272,8 @@ const NEXT_LABEL = "Read the proposal →";
 const NEXT = ` <a class="next" href="${NEXT_URL}">${NEXT_LABEL}</a>`;
 const PROMPTS = {
   ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. Same for everyone else in this thread. <b>Click the comment you think an agent wrote.</b>"],
-  right:   ["Good eye. It sounded right, though.", "The second user's agent posted it with the second user's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag." + NEXT + ""],
-  wrong:   ["Nope. That one's the human.", "The confident fix below it came from the second user's agent, posted with the second user's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag." + NEXT + ""],
+  right:   ["Good eye. It sounded right, though.", "The second user's agent posted it with the second user's token, and nobody can tell the difference." + NEXT + ""],
+  wrong:   ["Nope. That one's the human.", "The confident fix below it came from the second user's agent, posted with the second user's token, and nobody can tell the difference." + NEXT + ""],
   shown:   ["Same thread, GitHub tomorrow.", "The token your agent used marks everything it posts, right next to your name. Hover the tag." + NEXT + ""],
   back:    ["Back to today. Can you still spot it?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
 };
