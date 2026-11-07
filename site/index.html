@@ -193,7 +193,7 @@ main.wrap { max-width: 1140px; }
       <div class="grp js-p"><span class="lbl">Agent posts</span>
         <div class="seg" data-key="filter"><button data-v="show">Show</button><button data-v="collapse">Collapse</button><button data-v="hide">Hide</button></div></div>
       <div class="grp js-p"><span class="lbl">Tag</span>
-        <div class="seg" data-key="style"><button data-v="grey">Grey</button><button data-v="purple">Purple</button><button data-v="custom">Mine</button></div>
+        <div class="seg" data-key="style"><button data-v="purple">Purple</button><button data-v="custom">Mine</button></div>
         <div class="custom off" id="customCtl"><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div></div>
     </div>
 
@@ -213,9 +213,9 @@ const COLORS = [
   { name: "yellow", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
   { name: "red",    fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
 ];
-const initial = () => ({ mode: "today", guess: null, viewer: "reader", filter: "show", style: "grey", color: 3, suffix: "triage", endorsed: false, expanded: false });
+const initial = () => ({ mode: "today", guess: null, viewer: "reader", filter: "show", style: "purple", color: 3, suffix: "triage", endorsed: false, expanded: false });
 let s = initial();
-try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
+try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style === "custom" ? "custom" : "purple"; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
 
 const when = (long, short) => `<span class="when"><span class="long">${long}</span><span class="short">${short}</span></span>`;
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));

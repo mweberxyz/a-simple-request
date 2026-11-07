@@ -84,7 +84,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w); pick(w, "human"); mode(w, "today");
       $(w, "#prompt [data-go=proposal]").click();
       assert($(w, "#thread .tag").classList.contains("pop-quick"), "Show me tomorrow link should pop the tag too");
-      $(w, "[data-key=style] [data-v=grey]").click(); reset(w);
+      $(w, "[data-key=style] [data-v=purple]").click(); reset(w);
     });
 
     await test(`the reveal links to the proposal ${tag}`, async () => {
@@ -94,6 +94,13 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       pick(w, "agent");
       const a = $(w, "#prompt a.next");
       assert(a && a.getAttribute("href"), "proposal link after a guess");
+      reset(w);
+    });
+
+    await test(`the tag is purple by default, with no grey option ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      assert($(w, "#thread .tag").classList.contains("purple"), "default tag should be purple");
+      assert(!$(w, "[data-key=style] [data-v=grey]"), "grey option should be gone");
       reset(w);
     });
 
@@ -114,7 +121,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`thread never moves between states ${tag}`, async () => {
       reset(w); const seen = { today: positions(w) };
       mode(w, "proposal"); seen.tomorrow = positions(w);
-      for (const st of ["purple", "custom", "grey"]) { $(w, `[data-key=style] [data-v=${st}]`).click(); seen[st] = positions(w); }
+      for (const st of ["custom", "purple"]) { $(w, `[data-key=style] [data-v=${st}]`).click(); seen[st] = positions(w); }
       mode(w, "today"); seen.back = positions(w);
       reset(w); pick(w, "agent"); seen.right = positions(w);
       reset(w); pick(w, "human"); seen.wrong = positions(w);
