@@ -60,8 +60,6 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 |---|---|
 | `request/feature-request.md` | GitHub discussion text. No images. Add the site link at the end after launch. |
 | `site/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode under the headline **"Spot the slop."** Visitors click the comment they think the agent wrote, then the page reveals the answer and switches to "GitHub tomorrow" (the agent tag, plus one tag-style control). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, the switch row is the same height in both modes (the tag-style control keeps its space while hidden in today; Turbo has no picker, it cycles looks on its own, and the issue body reserves the height of the tallest conversation so swaps never move the page), and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). The only other control is **Boring | Turbo** (no label; screen readers get "Agent tag style"), at the right end of the switch row (its own line on phones), visible only in "tomorrow". Reset is next to the switch. The demo deliberately leaves out view-as, endorsing, and reader filters: they're in the full request, and in the demo they distracted from the puzzle. URLs and author are set in constants at the bottom of the file. |
-| `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the reveal ("Read the proposal →", via `NEXT_URL`) and from "The full request" in the top bar of `index.html`. It stays a local page while Matt iterates on the request; at launch the reveal link switches to the GitHub discussion. |
-| `site/request.md`, `site/mockups` | **Symlinks** to `../request/feature-request.md` and `../mockups`. The request page always shows the current text and mockups, so edit the originals and never these. |
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
 | `mockups/*.html`, `mock.css` | `og-card.html` is the source of `site/og.png`. Mockups 1–4 are no longer used by the request (kept for now; they describe the old credential-based design). |
 | `outreach/reddit-post.md` | Reddit post plus notes for r/github, HN, and social media. |
@@ -98,8 +96,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 ## Placeholders still to fill
 
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
-- In `site/index.html`: `REQUEST_URL`, an absolute `og:image` URL, and the launch switch of `NEXT_URL`/`NEXT_LABEL` from the local request page to the GitHub discussion.
-- In `site/request.html`: `REQUEST_URL` (keep it the same as in index.html) and an absolute `og:image` URL.
+- In `site/index.html`: `REQUEST_URL` and an absolute `og:image` URL.
 - Site link at the end of `request/feature-request.md` (after launch); `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
 
 ## Progress
@@ -181,4 +178,5 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** It's a request, not a proposal (Matt). The post-guess link now reads "Join the discussion →" ("Join the discussion ↗" at launch, when it points at GitHub). The request page's preview title says "the full request".
 - **2026-11-06:** Tests now run in both themes: `run.sh` does a light pass and a dark pass (via `--blink-settings=preferredColorScheme`). Until now the suite silently followed the machine's system theme. Added a contrast sweep that checks every visible text against the real background behind it, in each demo state and on the request page, with transitions off so it measures final colors. Confirmed it catches a deliberately faint color. 88 checks per theme.
 - **2026-11-06:** Dropped "The full request" from the landing page's top bar (Matt); only "Add your 👍 ↗" remains. The request page is still reached from "Join the discussion →" after a guess (it points there until launch).
-- **2026-11-06:** Removed the request page and the "Join the discussion" link, then reverted that at Matt's request. The request page, its symlinks, and the post-guess link are back.
+- **2026-11-06:** The discussion draft is done (Matt), so the site no longer shows it. Removed `site/request.html`, the `site/request.md` and `site/mockups` symlinks, and the "Join the discussion →" link after a guess. The only way off the landing page is now "Add your 👍 ↗". The draft lives only in `request/feature-request.md`; a test still checks it stays short, with no images or placeholders.
+- **2026-11-06:** Undid the revert (Matt): the request page, its symlinks, and the "Join the discussion" link are removed again. Matt says he's ready to launch.
