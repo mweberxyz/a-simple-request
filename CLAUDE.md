@@ -157,3 +157,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Turbo now changes every 10s (was 5s): each change is a whole new conversation, which takes longer to read than a tag.
 - **2026-11-06:** Added a countdown bar along the bottom of the GitHub window while Turbo cycles. It fills over the 10s (`TURBO_MS`, one constant for both the bar and the timer) and takes the current tag's color. Boring hides it; it takes no layout space. Test gotcha: a test that leaves Turbo cycling makes the headless runner hang, so tests that turn Turbo on reset in a `finally`. Tests: 62 checks.
 - **2026-11-06:** Removed "A simple request to GitHub · a proposal" from the top bar; it now holds only "The full request" and "Support it ↗", on the right. With the room freed, "The full request" shows on phones too. The page title and OG card still carry the name.
+- **2026-11-06:** Turbo now changes every 7s (was 10s; 10 felt slow).
