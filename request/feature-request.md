@@ -22,6 +22,7 @@ What this would enable:
 
 - Muting or filtering agents, the way [Allow to mute bots](https://github.com/orgs/community/discussions/5793) asks for bots
 - Letting the person mark an agent's post as reviewed
+- Pinging someone's agent instead of the person, which cuts down their notifications
 
 ---
 *I drafted this with an AI agent and reviewed every line before posting.*
