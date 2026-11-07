@@ -57,7 +57,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 |---|---|
 | `request/feature-request.md` | GitHub discussion text. Has `SITE_URL` placeholder and image slots. |
 | `site/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode under the headline **"Spot the slop."** Visitors click the comment they think the agent wrote, then the page reveals the answer and switches to "GitHub tomorrow" (tag, viewer, filter, and tag-style controls). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, the big switch is the only control above the thread (the same in both modes), and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). The other controls (view as, agent posts, tag style) sit **below** the thread and only appear in "tomorrow". Reset is next to the switch. URLs and author are set in constants at the bottom of the file. |
-| `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the call-out card right below the demo and from "The full request" in the top bar of `index.html`. |
+| `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the reveal ("Read the proposal →", via `NEXT_URL`) and from "The full request" in the top bar of `index.html`. It stays a local page while Matt iterates on the request; at launch the reveal link switches to the GitHub discussion. |
 | `site/request.md`, `site/mockups` | **Symlinks** to `../request/feature-request.md` and `../mockups`. The request page always shows the current text and mockups, so edit the originals and never these. |
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
 | `mockups/*.html`, `mock.css` | Sources for the four mockup PNGs attached to the request. |
@@ -95,7 +95,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 ## Placeholders still to fill
 
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
-- In `site/index.html`: `REQUEST_URL` and an absolute `og:image` URL.
+- In `site/index.html`: `REQUEST_URL`, an absolute `og:image` URL, and the launch switch of `NEXT_URL`/`NEXT_LABEL` from the local request page to the GitHub discussion.
 - In `site/request.html`: `REQUEST_URL` (keep it the same as in index.html) and an absolute `og:image` URL.
 - `SITE_URL` in `request/feature-request.md`; `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
 
@@ -143,3 +143,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Back to one problem (Matt: punchier). mweberxyz leaves a single, human comment; the agent reply now belongs to `ozzie-dev` (renamed from drive-by-dev, whose name was itself a tell), and it uses the technical, data-backed wrong fix instead of obvious slop. View-as and endorse now act as ozzie-dev. Tests back to 38.
 - **2026-11-06:** Renamed the agent's owner from ozzie-dev to `github-user-b`, a real person who gave Matt permission to be used as the stand-in. Tests pass.
 - **2026-11-06:** Clicking "GitHub tomorrow" (or "Show me tomorrow →") now pops the agent tag in too, with a shorter delay (0.2s) than the guess reveal (1s) so it lands as the highlight arrives. It only plays on the switch to tomorrow, not on later changes. Test added (42 checks).
+- **2026-11-06:** Dropped the "Like where this is going?" card (generic, and it competed with the puzzle). The next step now appears in the reveal itself, "Read the proposal →", only after a guess or in tomorrow. It points at the local request page for now so Matt can see the request while iterating; it becomes the GitHub link at launch (LAUNCH.md step 3).

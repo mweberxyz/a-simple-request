@@ -87,6 +87,16 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       $(w, "[data-key=style] [data-v=grey]").click(); reset(w);
     });
 
+    await test(`the reveal links to the proposal ${tag}`, async () => {
+      reset(w);
+      assert(!$(w, "#prompt a.next"), "no proposal link before a guess");
+      assert(!$(w, ".more"), "old card should be gone");
+      pick(w, "agent");
+      const a = $(w, "#prompt a.next");
+      assert(a && a.getAttribute("href"), "proposal link after a guess");
+      reset(w);
+    });
+
     await test(`picking the human's comment is wrong ${tag}`, async () => {
       reset(w); pick(w, "human");
       assert(h1(w).startsWith("Nope"), `headline was "${h1(w)}"`);
