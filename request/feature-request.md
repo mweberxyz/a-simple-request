@@ -7,7 +7,7 @@
 
 # Allow well-behaved agents to self identify
 
-More and more of what's posted under my name on GitHub comes from an agent using my token, and it looks exactly like something I wrote. Nobody reading it can tell the difference.
+Increasingly, what's posted under my name on GitHub comes from an agent using my token, and it looks exactly like something I wrote. Nobody reading it can tell the difference.
 
 I'd like a standard way for an agent to say "an agent did this," and a marker next to the author's name when it does.
 
