@@ -75,6 +75,18 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       assert($(w, ".seg.mode").classList.contains("reveal"), "reveal animation triggered");
     });
 
+    await test(`clicking GitHub tomorrow animates the tag in ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      const t = $(w, "#thread .tag");
+      assert(t && t.classList.contains("pop") && t.classList.contains("pop-quick"), "tag should pop in on a direct switch");
+      $(w, "[data-key=style] [data-v=purple]").click();
+      assert(!$(w, "#thread .tag").classList.contains("pop"), "tag should not re-pop on later changes");
+      reset(w); pick(w, "human"); mode(w, "today");
+      $(w, "#prompt [data-go=proposal]").click();
+      assert($(w, "#thread .tag").classList.contains("pop-quick"), "Show me tomorrow link should pop the tag too");
+      $(w, "[data-key=style] [data-v=grey]").click(); reset(w);
+    });
+
     await test(`picking the human's comment is wrong ${tag}`, async () => {
       reset(w); pick(w, "human");
       assert(h1(w).startsWith("Nope"), `headline was "${h1(w)}"`);
