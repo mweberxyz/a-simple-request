@@ -24,7 +24,7 @@ The site and the GitHub discussion need to link to each other, so the order matt
 
 ## 3. Connect the site to the request
 - [ ] Set `REQUEST_URL` in `site/index.html`, and point the post-reveal link at it: `NEXT_URL = REQUEST_URL` and `NEXT_LABEL = "Back the proposal on GitHub ↗"` (both next to `PROMPTS`). Redeploy.
-- [ ] Open the live site and click both "Support" buttons to confirm they open the discussion.
+- [ ] Open the live site and click both "Add your 👍" buttons to confirm they open the discussion.
 - [ ] Paste SITE_URL into a link-preview checker to confirm the image and title appear.
 
 ## 4. Go public
