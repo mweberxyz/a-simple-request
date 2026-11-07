@@ -283,6 +283,29 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       } finally { reset(w); }
     });
 
+    await test(`a horizontal swipe on the window steps through Turbo ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      const win = $(w, ".win"), r = win.getBoundingClientRect(), y = r.top + 120, x0 = r.left + r.width / 2;
+      const swipe = (dx, dy = 0, type = "touch") => {
+        const ev = (name, x, yy) => win.dispatchEvent(new w.PointerEvent(name, { pointerId: 7, pointerType: type, clientX: x, clientY: yy, bubbles: true }));
+        ev("pointerdown", x0, y); ev("pointerup", x0 + dx, y + dy);
+      };
+      const at = () => w.eval("s.turbo"), n = w.eval("TURBO.length");
+      const before = at(); swipe(-100);
+      eq(at(), before, "swipes do nothing outside Turbo");
+      $(w, "[data-key=style] [data-v=custom]").click();
+      try {
+        const start = at();
+        swipe(-100); eq(at(), (start + 1) % n, "swipe left goes forward");
+        swipe(100); swipe(100); eq(at(), (start - 1 + n) % n, "swipe right goes back, wrapping around");
+        const mid = at();
+        swipe(-20); eq(at(), mid, "a short drag is not a swipe");
+        swipe(-60, 120); eq(at(), mid, "a mostly vertical drag is a scroll, not a swipe");
+        swipe(-100, 0, "mouse"); eq(at(), mid, "mouse drags don't swipe");
+        eq(w.getComputedStyle(win).touchAction, "pan-y", "vertical scrolling stays native");
+      } finally { reset(w); }
+    });
+
     await test(`a keyboard can make the guess, and lands on the answer ${tag}`, async () => {
       reset(w);
       const btns = $$(w, "#thread .guess");
