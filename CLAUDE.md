@@ -77,6 +77,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **Facts get checked before they're cited.** Any link or claim that will appear under Matt's name is looked up first.
 - **Iteration mode (since 2026-11-06):** Matt is iterating. Don't end turns with "what's next / ready to launch?" questions until Matt says they're ready.
 - **Commit proactively.** After each meaningful change (a finished edit, a re-rendered asset, a decision applied), commit it without being asked. Keep each commit to one change, with a short message that says what changed and why. Re-render any PNG whose HTML source changed before committing, so assets never fall behind their sources. Local commits only. Never push or add a remote unless Matt asks.
+- **Commits are GPG-signed.** Signing is on in this repo's local git config. Never use `--no-gpg-sign`, and don't change the signing settings. If signing fails, stop and tell Matt instead of committing unsigned.
 - **Keep this file current.** Update CLAUDE.md in the same commit as the change it describes: check off Progress items, move the "← current" marker, add a dated Log line for decisions and findings, update "Placeholders still to fill" and "The proposal (settled decisions)" when they change, and remove anything that's no longer true. A new session should be able to read this file and pick up where the last one left off.
 - Matt rewrites copy in their own voice. Treat the drafted text as a starting point, not final.
 
@@ -111,3 +112,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Clarified with Matt that the GitHub email and handle are already public, so commit authorship is fine but they shouldn't be repeated in files. The real concern is machine, network, path, and environment details. Re-audited: the Chrome install path in the render commands (in earlier commits) was the only finding, and it's now `$CHROME`.
 - **2026-11-06:** The repo will be published on GitHub with full history. A privacy audit found nothing to fix; the only identifying detail is the commit author email. Added the public-repo warning section and a pre-commit check to the top of this file.
 - **2026-11-06:** Added a gitignored `CLAUDE.local.md` for private, cross-session context, and moved machine-specific notes into it.
+- **2026-11-06:** Re-signed all commits with Matt's GPG key (contents and author dates unchanged) and turned on signing for this repo.
