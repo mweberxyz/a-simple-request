@@ -64,14 +64,14 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       eq(h1(w), "Spot the slop.", "headline");
       eq($$(w, ".pick").length, 2, "clickable replies");
       eq($$(w, "#thread .tag").length, 0, "no agent tag today");
-      assert($(w, "#toolbar").hidden, "secondary controls hidden today");
+      assert(w.getComputedStyle($(w, "#tagctl")).visibility === "hidden", "tag control hidden today");
     });
 
     await test(`picking the agent's comment is right ${tag}`, async () => {
       reset(w); pick(w, "agent");
       assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
       eq($$(w, "#thread .tag").length, 1, "agent tagged");
-      assert(!$(w, "#toolbar").hidden, "controls visible tomorrow");
+      assert(w.getComputedStyle($(w, "#tagctl")).visibility === "visible", "tag control visible tomorrow");
       assert($(w, ".seg.mode").classList.contains("reveal"), "reveal animation triggered");
     });
 
@@ -153,21 +153,13 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       input.value = "triage"; input.dispatchEvent(new w.Event("input")); reset(w);
     });
 
-    await test(`endorsing removes the tag ${tag}`, async () => {
+    await test(`only the tag control remains, above the thread on the right ${tag}`, async () => {
       reset(w); mode(w, "proposal");
-      $(w, "[data-key=viewer] [data-v=author]").click();
-      $(w, "#endorse").click();
-      eq($$(w, "#thread .tag").length, 0, "tag after endorsing");
-      assert($(w, "#thread .event"), "endorsed event in timeline");
-      assert(h1(w).startsWith("Endorsed"), `headline was "${h1(w)}"`);
-    });
-
-    await test(`reader filters collapse and hide the agent comment ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      $(w, "[data-key=filter] [data-v=collapse]").click();
-      eq($$(w, "#thread .collapsed").length, 1, "collapsed row");
-      $(w, "[data-key=filter] [data-v=hide]").click();
-      eq($$(w, "#thread .box").length, 2, "only alice and the human reply remain");
+      for (const k of ["viewer", "filter"]) assert(!$(w, `[data-key=${k}]`), `${k} control should be gone`);
+      eq([...$$(w, "[data-key=style] button")].map(b => b.textContent).join("|"), "Boring|Turbo", "tag options");
+      const c = $(w, "#tagctl").getBoundingClientRect(), win = $(w, ".win").getBoundingClientRect();
+      assert(c.bottom <= win.top, "tag control should sit above the thread");
+      assert(Math.abs(c.right - win.right) < 2, `tag control should be flush right (${c.right} vs ${win.right})`);
       reset(w);
     });
 

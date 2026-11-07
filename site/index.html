@@ -64,14 +64,13 @@ main.wrap { max-width: 1140px; }
 .prompt .next { color: var(--brand); font-weight: 700; text-decoration: none; white-space: nowrap; }
 .prompt .next:hover { text-decoration: underline; }
 .prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
-.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 16px 0 0; }
-.toolbar[hidden] { display: none; }
-.toolbar .grp { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 7px; }
-.toolbar .lbl { font-size: 12px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+.tagctl { margin-left: auto; position: relative; display: flex; align-items: center; gap: 7px; }
+.tagctl.off { visibility: hidden; }
+.tagctl .lbl { font-size: 12px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
 .seg { display: flex; background: color-mix(in srgb, var(--ink) 7%, transparent); border-radius: 9px; padding: 3px; gap: 2px; }
 .seg button { border: 0; background: transparent; color: var(--ink-2); font: 600 13px/1 inherit; font-family: inherit; padding: 8px 11px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
 .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
-.switch { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.switch { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 16px; }
 .seg.mode { position: relative; padding: 5px; gap: 0; border-radius: 14px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
 .seg.mode button { position: relative; z-index: 1; font-size: 18px; font-weight: 700; padding: 15px 28px; border-radius: 10px; background: transparent !important; box-shadow: none !important; color: var(--ink-2); transition: color .3s; }
 .seg.mode button[aria-pressed="true"] { color: var(--brand-ink); }
@@ -85,7 +84,7 @@ main.wrap { max-width: 1140px; }
 .tag.pop.pop-quick { animation-delay: .2s; }
 @keyframes tagPop { 0% { transform: scale(.2); opacity: 0; box-shadow: 0 0 0 0 rgba(130,80,223,.6); } 60% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 0 8px rgba(130,80,223,.25); } 100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(130,80,223,0); } }
 @media (max-width: 560px) { .switch { gap: 10px; } .seg.mode button { font-size: 15px; padding: 12px 16px; } .reset span { display: none; } .reset { font-size: 18px; } }
-.custom { display: flex; align-items: center; gap: 10px; }
+.custom { position: absolute; z-index: 6; right: 0; top: calc(100% + 6px); display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; box-shadow: var(--shadow); white-space: nowrap; }
 .custom.off { display: none; }
 .swatches { display: flex; gap: 6px; }
 .swatches button { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
@@ -134,22 +133,6 @@ main.wrap { max-width: 1140px; }
 .tag .tip b { color: #fff; display: block; }
 .tag:hover .tip, .tag:focus .tip { display: block; }
 .via { color: var(--gh-muted); }
-.banner { border: 1px solid var(--gh-border); background: var(--gh-canvas); border-radius: 6px; padding: 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-.banner p { margin: 0; flex: 1 1 260px; }
-.banner small { color: var(--gh-muted); }
-.ghbtn { border: 1px solid rgba(31,35,40,.15); background: var(--gh-canvas); color: var(--gh-fg); border-radius: 6px; padding: 5px 12px; font: 500 13px/1.4 inherit; font-family: inherit; cursor: pointer; }
-.ghbtn.go { background: var(--gh-green); color: #fff; }
-.collapsed { margin: 0 0 16px 48px; border: 1px dashed var(--gh-border); border-radius: 6px; padding: 7px 12px; color: var(--gh-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-@media (max-width: 560px) { .collapsed, .event { margin-left: 0 !important; } }
-.collapsed b { color: var(--gh-fg); }
-.collapsed button { border: 0; background: none; color: #0969da; cursor: pointer; font: inherit; padding: 0; }
-.event { margin: 0 0 16px 48px; display: flex; gap: 10px; align-items: center; color: var(--gh-muted); font-size: 13px; animation: pop .35s ease; }
-.event .ic { width: 26px; height: 26px; border-radius: 50%; background: #dafbe1; display: grid; place-items: center; flex: none; }
-.event b { color: var(--gh-fg); }
-@keyframes pop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
-.hidden-note { margin: 0 0 16px 48px; color: var(--gh-muted); font-size: 13px; font-style: italic; }
-.flash { animation: flash 1s ease; }
-@keyframes flash { 0% { background: #fff8c5; } 100% { background: var(--gh-canvas); } }
 
 
 
@@ -177,6 +160,9 @@ main.wrap { max-width: 1140px; }
     <div class="switch">
       <div class="seg mode still" data-key="mode" role="group" aria-label="Show GitHub today or tomorrow"><span class="thumb" aria-hidden="true"></span><button data-v="today">GitHub today</button><button data-v="proposal">GitHub tomorrow</button></div>
       <button class="reset" id="reset" title="Start over" aria-label="Start over">↺ <span>Reset</span></button>
+      <div class="tagctl off" id="tagctl"><span class="lbl">Tag</span>
+        <div class="seg" data-key="style"><button data-v="purple">Boring</button><button data-v="custom">Turbo</button></div>
+        <div class="custom off" id="customCtl"><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div></div>
     </div>
 
     <div class="win" role="region" aria-label="Mockup of a GitHub-style issue thread">
@@ -186,15 +172,6 @@ main.wrap { max-width: 1140px; }
         <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
         <div id="thread"></div>
       </div>
-    </div>
-    <div class="toolbar" id="toolbar" aria-label="Demo controls" hidden>
-      <div class="grp js-p"><span class="lbl">View as</span>
-        <div class="seg" data-key="viewer"><button data-v="reader">Reader</button><button data-v="author">github-user-b</button></div></div>
-      <div class="grp js-p"><span class="lbl">Agent posts</span>
-        <div class="seg" data-key="filter"><button data-v="show">Show</button><button data-v="collapse">Collapse</button><button data-v="hide">Hide</button></div></div>
-      <div class="grp js-p"><span class="lbl">Tag</span>
-        <div class="seg" data-key="style"><button data-v="purple">Purple</button><button data-v="custom">Mine</button></div>
-        <div class="custom off" id="customCtl"><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div></div>
     </div>
 
   </div>
@@ -213,7 +190,7 @@ const COLORS = [
   { name: "yellow", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
   { name: "red",    fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
 ];
-const initial = () => ({ mode: "today", guess: null, viewer: "reader", filter: "show", style: "purple", color: 3, suffix: "triage", endorsed: false, expanded: false });
+const initial = () => ({ mode: "today", guess: null, style: "purple", color: 3, suffix: "triage" });
 let s = initial();
 try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style === "custom" ? "custom" : "purple"; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
 
@@ -246,15 +223,13 @@ const NEXT_LABEL = "Read the proposal →";
 const NEXT = ` <a class="next" href="${NEXT_URL}">${NEXT_LABEL}</a>`;
 const PROMPTS = {
   ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. Same for everyone else in this thread. <b>Click the comment you think an agent wrote.</b>"],
-  right:   ["Good eye. It sounded right, though.", "github-user-b's agent posted it with github-user-b's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag, then try the controls below the thread." + NEXT + ""],
-  wrong:   ["Nope. That one's the human.", "The confident fix above came from github-user-b's agent, posted with github-user-b's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag, then try the controls below the thread." + NEXT + ""],
-  shown:   ["Same thread, GitHub tomorrow.", "The token github-user-b's agent used marks everything it posts, right next to github-user-b's name. Hover the tag, switch to github-user-b's view to endorse it, or try the reader filter." + NEXT + ""],
+  right:   ["Good eye. It sounded right, though.", "github-user-b's agent posted it with github-user-b's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag." + NEXT + ""],
+  wrong:   ["Nope. That one's the human.", "The confident fix above came from github-user-b's agent, posted with github-user-b's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag." + NEXT + ""],
+  shown:   ["Same thread, GitHub tomorrow.", "The token github-user-b's agent used marks everything it posts, right next to github-user-b's name. Hover the tag." + NEXT + ""],
   back:    ["Back to today. Can you still spot it?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
-  endorsed:["Endorsed. Now it's github-user-b's, mistakes and all.", "Endorsing means github-user-b read it and stands behind it. The tag is gone, and the timeline records who vouched for it." + NEXT + ""],
 };
 function promptKey() {
   if (s.mode === "today") return s.guess ? "back" : "ask";
-  if (s.endorsed) return "endorsed";
   return s.guess ? s.guess : "shown";
 }
 
@@ -264,17 +239,7 @@ function agentComment() {
   if (s.mode === "today") {
     return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>`;
   }
-  if (s.endorsed) {
-    return `<div class="c">${av}<div class="box"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>
-      <div class="event"><span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#1a7f37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span><span><b>${AGENT_OWNER}</b> reviewed and endorsed the agent's comment above · just now</span></div>`;
-  }
-  if (s.filter === "hide") return "";
-  if (s.filter === "collapse" && !s.expanded) {
-    return `<div class="collapsed"><b>${AGENT_OWNER}</b> ${tagHTML()} left 1 comment 2 hours ago · <button class="expand">show</button></div>`;
-  }
-  const endorse = s.viewer === "author"
-    ? `<div class="banner flash"><p><b>Your agent posted this without your review.</b><br><small>Only you see this box. Endorsing removes the tag for everyone.</small></p><button class="ghbtn go" id="endorse">Endorse as mine</button></div>` : "";
-  return `<div class="c">${av}<div class="box"><div class="hd">${head(true)}</div><div class="bd">${endorse}${agentBody}</div></div></div>`;
+  return `<div class="c">${av}<div class="box"><div class="hd">${head(true)}</div><div class="bd">${agentBody}</div></div></div>`;
 }
 
 function placeThumb() {
@@ -283,20 +248,17 @@ function placeThumb() {
   th.style.width = act.offsetWidth + "px"; th.style.transform = `translateX(${act.offsetLeft}px)`;
 }
 function render() {
-  const note = s.mode === "proposal" && s.filter === "hide" && !s.endorsed && s.viewer === "author" ? `<div class="hidden-note">1 unreviewed agent comment is hidden by your filter.</div>` : "";
-  document.getElementById("thread").innerHTML = alice + note + agentComment() + humanComment();
+  document.getElementById("thread").innerHTML = alice + agentComment() + humanComment();
   const [h, sub] = PROMPTS[promptKey()];
   const touch = matchMedia("(hover: none)").matches;
   document.getElementById("prompt").innerHTML = `<h1>${h}</h1><p>${touch ? sub.replace(/Hover the tag/g, "Tap the tag") : sub}</p>`;
-  document.getElementById("toolbar").hidden = s.mode !== "proposal";
+  const tc = document.getElementById("tagctl"); tc.classList.toggle("off", s.mode !== "proposal"); tc.inert = s.mode !== "proposal";
   document.querySelectorAll(".seg").forEach(seg => {
     const key = seg.dataset.key;
     seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === s[key])));
   });
   const cc = document.getElementById("customCtl"); cc.classList.toggle("off", s.style !== "custom"); cc.inert = s.style !== "custom";
   document.querySelectorAll("#swatches button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === s.color)));
-  const e = document.getElementById("endorse"); if (e) e.onclick = () => { s.endorsed = true; render(); };
-  document.querySelectorAll("#thread .expand").forEach(x => x.onclick = () => { s.expanded = true; render(); });
   placeThumb();
   s.justRevealed = false;
   try { localStorage.setItem("agent-demo-style", JSON.stringify({ style: s.style, color: s.color, suffix: s.suffix })); } catch (err) {}
@@ -307,7 +269,7 @@ document.querySelectorAll("#swatches button").forEach((b, i) => b.onclick = () =
 document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", ev => {
   const b = ev.target.closest("button"); if (!b) return;
   if (seg.dataset.key === "mode" && b.dataset.v === "proposal" && s.mode !== "proposal") s.justRevealed = "toggle";
-  s[seg.dataset.key] = b.dataset.v; if (seg.dataset.key === "filter") s.expanded = false; render();
+  s[seg.dataset.key] = b.dataset.v; render();
 }));
 const sfx = document.getElementById("suffix"); sfx.value = s.suffix;
 sfx.addEventListener("input", () => { s.suffix = sfx.value; render(); });
