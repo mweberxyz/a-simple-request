@@ -90,6 +90,8 @@ main.wrap { max-width: 1140px; }
 @keyframes switchPop { 0% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } 25% { transform: scale(1.09); box-shadow: 0 0 0 10px color-mix(in srgb, var(--brand) 35%, transparent); } 55% { transform: scale(.98); } 100% { transform: scale(1); box-shadow: 0 0 0 28px transparent; } }
 .tag.pop { animation: tagPop .8s cubic-bezier(.3,1.7,.5,1) 1s both; }
 .tag.pop.pop-quick { animation-delay: .2s; }
+.win .body.swap { animation: threadSwap .45s ease; }
+@keyframes threadSwap { from { opacity: .15; } to { opacity: 1; } }
 .tag.swap { animation: tagSwap .4s cubic-bezier(.3,1.6,.5,1); }
 @keyframes tagSwap { from { transform: scale(.7); opacity: .3; } to { transform: scale(1); opacity: 1; } }
 @keyframes tagPop { 0% { transform: scale(.2); opacity: 0; box-shadow: 0 0 0 0 rgba(130,80,223,.6); } 60% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 0 8px rgba(130,80,223,.25); } 100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(130,80,223,0); } }
@@ -168,9 +170,9 @@ main.wrap { max-width: 1140px; }
     </div>
 
     <div class="win" role="region" aria-label="Mockup of a GitHub-style issue thread">
-      <div class="bar"><i></i><i></i><i></i>&nbsp; acme / <b>http-client</b> › Issues › #4182</div>
-      <div class="body">
-        <h3>Intermittent <code>ECONNRESET</code> when reusing keep-alive sockets <span>#4182</span></h3>
+      <div class="bar"><i></i><i></i><i></i>&nbsp; acme / <b>http-client</b> › Issues › <span id="num"></span></div>
+      <div class="body" id="issue">
+        <h3 id="title"></h3>
         <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
         <div id="thread"></div>
       </div>
@@ -185,14 +187,44 @@ const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
 // ---------------------------------
 document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; });
 
-// Turbo shows what people could build on top of the agent flag: it cycles through these on its own.
+// The puzzle thread (today, and tomorrow with the Boring tag).
+const MAIN = {
+  num: 4182, title: "Intermittent <code>ECONNRESET</code> when reusing keep-alive sockets",
+  ask: "<p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached. What's the right fix?</p>",
+  human: "<p>Changing the default timeout won't fix this. Idle timeouts vary by server and by every proxy in between, so any fixed value loses this race somewhere. Your server sends <code>Keep-Alive: timeout=5</code>: the pool should honor that header, and retry idempotent requests that hit <code>ECONNRESET</code> on a reused socket.</p>",
+  agent: "<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can go out on a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>",
+};
+// Turbo shows what people could build on top of the agent flag: it cycles through these
+// on its own, and each one swaps in a conversation where that kind of agent makes sense.
+// No green (it reads as "verified").
 const TURBO = [
-  { text: "triage",      fg: "#0969da", bd: "#80ccff", bg: "#ddf4ff" },
-  { text: "night shift", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
-  { text: "deps",        fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
-  { text: "docs",        fg: "#bf3989", bd: "#ff80c8", bg: "#ffeff7" },
-  { text: "flaky tests", fg: "#bc4c00", bd: "#ffb77c", bg: "#fff1e5" },
+  { text: "triage", fg: "#0969da", bd: "#80ccff", bg: "#ddf4ff",
+    num: 4196, title: "Docs search returns nothing for “pool”",
+    ask: "<p>Since yesterday's release, searching the docs for <code>pool</code> or <code>keepAlive</code> returns no results.</p>",
+    human: "<p>Confirmed. The release job skipped rebuilding the search index. I'll rerun it.</p>",
+    agent: "<p>Labeled <b>docs</b> and <b>regression</b>, and added this to the 4.2 milestone. Likely duplicate of #4171 (search index not rebuilt on tag releases).</p>" },
+  { text: "night shift", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5",
+    num: 4199, title: "CI failing on main since 02:00",
+    ask: "<p>Every job on <code>main</code> has failed at the install step since about 2am.</p>",
+    human: "<p>The lockfile pins <code>mock-server@3.1.0</code>, which was unpublished overnight.</p>",
+    agent: "<p>While you were offline: I bisected the first failure to 3f9c2e1 and opened #4201, which pins <code>mock-server@3.0.9</code>. CI is green on that branch. Nothing merged.</p>" },
+  { text: "deps", fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9",
+    num: 4203, title: "Bump http-parser for the request smuggling advisory",
+    ask: "<p>http-parser 2.4 fixes the request smuggling advisory published this week. Can we bump it?</p>",
+    human: "<p>Yes, but 2.4 rejects duplicate <code>Content-Length</code> headers, so our lenient-headers test will need updating.</p>",
+    agent: "<p>Opened #4205: http-parser 2.3.1 → 2.4.0. Changelog: 3 fixes, 1 breaking change (duplicate <code>Content-Length</code> now rejected). 1 failing test: <code>lenient-headers.test.js</code>.</p>" },
+  { text: "docs", fg: "#bf3989", bd: "#ff80c8", bg: "#ffeff7",
+    num: 4208, title: "<code>keepAliveTimeout</code> isn't in the API reference",
+    ask: "<p>The option exists in the code but not in the docs. What does it default to?</p>",
+    human: "<p>4.9 seconds. Keep it below your server's idle timeout, or you'll see <code>ECONNRESET</code> on reused sockets.</p>",
+    agent: "<p>Drafted the missing entry in #4210: <code>keepAliveTimeout</code> (number, default <code>4900</code>), how long an idle socket stays in the pool, with a note about server idle timeouts.</p>" },
+  { text: "flaky tests", fg: "#bc4c00", bd: "#ffb77c", bg: "#fff1e5",
+    num: 4212, title: "<code>retry.test.js</code> fails about 1 in 30 runs",
+    ask: "<p>Intermittent timeouts in <code>retry.test.js</code> on CI. Never reproduces locally.</p>",
+    human: "<p>It waits on a real 100 ms timer. On a loaded CI runner the retry fires late.</p>",
+    agent: "<p>This test failed 14 of the last 400 CI runs, all on Linux runners. #4214 switches it to fake timers: 0 failures in 1,000 reruns.</p>" },
 ];
+const scenario = () => s.mode === "proposal" && s.style === "custom" ? TURBO[s.turbo] : MAIN;
 const initial = () => ({ mode: "today", guess: null, style: "purple", turbo: 0 });
 let s = initial();
 
@@ -213,11 +245,8 @@ function tagHTML(owner = AGENT_OWNER, via = "") {
   return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg><span class="txt">${label}</span><span class="tip" role="tooltip"><b>Posted by an agent on ${owner}'s behalf</b>${via ? `Sent via ${via}. ` : ""}${owner} hasn't reviewed this. The agent session was authorized by ${owner}${via ? " on Nov 4" : ""}.</span></span>`;
 }
 
-const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")} <span class="role">Member</span></div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached. What's the right fix?</p></div></div></div>`;
-const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can go out on a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
-const humanBody = `<p>Changing the default timeout won't fix this. Idle timeouts vary by server and by every proxy in between, so any fixed value loses this race somewhere. Your server sends <code>Keep-Alive: timeout=5</code>: the pool should honor that header, and retry idempotent requests that hit <code>ECONNRESET</code> on a reused socket.</p>`;
 const pickable = () => s.mode === "today";
-const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
+const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${scenario().human}</div></div></div>`;
 
 // Where the reveal sends people next. While iterating: the local request page.
 // At launch: NEXT_URL = REQUEST_URL, NEXT_LABEL = "Back the proposal on GitHub ↗" (see LAUNCH.md).
@@ -240,9 +269,9 @@ function agentComment() {
   const av = `<div class="av" style="background:#8250df">C</div>`;
   const head = tagged => `<b>${AGENT_OWNER}</b> ${tagged ? tagHTML() + " " : ""}${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span>`;
   if (s.mode === "today") {
-    return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>`;
+    return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd">${head(false)}</div><div class="bd">${scenario().agent}</div></div></div>`;
   }
-  return `<div class="c">${av}<div class="box"><div class="hd">${head(true)}</div><div class="bd">${agentBody}</div></div></div>`;
+  return `<div class="c">${av}<div class="box"><div class="hd">${head(true)}</div><div class="bd">${scenario().agent}</div></div></div>`;
 }
 
 function placeThumb() {
@@ -250,8 +279,17 @@ function placeThumb() {
   if (!act) return;
   th.style.width = act.offsetWidth + "px"; th.style.transform = `translateX(${act.offsetLeft}px)`;
 }
+const aliceComment = () => `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")} <span class="role">Member</span></div><div class="bd">${scenario().ask}</div></div></div>`;
+function fillIssue() {
+  const sc = scenario();
+  document.getElementById("num").textContent = "#" + sc.num;
+  document.getElementById("title").innerHTML = `${sc.title} <span>#${sc.num}</span>`;
+  document.getElementById("thread").innerHTML = aliceComment() + humanComment() + agentComment();
+}
 function render() {
-  document.getElementById("thread").innerHTML = alice + humanComment() + agentComment();
+  fillIssue();
+  const body = document.getElementById("issue");
+  if (s.swapped) { body.classList.remove("swap"); void body.offsetWidth; body.classList.add("swap"); }
   const [h, sub] = PROMPTS[promptKey()];
   const touch = matchMedia("(hover: none)").matches;
   document.getElementById("prompt").innerHTML = `<h1>${h}</h1><p>${touch ? sub.replace(/Hover the tag/g, "Tap the tag") : sub}</p>`;
@@ -263,7 +301,7 @@ function render() {
   placeThumb();
   s.justRevealed = false; s.swapped = false;
   const cycling = s.mode === "proposal" && s.style === "custom";
-  if (cycling && !window.__turboT) window.__turboT = setInterval(turboTick, 2000);
+  if (cycling && !window.__turboT) window.__turboT = setInterval(turboTick, 5000);
   if (!cycling && window.__turboT) { clearInterval(window.__turboT); window.__turboT = null; }
 }
 
@@ -285,6 +323,18 @@ function sizePrompt() {
 }
 addEventListener("resize", sizePrompt);
 if (document.fonts) document.fonts.ready.then(sizePrompt);
+// Same for the issue: Turbo swaps whole conversations, so reserve the tallest one at this width.
+function sizeIssue() {
+  const body = document.getElementById("issue"), keep = { ...s };
+  body.style.minHeight = "";
+  let max = 0;
+  for (const st of [{ mode: "today", style: "purple" }, ...TURBO.map((_, i) => ({ mode: "proposal", style: "custom", turbo: i }))]) {
+    Object.assign(s, st); fillIssue(); max = Math.max(max, body.getBoundingClientRect().height);
+  }
+  s = keep; body.style.minHeight = Math.ceil(max) + "px"; fillIssue();
+}
+addEventListener("resize", sizeIssue);
+if (document.fonts) document.fonts.ready.then(sizeIssue);
 document.getElementById("thread").addEventListener("click", ev => {
   const box = ev.target.closest(".pick"); if (!box) return;
   s.guess = box.dataset.pick === "agent" ? "right" : "wrong"; s.mode = "proposal"; s.justRevealed = true;
@@ -300,6 +350,7 @@ document.getElementById("prompt").addEventListener("click", ev => {
 document.getElementById("reset").onclick = () => { clearTimeout(window.__revealT); document.querySelector(".seg.mode").classList.remove("reveal"); s = initial(); render(); };
 render();
 sizePrompt();
+sizeIssue();
 requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector(".seg.mode").classList.remove("still")));
 addEventListener("resize", placeThumb);
 if (document.fonts) document.fonts.ready.then(placeThumb);
