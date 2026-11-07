@@ -4,23 +4,24 @@
 >
 > Matt plans to publish the entire repo, including its full git history, on GitHub, and to serve the site from it. **Treat every commit as public from the moment it's made.** Rewriting history after pushing doesn't really take anything back.
 >
-> **Never commit:**
-> - Personal info: email addresses, phone numbers, home or work details, or names of people other than public GitHub handles we cite on purpose.
-> - Absolute local paths (`/Users/...`, `~/...`, app or scratch folders), machine names, or anything else from this computer. Use repo-relative paths only.
-> - Secrets of any kind: tokens, keys, `.env` files, cookies, or screenshots that contain them.
-> - Private conversation details, or other people's content that isn't already public.
-> - Image metadata. PNGs are rendered with headless Chrome, which writes none. Check any image that comes from somewhere else.
+> **The main thing to watch for: details about Matt's machine, network, and environment.** Never commit:
+> - **Paths:** absolute or home-relative paths (`/Users/...`, `/home/...`, `~/...`, `/private/...`, `/Applications/...`), app-support, scratch, or temp folders, or OS-specific install locations. Use repo-relative paths. Refer to tools by name or by a variable such as `$CHROME`.
+> - **Machine specifics:** usernames, hostnames, computer names, OS or kernel versions, hardware, installed-app lists, or shell and tool configuration.
+> - **Networking:** IP addresses, internal hostnames (`*.local`, `*.lan`, `*.internal`), VPN or proxy details, Wi-Fi names, or ports of anything other than this repo's own preview server (`localhost:8765` is fine).
+> - **Environment:** env var values, `.env` files, shell history, terminal output, logs, or screenshots of the desktop or terminal.
+> - **Secrets:** tokens, keys, cookies, or anything that looks like one.
+> - **Image metadata.** PNGs rendered with headless Chrome have none. Check any image that comes from somewhere else.
 >
-> **Before every commit**, run this check. Anything it prints needs a deliberate decision:
+> **Already public, but still don't copy it into files:** Matt's GitHub email and the `mweberxyz` handle are public through Matt's GitHub activity, so commit authorship is fine as it is. Being public elsewhere is no reason to repeat them in repo content, so leave them out unless they serve the site (for example `AUTHOR_URL`).
+>
+> **Public by design:** Matt's first name, the placeholder `mweber` handle in the mockups, the five cited repos, and the drafts in `outreach/` and `LAUNCH.md`. If the repo goes public before launch, those drafts are visible early, so time the visibility switch with launch.
+>
+> **Before every commit**, run this check. Anything it prints needs a deliberate decision. The section above is expected to match its own examples.
 > ```bash
-> git diff --cached | grep -n -i -E '/Users/|/home/|~/|@[a-z0-9-]+\.(dev|xyz|com|io)|ghp_|github_pat_|token=|password|secret|\.env'
+> git diff --cached | grep -n -i -E '/(Users|home|private|var/folders|Applications|Library)/|~/|\b([0-9]{1,3}\.){3}[0-9]{1,3}\b|\.(local|lan|internal)\b|Darwin|ghp_|github_pat_|token=|password|secret|\.env'
 > ```
 >
-> **Commit identity is public too.** Commits are currently authored with the email in Matt's global git config. Matt has been told this and hasn't yet decided whether to switch to a GitHub `noreply` address. Until Matt decides, don't change git config or rewrite history.
->
-> **Already public by design:** Matt's first name, the `mweber` handle in the mockups, the five cited repos, and the drafts in `outreach/` and `LAUNCH.md`. If the repo goes public before launch, those drafts are visible early, so time the visibility switch with launch.
->
-> **Last audit: 2026-11-06.** Full history, all files, and PNG metadata were checked. No personal info, local paths, or secrets were found. The commit author email above is the only identifying detail.
+> **Last audit: 2026-11-06.** Full history, all files, and PNG metadata were checked for paths, machine, network, and environment details, and for secrets. The only finding was the Chrome install path in the render commands, which was replaced with `$CHROME`.
 
 ## What this is
 
@@ -61,7 +62,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 ## How to work on it
 
 - **Preview the site:** `python3 -m http.server 8765 --directory site` (also set up in `.claude/launch.json` as `site`).
-- **Re-render a mockup PNG** (2x) after editing its HTML:
+- **Re-render a mockup PNG** (2x) after editing its HTML. `$CHROME` is any Chrome or Chromium binary; set it in your own shell and never commit its value.
   ```bash
   "$CHROME" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1280,760 --screenshot="$PWD/mockups/1-comment-thread.png" "file://$PWD/mockups/1-comment-thread.html"
   ```
@@ -94,7 +95,6 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - [x] Moved into this repo (2026-11-06).
 - [x] "Full feature request" page on the site, rendered live from the request markdown.
 - [ ] Iterate on content and design with Matt. ← **current**
-- [ ] Decide the commit email: keep the current global git email or switch to a GitHub noreply address (would rewrite the local history before the first push).
 - [ ] Duplicate check: GitHub changelog plus community discussions.
 - [ ] Decide on hosting. GitHub Pages serves from the repo root or `/docs` only, not `/site`, so either move the folder or use a Pages workflow. Either way, the deploy must **copy the symlinked files as real files** (e.g. `cp -RL site/ out/`), because hosts may not follow symlinks.
 - [ ] Fill placeholders, then launch per `LAUNCH.md`.
@@ -105,4 +105,5 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Added working agreements to commit proactively and keep CLAUDE.md current.
 - **2026-11-06:** Cut the "What this isn't" section from the site to make it punchier. The Non-goals section stays in the feature request.
 - **2026-11-06:** Added `site/request.html`, which renders the feature request live from the markdown via symlinks, so the site and the request can be reviewed together while iterating. The comparison table stacks on phones.
+- **2026-11-06:** Clarified with Matt that the GitHub email and handle are already public, so commit authorship is fine but they shouldn't be repeated in files. The real concern is machine, network, path, and environment details. Re-audited: the Chrome install path in the render commands (in earlier commits) was the only finding, and it's now `$CHROME`.
 - **2026-11-06:** The repo will be published on GitHub with full history. A privacy audit found nothing to fix; the only identifying detail is the commit author email. Added the public-repo warning section and a pre-commit check to the top of this file.
