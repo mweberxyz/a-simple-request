@@ -4,7 +4,7 @@
 
 **Flair:** Built with Claude. (Rule 7: say what was built, how Claude helped in detail, and that it's free. Rule 10: never ask for Reddit upvotes. Posting needs more than 100 karma.)
 
-**Type:** Text post with the demo link near the top. Check the sub's rules first; if link posts fit better, link https://mweberxyz.github.io/a-simple-request/ and put the body in a first comment.
+**Type:** Text post (not a link post). Rule 7 needs the description, how Claude helped, and "free" in the post itself, not in a comment.
 
 **Body:**
 
