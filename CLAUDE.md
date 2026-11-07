@@ -49,7 +49,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **Nothing goes out without Matt.** Claude never posts, deploys, files, or pushes anything external. Matt posts the request and the Reddit post personally, by hand. A proposal about labeling agent posts loses credibility if an agent posts it.
 - **Facts get checked before they're cited.** Any link or claim that will appear under Matt's name is looked up first.
 - **Iteration mode (since 2026-11-06):** Matt is iterating. Don't end turns with "what's next / ready to launch?" questions until Matt says they're ready.
-- Matt rewrites copy in his own voice. Treat the drafted text as a starting point, not final.
+- Matt rewrites copy in their own voice. Treat the drafted text as a starting point, not final.
 
 ## Placeholders still to fill
 
