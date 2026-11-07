@@ -3,6 +3,7 @@
 **Approach:** a discussion, not a launch. The post is about a problem engineers already have at work, across GitHub, Jira, Slack and the rest, and it asks how other teams handle it. The demo is linked once, in passing, as a GitHub-flavored illustration. The GitHub discussion isn't linked; share it in a comment only if someone asks where to follow along. No asks of any kind (votes, reactions, upvotes).
 
 **Before posting:**
+- The sub only allows AI discussion on Wednesdays and Saturdays. Post on one of those days.
 - Matt will rewrite this in his own words and ask Claude for feedback. This draft is the starting point.
 - Read the sub's current rules and flair options. Claude couldn't open Reddit from here, so nothing below has been checked against them.
 - If much of this wording survives, keep the disclosure line at the end.
