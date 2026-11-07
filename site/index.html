@@ -55,28 +55,30 @@ section { padding: 56px 0; }
 .sec-head .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
 h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.015em; margin: 6px 0 12px; }
 .sec-head p { color: var(--ink-2); margin: 0; }
-.stage { max-width: 880px; margin: 0 auto; padding: 12px 0 40px; display: flex; flex-direction: column; }
-@media (max-width: 720px) { .stage .toolbar { order: 3; margin: 16px 0 0; } .stage .more { order: 4; } .prompt { min-height: 0; margin-bottom: 16px; } .prompt h1 { font-size: 25px; } .prompt p { font-size: 15.5px; } }
-.prompt { margin: 8px 0 22px; min-height: 7.2em; }
+.stage { max-width: 1040px; margin: 0 auto; padding: 12px 0 40px; display: flex; flex-direction: column; }
+@media (max-width: 1100px) { .stage .toolbar { order: 3; margin: 16px 0 0; flex-wrap: wrap; align-items: flex-start; } .toolbar .modegrp { width: 100%; } .toolbar .grp { flex-wrap: wrap; flex-shrink: 1; max-width: 100%; } .toolbar .custom { position: static; box-shadow: none; border: 0; padding: 0; background: none; flex-basis: 100%; margin-left: 2px; } .toolbar .custom.off { display: none; } .stage .more { order: 4; } }
+@media (max-width: 720px) { .prompt { min-height: 0; margin-bottom: 16px; } .prompt h1 { font-size: 25px; } .prompt p { font-size: 15.5px; } }
+.prompt { margin: 8px 0 22px; }
 .prompt h1 { font-size: clamp(26px, 4.2vw, 40px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 10px; }
 .prompt p { margin: 0; color: var(--ink-2); font-size: clamp(16px, 2vw, 18px); }
 .prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
-.toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; margin-bottom: 14px; }
-.toolbar .grp { display: flex; flex-direction: column; gap: 6px; }
-.toolbar .lbl { font-size: 12px; font-weight: 600; color: var(--ink-3); }
-.toolbar .grp[hidden] { display: none; }
+.toolbar { display: flex; flex-wrap: nowrap; align-items: center; gap: 10px 14px; margin-bottom: 14px; }
+.toolbar .grp { display: flex; flex-direction: row; align-items: center; gap: 7px; position: relative; flex-shrink: 0; }
+.toolbar .modegrp { margin-right: auto; }
+.toolbar .lbl { font-size: 12px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+.toolbar .grp.off { visibility: hidden; }
 .seg { display: flex; background: color-mix(in srgb, var(--ink) 7%, transparent); border-radius: 9px; padding: 3px; gap: 2px; }
 .seg button { border: 0; background: transparent; color: var(--ink-2); font: 600 13px/1 inherit; font-family: inherit; padding: 8px 11px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
 .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
 .seg.mode button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
-.custom { display: flex; align-items: center; gap: 8px; }
-.custom[hidden] { display: none; }
+.custom { display: flex; align-items: center; gap: 10px; position: absolute; right: 0; top: calc(100% + 8px); z-index: 4; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; box-shadow: var(--shadow); white-space: nowrap; }
+.custom.off { visibility: hidden; }
 .swatches { display: flex; gap: 6px; }
 .swatches button { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
 .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
 .suffix { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--ink-3); }
 .suffix input { width: 7.5em; font: inherit; font-size: 13px; padding: 5px 7px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
-.reset { background: none; border: 0; color: var(--ink-3); font: inherit; font-size: 13px; cursor: pointer; padding: 8px 0; margin-left: auto; }
+.reset { background: none; border: 0; color: var(--ink-3); font: inherit; font-size: 13px; cursor: pointer; padding: 8px 0; white-space: nowrap; }
 .reset:hover { color: var(--ink); }
 .pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
 .pick:hover { box-shadow: 0 0 0 3px var(--brand); transform: translateY(-1px); }
@@ -107,6 +109,9 @@ h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.0
 .box .bd p { margin: 0 0 8px; } .box .bd p:last-child { margin: 0; }
 .role { margin-left: auto; border: 1px solid var(--gh-border); border-radius: 99px; padding: 0 8px; font-size: 12px; }
 .tag { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--gh-border); color: var(--gh-muted); border-radius: 99px; padding: 0 7px; font-size: 12px; font-weight: 500; line-height: 18px; cursor: help; position: relative; white-space: nowrap; }
+.box .hd .tag { margin: -1px 0; }
+.when .short { display: none; }
+@media (max-width: 560px) { .box .hd { flex-wrap: nowrap; white-space: nowrap; } .box .hd .role, .box .hd .via { display: none; } .when .long { display: none; } .when .short { display: inline; } .pick .hd::after { content: none; } }
 .tag svg { width: 12px; height: 12px; fill: currentColor; display: none; }
 .tag.purple { color: #8250df; border-color: #d8b9ff; background: #fbefff; }
 .tag.glyph svg { display: block; }
@@ -176,17 +181,14 @@ footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align:
     <div class="prompt" id="prompt" aria-live="polite"></div>
 
     <div class="toolbar" aria-label="Demo controls">
-      <div class="grp"><div class="seg mode" data-key="mode" aria-label="Show GitHub today or tomorrow"><button data-v="today">GitHub today</button><button data-v="proposal">GitHub tomorrow</button></div></div>
-      <div class="grp js-p"><span class="lbl">Looking at it as</span>
-        <div class="seg" data-key="viewer"><button data-v="reader">A reader</button><button data-v="author">github-user-a</button></div></div>
-      <div class="grp js-p"><span class="lbl">Unreviewed agent posts</span>
+      <div class="grp modegrp"><div class="seg mode" data-key="mode" aria-label="Show GitHub today or tomorrow"><button data-v="today">GitHub today</button><button data-v="proposal">GitHub tomorrow</button></div><button class="reset" id="reset" title="Start over">↺ Reset</button></div>
+      <div class="grp js-p"><span class="lbl">View as</span>
+        <div class="seg" data-key="viewer"><button data-v="reader">Reader</button><button data-v="author">github-user-a</button></div></div>
+      <div class="grp js-p"><span class="lbl">Agent posts</span>
         <div class="seg" data-key="filter"><button data-v="show">Show</button><button data-v="collapse">Collapse</button><button data-v="hide">Hide</button></div></div>
-      <div class="grp js-p"><span class="lbl">Tag style</span>
-        <div class="custom-row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <div class="seg" data-key="style"><button data-v="grey">Grey</button><button data-v="purple">Purple</button><button data-v="custom">Mine</button></div>
-          <div class="custom" id="customCtl" hidden><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div>
-        </div></div>
-      <button class="reset" id="reset">↺ Start over</button>
+      <div class="grp js-p"><span class="lbl">Tag</span>
+        <div class="seg" data-key="style"><button data-v="grey">Grey</button><button data-v="purple">Purple</button><button data-v="custom">Mine</button></div>
+        <div class="custom off" id="customCtl"><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div></div>
     </div>
 
     <div class="win" role="region" aria-label="Mockup of a GitHub-style issue thread">
@@ -267,6 +269,7 @@ const initial = () => ({ mode: "today", guess: null, viewer: "reader", filter: "
 let s = initial();
 try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
 
+const when = (long, short) => `<span class="when"><span class="long">${long}</span><span class="short">${short}</span></span>`;
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function tagHTML() {
@@ -277,14 +280,14 @@ function tagHTML() {
     style = `color:${c.fg};border-color:${c.bd};background:${c.bg}`;
     if (s.suffix.trim()) label += " · " + esc(s.suffix.trim());
   }
-  return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg>${label}<span class="tip" role="tooltip"><b>Posted by an agent on github-user-a's behalf</b>github-user-a hasn't reviewed this. The agent session was authorized by github-user-a on Nov 4.</span></span>`;
+  return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg>${label}<span class="tip" role="tooltip"><b>Posted by an agent on github-user-a's behalf</b>Sent via Claude Code. github-user-a hasn't reviewed this. The agent session was authorized by github-user-a on Nov 4.</span></span>`;
 }
 
-const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> commented yesterday</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
+const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")}</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can be written to a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
 const humanBody = `<p>I'd rather fix this by honoring the server's <code>Keep-Alive: timeout</code> header than by changing the default. I'm taking a look.</p>`;
 const pickable = () => s.mode === "today" && !s.guess;
-const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> commented 10 minutes ago <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
+const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 10 minutes ago", "10m ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
 
 const PROMPTS = {
   ask:     ["Two of these comments are from github-user-a. github-user-a never read one of them.", "That's GitHub today: an agent using github-user-a's token looks exactly like github-user-a. <b>Click the comment you think github-user-a actually wrote.</b>"],
@@ -302,10 +305,10 @@ function promptKey() {
 
 function agentComment() {
   if (s.mode === "today") {
-    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd"><b>github-user-a</b> commented 2 hours ago <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>`;
+    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>`;
   }
   if (s.endorsed) {
-    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> commented 2 hours ago <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>
+    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>
       <div class="event"><span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#1a7f37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span><span><b>github-user-a</b> reviewed and endorsed the agent's comment above · just now</span></div>`;
   }
   if (s.filter === "hide") return s.viewer === "author" ? `<div class="hidden-note">1 unreviewed agent comment is hidden by your filter.</div>` : "";
@@ -314,7 +317,7 @@ function agentComment() {
   }
   const endorse = s.viewer === "author"
     ? `<div class="banner flash"><p><b>Your agent posted this without your review.</b><br><small>Only you see this box. Endorsing removes the tag for everyone.</small></p><button class="ghbtn go" id="endorse">Endorse as mine</button></div>` : "";
-  return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> ${tagHTML()} commented 2 hours ago <span class="via">· via Claude Code</span><span class="role">Member</span></div><div class="bd">${endorse}${agentBody}</div></div></div>`;
+  return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> ${tagHTML()} ${when("commented 2 hours ago", "2h ago")} <span class="via">· via Claude Code</span><span class="role">Member</span></div><div class="bd">${endorse}${agentBody}</div></div></div>`;
 }
 
 function render() {
@@ -322,12 +325,12 @@ function render() {
   const [h, sub] = PROMPTS[promptKey()];
   const touch = matchMedia("(hover: none)").matches;
   document.getElementById("prompt").innerHTML = `<h1>${h}</h1><p>${touch ? sub.replace(/Hover the tag/g, "Tap the tag") : sub}</p>`;
-  document.querySelectorAll(".js-p").forEach(g => g.hidden = s.mode !== "proposal");
+  document.querySelectorAll(".js-p").forEach(g => { const off = s.mode !== "proposal"; g.classList.toggle("off", off); g.inert = off; });
   document.querySelectorAll(".seg").forEach(seg => {
     const key = seg.dataset.key;
     seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === s[key])));
   });
-  document.getElementById("customCtl").hidden = s.style !== "custom";
+  const cc = document.getElementById("customCtl"); cc.classList.toggle("off", s.style !== "custom"); cc.inert = s.style !== "custom";
   document.querySelectorAll("#swatches button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === s.color)));
   const e = document.getElementById("endorse"); if (e) e.onclick = () => { s.endorsed = true; render(); };
   const x = document.getElementById("expand"); if (x) x.onclick = () => { s.expanded = true; render(); };
@@ -342,6 +345,18 @@ document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", e
 }));
 const sfx = document.getElementById("suffix"); sfx.value = s.suffix;
 sfx.addEventListener("input", () => { s.suffix = sfx.value; render(); });
+// Keep the page still: size the prompt to its tallest message at this width.
+function sizePrompt() {
+  const el = document.getElementById("prompt");
+  const probe = el.cloneNode(false); probe.removeAttribute("id");
+  probe.style.cssText = `position:absolute;visibility:hidden;left:0;top:0;width:${el.clientWidth}px;min-height:0;margin:0`;
+  document.body.appendChild(probe);
+  let max = 0;
+  for (const [h, sub] of Object.values(PROMPTS)) { probe.innerHTML = `<h1>${h}</h1><p>${sub}</p>`; max = Math.max(max, probe.getBoundingClientRect().height); }
+  probe.remove(); el.style.minHeight = Math.ceil(max) + "px";
+}
+addEventListener("resize", sizePrompt);
+if (document.fonts) document.fonts.ready.then(sizePrompt);
 document.getElementById("thread").addEventListener("click", ev => {
   const box = ev.target.closest(".pick"); if (!box) return;
   s.guess = box.dataset.pick === "human" ? "right" : "wrong"; s.mode = "proposal"; render();
@@ -353,6 +368,7 @@ document.getElementById("prompt").addEventListener("click", ev => {
 });
 document.getElementById("reset").onclick = () => { s = initial(); sfx.value = s.suffix; render(); };
 render();
+sizePrompt();
 </script>
 </body>
 </html>

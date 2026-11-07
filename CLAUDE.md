@@ -53,7 +53,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 | Path | What |
 |---|---|
 | `request/feature-request.md` | GitHub discussion text. Has `SITE_URL` placeholder and image slots. |
-| `site/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode, which asks visitors to pick which of mweber's two comments mweber actually wrote, then reveals the answer and switches to "GitHub tomorrow" (tag, viewer, filter, and tag-style controls). On phones the controls sit below the thread so the result headline and the tag fit on one screen. URLs and author are set in constants at the bottom of the file. |
+| `site/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode, which asks visitors to pick which of mweber's two comments mweber actually wrote, then reveals the answer and switches to "GitHub tomorrow" (tag, viewer, filter, and tag-style controls). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, hidden controls keep their space (`visibility`, not `display`), the "Mine" picker is a popover, and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). At 1100px and up the controls sit in one row above the thread; below that they sit under it. Reset is next to the switch. URLs and author are set in constants at the bottom of the file. |
 | `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the call-out card right below the demo and from the CTA on `index.html`. |
 | `site/request.md`, `site/mockups` | **Symlinks** to `../request/feature-request.md` and `../mockups`. The request page always shows the current text and mockups, so edit the originals and never these. |
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
@@ -69,6 +69,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
   "$CHROME" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1280,760 --screenshot="$PWD/mockups/1-comment-thread.png" "file://$PWD/mockups/1-comment-thread.html"
   ```
   Window heights used: 1→760, 2→730, 3→720, 4→710.
+- **Check for layout shift** after any demo change: in the browser console, record the top of `.win` and each `#thread .box` in every state (today, tomorrow, each tag style, after a guess). The numbers must match at 1280, 1024, and 375 px wide, with no horizontal scroll.
 - **Re-render the OG image** (1x, 1200×630) from `mockups/og-card.html` into `site/og.png`.
 
 ## Working agreements
@@ -116,3 +117,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Landing page principle: the demo hooks people, and the full feature request is where they go next. Anything the request already covers well comes off the landing page. Removed "The proposal: four small pieces" and replaced it with a prominent "Read the full feature request" card right below the demo.
 - **2026-11-06:** Landing page now opens directly on the demo, to stand apart from generic AI-made landing pages (no big centered hero, kicker pill, or sidebar). The hook is a guess: two mweber comments look identical today, and one was never read by mweber. Picking one reveals the answer and the proposal's tag. Checked on desktop and phone, in light and dark.
 - **2026-11-06:** Renamed the demo switch to "GitHub today | GitHub tomorrow" and removed the "Show it as" label.
+- **2026-11-06:** Removed all layout shift between GitHub today and GitHub tomorrow (prompt height, toolbar, header wrapping, color picker). Verified identical positions at 1280, 1024, and 375 px.
