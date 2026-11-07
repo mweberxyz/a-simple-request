@@ -129,10 +129,6 @@ h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.0
 .quote span { color: var(--ink-3); }
 .steps { display: grid; gap: 16px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .steps { grid-template-columns: repeat(2, 1fr); } }
-.isnt { display: grid; gap: 10px; grid-template-columns: 1fr; padding: 0; margin: 0; list-style: none; }
-@media (min-width: 760px) { .isnt { grid-template-columns: repeat(3, 1fr); } }
-.isnt li { border-left: 3px solid var(--line); padding: 4px 0 4px 14px; color: var(--ink-2); font-size: 15.5px; }
-.isnt li b { color: var(--ink); display: block; }
 
 .proof { display: grid; gap: 12px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .proof { grid-template-columns: repeat(2, 1fr); } }
@@ -243,17 +239,6 @@ footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align:
       <div class="card"><div class="n">3</div><h3>Endorse as mine</h3><p>Review an agent's comment or PR and endorse it. The tag goes away, and the timeline records that you did. Review what matters and let the rest go out tagged.</p></div>
       <div class="card"><div class="n">4</div><h3>Readers choose what they see</h3><p>Show, collapse, or hide unreviewed agent activity per repo, in notifications, and in the API. Maintainers get a signal they can actually use.</p></div>
     </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head"><div class="eyebrow">What this isn't</div><h2>No detection, no shaming, no new accounts.</h2></div>
-    <ul class="isnt">
-      <li><b>Not AI detection.</b>The tag comes from what you declared about the session. Nothing guesses from the text.</li>
-      <li><b>Not a penalty.</b>Agent sessions keep the same permissions. The tag only says whether a person reviewed the content.</li>
-      <li><b>Not bot accounts.</b>Bot accounts break the link to the responsible person. This keeps that link.</li>
-    </ul>
   </div>
 </section>
 

@@ -76,3 +76,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 
 - **2026-11-06:** Initial mockups, site, request, outreach drafts. A side session researched prior art and the five workaround repos were verified and added.
 - **2026-11-06:** Added working agreements to commit proactively and keep CLAUDE.md current.
+- **2026-11-06:** Cut the "What this isn't" section from the site to make it punchier. The Non-goals section stays in the feature request.
