@@ -1,7 +1,7 @@
 <!--
   Where: github.com/orgs/community/discussions → New discussion.
-  Check which category GitHub currently uses for product feedback before posting
-  (it has been "General" / "Product Feedback"; pick the one that fits).
+  Category: "💭 Other Feature Feedback, Questions, & Ideas". Feedback type, if asked: "Product Feedback".
+  Then reply briefly in the pinned "Which maintainer improvements would help you most?" discussion, linking here (see LAUNCH.md step 2).
   After the site launches, add a link to it at the end.
 -->
 
