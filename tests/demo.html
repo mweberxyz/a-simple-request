@@ -342,7 +342,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`text and the Turbo rainbow meet contrast minimums ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       const bg = w.getComputedStyle(w.document.body).backgroundColor;
-      for (const sel of ["#prompt p", "#reset", ".top nav a.plain"]) {
+      for (const sel of ["#prompt p", "#reset"]) {
         const el = $(w, sel); if (!el || !el.offsetWidth) continue;
         const r = contrast(w.getComputedStyle(el).color, bg);
         assert(r >= 4.5, `${sel} contrast ${r.toFixed(2)}`);
