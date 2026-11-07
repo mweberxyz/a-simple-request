@@ -60,6 +60,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
 | `mockups/*.html`, `mock.css` | Sources for the four mockup PNGs attached to the request. |
 | `outreach/reddit-post.md` | Reddit post plus notes for r/github, HN, and social media. |
+| `tests/demo.html`, `tests/run.sh` | Behavior tests for the site (see "Run the tests"). Not part of the deployed site. |
 | `LAUNCH.md` | Launch checklist, step by step. |
 
 ## How to work on it
@@ -70,7 +71,11 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
   "$CHROME" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --window-size=1280,760 --screenshot="$PWD/mockups/1-comment-thread.png" "file://$PWD/mockups/1-comment-thread.html"
   ```
   Window heights used: 1→760, 2→730, 3→720, 4→710.
-- **Check for layout shift** after any demo change: in the browser console, record the top of `.win` and each `#thread .box` in every state (today, tomorrow, each tag style, after a guess). The numbers must match at 1280, 1024, and 375 px wide, with no horizontal scroll.
+- **Run the tests** after any site change, and before committing it:
+  ```bash
+  CHROME="$CHROME" tests/run.sh
+  ```
+  `tests/demo.html` loads the real site in frames at 1280, 1024, 375, and 360 px and checks the demo: the opening puzzle, right and wrong guesses, guessing again after going back to today, **no layout shift between states**, no horizontal scroll or header overflow, endorsing, reader filters, reset during the reveal, reduced motion, and that the full-request page renders with its four images. The runner serves the repo on `localhost:8799` and exits non-zero on failure. You can also open `/tests/demo.html` in a browser from a server rooted at the repo to see the results. When you add demo behavior, add a pointed test for it.
 - **Re-render the OG image** (1x, 1200×630) from `mockups/og-card.html` into `site/og.png`.
 
 - **Motion:** the site respects `prefers-reduced-motion` with a single catch-all rule at the end of the `<style>` in `site/index.html` (no animation, transitions, or smooth scrolling), plus a check in the JS auto-scroll. New motion is covered automatically. Make sure every animated element still looks right in its final, unanimated state.
@@ -129,3 +134,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** The "GitHub today | GitHub tomorrow" switch is now large (18px, sliding purple highlight) and is the only control above the thread; the rest moved below it. When a guess flips the switch from the opening state, it plays a reveal: the highlight eases across with a slight overshoot, the switch swells with a pulse ring, and the agent tag pops in about 1s later. Reset cancels the animation. Nothing animates when reduced motion is on.
 - **2026-11-06:** Reduced-motion audit. Six motions weren't covered (smooth scroll, JS auto-scroll, comment hover lift and hint fade, endorsed event pop, endorse banner flash, switch label fades). Replaced the separate rules with one catch-all and made the JS scroll respect the setting. Verified by applying the rule and running the whole demo: no running animations, and every final state is correct.
 - **2026-11-06:** Fix: comments are clickable whenever the demo is in "today" mode, including after going back from tomorrow ("Can you still spot it?"). Each guess replays the reveal.
+- **2026-11-06:** Added `tests/` (38 checks across 4 widths). On its first run it found a real bug: at 360 px a 16-character custom tag suffix overflowed the comment header. Fixed by truncating the tag label with an ellipsis on narrow screens (the tooltip is unaffected).

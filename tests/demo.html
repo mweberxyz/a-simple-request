@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site Tests</title>
+<style>
+  body { font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 24px; color: #1f2328; background: #fff; }
+  h1 { font-size: 20px; margin: 0 0 12px; }
+  #summary { font-weight: 700; margin-bottom: 12px; }
+  .pass { color: #1a7f37; } .fail { color: #cf222e; }
+  li { margin: 2px 0; } li small { color: #59636e; }
+  #frames { position: absolute; left: -10000px; top: 0; }
+  #frames iframe { border: 0; display: block; }
+</style>
+</head>
+<body>
+<h1>Site tests</h1>
+<div id="summary">Running…</div>
+<ul id="list"></ul>
+<pre id="results" hidden></pre>
+<div id="frames"></div>
+
+<script>
+// Loads the real site in iframes at several widths and checks the demo's behavior.
+// Run headless with tests/run.sh, or open /tests/demo.html from a server rooted at the repo.
+const SITE = "../site/index.html", REQUEST = "../site/request.html";
+const WIDTHS = [1280, 1024, 375, 360];  // 360 = common Android width
+const results = [];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function load(url, width, height = 900) {
+  return new Promise((resolve, reject) => {
+    const f = document.createElement("iframe");
+    f.style.width = width + "px"; f.style.height = height + "px";
+    f.onload = async () => { await sleep(300); resolve(f.contentWindow); };
+    f.onerror = reject;
+    f.src = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
+    document.getElementById("frames").appendChild(f);
+  });
+}
+async function test(name, fn) {
+  try { await fn(); results.push({ name, ok: true }); }
+  catch (e) { results.push({ name, ok: false, error: String(e && e.message || e) }); }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg); }
+function eq(a, b, msg) { if (a !== b) throw new Error(`${msg}: expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`); }
+
+// Helpers that drive the demo the way a visitor would.
+const $ = (w, sel) => w.document.querySelector(sel);
+const $$ = (w, sel) => [...w.document.querySelectorAll(sel)];
+const h1 = w => $(w, "#prompt h1").textContent.trim();
+const mode = (w, v) => $(w, `[data-key=mode] [data-v=${v}]`).click();
+const pick = (w, who) => $(w, `.pick[data-pick=${who}]`).click();
+const reset = w => $(w, "#reset").click();
+const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.getBoundingClientRect().top + w.scrollY).toFixed(1)).join(",");
+
+(async () => {
+  for (const width of WIDTHS) {
+    const w = await load(SITE, width);
+    const tag = `@${width}px`;
+
+    await test(`opens on the puzzle ${tag}`, async () => {
+      reset(w);
+      eq(h1(w), "Spot the slop.", "headline");
+      eq($$(w, ".pick").length, 2, "clickable comments");
+      eq($$(w, "#thread .tag").length, 0, "no agent tag today");
+      assert($(w, "#toolbar").hidden, "secondary controls hidden today");
+    });
+
+    await test(`picking the agent's comment is right ${tag}`, async () => {
+      reset(w); pick(w, "agent");
+      assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
+      eq($$(w, "#thread .tag").length, 1, "agent tag shown");
+      assert(!$(w, "#toolbar").hidden, "controls visible tomorrow");
+      assert($(w, ".seg.mode").classList.contains("reveal"), "reveal animation triggered");
+    });
+
+    await test(`picking the human's comment is wrong ${tag}`, async () => {
+      reset(w); pick(w, "human");
+      assert(h1(w).startsWith("Nope"), `headline was "${h1(w)}"`);
+    });
+
+    await test(`can guess again after going back to today ${tag}`, async () => {
+      reset(w); pick(w, "human"); mode(w, "today");
+      eq(h1(w), "Back to today. Can you still spot it?", "headline");
+      eq($$(w, ".pick").length, 2, "comments clickable again");
+      pick(w, "agent");
+      assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
+    });
+
+    await test(`thread never moves between states ${tag}`, async () => {
+      reset(w); const seen = { today: positions(w) };
+      mode(w, "proposal"); seen.tomorrow = positions(w);
+      for (const st of ["purple", "custom", "grey"]) { $(w, `[data-key=style] [data-v=${st}]`).click(); seen[st] = positions(w); }
+      mode(w, "today"); seen.back = positions(w);
+      reset(w); pick(w, "agent"); seen.right = positions(w);
+      reset(w); pick(w, "human"); seen.wrong = positions(w);
+      const distinct = new Set(Object.values(seen));
+      assert(distinct.size === 1, "positions differ: " + JSON.stringify(seen));
+    });
+
+    await test(`no horizontal scroll and one-line headers ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      $(w, "[data-key=style] [data-v=custom]").click();
+      const input = $(w, "#suffix"); input.value = "sixteen-chars-xx"; input.dispatchEvent(new w.Event("input"));
+      eq(w.document.documentElement.scrollWidth, width, "page width");
+      assert(!$$(w, "#thread .hd").some(h => h.scrollWidth > h.clientWidth + 1), "a comment header overflows");
+      input.value = "triage"; input.dispatchEvent(new w.Event("input")); reset(w);
+    });
+
+    await test(`endorsing removes the tag ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      $(w, "[data-key=viewer] [data-v=author]").click();
+      $(w, "#endorse").click();
+      eq($$(w, "#thread .tag").length, 0, "tag after endorsing");
+      assert($(w, "#thread .event"), "endorsed event in timeline");
+      assert(h1(w).startsWith("Endorsed"), `headline was "${h1(w)}"`);
+    });
+
+    await test(`reader filters collapse and hide the agent comment ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      $(w, "[data-key=filter] [data-v=collapse]").click();
+      assert($(w, "#thread .collapsed"), "collapsed row");
+      $(w, "[data-key=filter] [data-v=hide]").click();
+      eq($$(w, "#thread .box").length, 2, "only alice and the human comment remain");
+      reset(w);
+    });
+
+    await test(`reset cancels a reveal in progress ${tag}`, async () => {
+      reset(w); pick(w, "agent"); reset(w);
+      assert(!$(w, ".seg.mode").classList.contains("reveal"), "reveal class still set");
+      eq(h1(w), "Spot the slop.", "headline after reset");
+    });
+  }
+
+  // Reduced motion: the catch-all rule exists and, applied, stops everything.
+  {
+    const w = await load(SITE, 1280);
+    await test("prefers-reduced-motion stops all motion", async () => {
+      const rule = [...w.document.styleSheets[0].cssRules].find(r => r.media && r.media.mediaText.includes("prefers-reduced-motion"));
+      assert(rule, "no prefers-reduced-motion rule");
+      const style = w.document.createElement("style");
+      style.textContent = [...rule.cssRules].map(r => r.cssText).join("\n");
+      w.document.head.appendChild(style);
+      reset(w); pick(w, "agent");
+      const running = w.document.getAnimations().length;
+      eq(running, 0, "running animations/transitions");
+      eq(w.getComputedStyle($(w, "#thread .tag")).opacity, "1", "tag visible without animation");
+      style.remove(); reset(w);
+    });
+  }
+
+  // The full feature request page renders from the markdown, with images.
+  {
+    const w = await load(REQUEST, 1024);
+    await test("full request page renders", async () => {
+      for (let i = 0; i < 30 && !$(w, "#doc h1"); i++) await sleep(100);
+      assert($(w, "#doc h1"), "no title rendered (markdown or marked.js failed to load)");
+      const h2s = $$(w, "#doc h2").map(h => h.textContent);
+      for (const want of ["Summary", "The problem", "Proposal", "People are already working around this"]) assert(h2s.includes(want), `missing section "${want}"`);
+      const imgs = $$(w, "#doc img");
+      eq(imgs.length, 4, "mockup images");
+      for (const img of imgs) { img.loading = "eager"; if (!img.complete) await new Promise(r => { img.onload = img.onerror = r; }); assert(img.naturalWidth > 0, "image failed: " + img.getAttribute("src")); }
+      assert(!w.document.body.innerText.includes("SITE_URL"), "SITE_URL placeholder visible");
+      assert(!$(w, "#doc").innerHTML.includes("&lt;!--"), "HTML comment visible");
+    });
+  }
+
+  // Report
+  const failed = results.filter(r => !r.ok);
+  document.getElementById("summary").innerHTML = failed.length
+    ? `<span class="fail">${failed.length} failed</span>, ${results.length - failed.length} passed`
+    : `<span class="pass">All ${results.length} passed</span>`;
+  document.getElementById("list").innerHTML = results.map(r =>
+    `<li class="${r.ok ? "pass" : "fail"}">${r.ok ? "✓" : "✗"} ${r.name}${r.ok ? "" : ` <small>${r.error.replace(/</g, "&lt;")}</small>`}</li>`).join("");
+  document.getElementById("results").textContent = JSON.stringify(results);
+  document.title = failed.length ? "FAIL" : "PASS";
+})();
+</script>
+</body>
+</html>

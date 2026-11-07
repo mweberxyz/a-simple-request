@@ -120,9 +120,10 @@ main.wrap { max-width: 1140px; }
 .box .bd p { margin: 0 0 8px; } .box .bd p:last-child { margin: 0; }
 .role { margin-left: auto; border: 1px solid var(--gh-border); border-radius: 99px; padding: 0 8px; font-size: 12px; }
 .tag { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--gh-border); color: var(--gh-muted); border-radius: 99px; padding: 0 7px; font-size: 12px; font-weight: 500; line-height: 18px; cursor: help; position: relative; white-space: nowrap; }
-.box .hd .tag { margin: -1px 0; }
+.box .hd .tag { margin: -1px 0; min-width: 0; }
+.tag .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .when .short { display: none; }
-@media (max-width: 560px) { .box .hd { flex-wrap: nowrap; white-space: nowrap; } .box .hd .role, .box .hd .via { display: none; } .when .long { display: none; } .when .short { display: inline; } .pick .hd::after { content: none; } }
+@media (max-width: 560px) { .box .hd { flex-wrap: nowrap; white-space: nowrap; } .box .hd b, .box .hd .when { flex-shrink: 0; } .box .hd .tag { flex-shrink: 1; } .box .hd .role, .box .hd .via { display: none; } .when .long { display: none; } .when .short { display: inline; } .pick .hd::after { content: none; } }
 .tag svg { width: 12px; height: 12px; fill: currentColor; display: none; }
 .tag.purple { color: #8250df; border-color: #d8b9ff; background: #fbefff; }
 .tag.glyph svg { display: block; }
@@ -230,7 +231,7 @@ function tagHTML() {
     if (s.suffix.trim()) label += " · " + esc(s.suffix.trim());
   }
   if (s.justRevealed) cls += " pop";
-  return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg>${label}<span class="tip" role="tooltip"><b>Posted by an agent on github-user-a's behalf</b>Sent via Claude Code. github-user-a hasn't reviewed this. The agent session was authorized by github-user-a on Nov 4.</span></span>`;
+  return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg><span class="txt">${label}</span><span class="tip" role="tooltip"><b>Posted by an agent on github-user-a's behalf</b>Sent via Claude Code. github-user-a hasn't reviewed this. The agent session was authorized by github-user-a on Nov 4.</span></span>`;
 }
 
 const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")}</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
