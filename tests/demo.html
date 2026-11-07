@@ -62,7 +62,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`opens on the puzzle ${tag}`, async () => {
       reset(w);
       eq(h1(w), "Spot the slop.", "headline");
-      eq($$(w, ".pick").length, 3, "clickable replies");
+      eq($$(w, ".pick").length, 2, "clickable replies");
       eq($$(w, "#thread .tag").length, 0, "no agent tag today");
       assert($(w, "#toolbar").hidden, "secondary controls hidden today");
     });
@@ -70,7 +70,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`picking the agent's comment is right ${tag}`, async () => {
       reset(w); pick(w, "agent");
       assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
-      eq($$(w, "#thread .tag").length, 2, "both agents tagged");
+      eq($$(w, "#thread .tag").length, 1, "agent tagged");
       assert(!$(w, "#toolbar").hidden, "controls visible tomorrow");
       assert($(w, ".seg.mode").classList.contains("reveal"), "reveal animation triggered");
     });
@@ -80,16 +80,11 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       assert(h1(w).startsWith("Nope"), `headline was "${h1(w)}"`);
     });
 
-    await test(`picking drive-by-dev's agent finds one of two ${tag}`, async () => {
-      reset(w); pick(w, "drive");
-      assert(h1(w).startsWith("That's one"), `headline was "${h1(w)}"`);
-      eq($$(w, "#thread .tag").length, 2, "both agents tagged");
-    });
 
     await test(`can guess again after going back to today ${tag}`, async () => {
       reset(w); pick(w, "human"); mode(w, "today");
-      eq(h1(w), "Back to today. Can you still spot them?", "headline");
-      eq($$(w, ".pick").length, 3, "replies clickable again");
+      eq(h1(w), "Back to today. Can you still spot it?", "headline");
+      eq($$(w, ".pick").length, 2, "replies clickable again");
       pick(w, "agent");
       assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
     });
@@ -118,7 +113,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w); mode(w, "proposal");
       $(w, "[data-key=viewer] [data-v=author]").click();
       $(w, "#endorse").click();
-      eq($$(w, "#thread .tag").length, 1, "only drive-by-dev's agent still tagged");
+      eq($$(w, "#thread .tag").length, 0, "tag after endorsing");
       assert($(w, "#thread .event"), "endorsed event in timeline");
       assert(h1(w).startsWith("Endorsed"), `headline was "${h1(w)}"`);
     });
@@ -126,7 +121,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`reader filters collapse and hide the agent comment ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       $(w, "[data-key=filter] [data-v=collapse]").click();
-      eq($$(w, "#thread .collapsed").length, 2, "collapsed rows");
+      eq($$(w, "#thread .collapsed").length, 1, "collapsed row");
       $(w, "[data-key=filter] [data-v=hide]").click();
       eq($$(w, "#thread .box").length, 2, "only alice and the human reply remain");
       reset(w);

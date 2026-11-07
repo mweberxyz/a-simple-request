@@ -93,7 +93,7 @@ main.wrap { max-width: 1140px; }
 .reset:hover { color: var(--ink); }
 .pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
 .pick:hover { box-shadow: 0 0 0 3px var(--brand); transform: translateY(-1px); }
-.pick .hd::after { content: "← an agent wrote this"; margin-left: auto; color: var(--brand); font-weight: 600; font-size: 12px; opacity: 0; transition: opacity .15s; }
+.pick .hd::after { content: "← the agent wrote this"; margin-left: auto; color: var(--brand); font-weight: 600; font-size: 12px; opacity: 0; transition: opacity .15s; }
 .pick:hover .hd::after { opacity: 1; }
 .pick .role { margin-left: 8px; }
 
@@ -190,7 +190,7 @@ main.wrap { max-width: 1140px; }
     </div>
     <div class="toolbar" id="toolbar" aria-label="Demo controls" hidden>
       <div class="grp js-p"><span class="lbl">View as</span>
-        <div class="seg" data-key="viewer"><button data-v="reader">Reader</button><button data-v="author">github-user-a</button></div></div>
+        <div class="seg" data-key="viewer"><button data-v="reader">Reader</button><button data-v="author">ozzie-dev</button></div></div>
       <div class="grp js-p"><span class="lbl">Agent posts</span>
         <div class="seg" data-key="filter"><button data-v="show">Show</button><button data-v="collapse">Collapse</button><button data-v="hide">Hide</button></div></div>
       <div class="grp js-p"><span class="lbl">Tag</span>
@@ -222,7 +222,8 @@ try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null
 const when = (long, short) => `<span class="when"><span class="long">${long}</span><span class="short">${short}</span></span>`;
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-function tagHTML(owner = "github-user-a", via = "Claude Code") {
+const AGENT_OWNER = "ozzie-dev";
+function tagHTML(owner = AGENT_OWNER, via = "") {
   let cls = "tag", style = "", label = "agent";
   if (s.style === "purple") cls += " purple glyph";
   if (s.style === "custom") {
@@ -235,27 +236,18 @@ function tagHTML(owner = "github-user-a", via = "Claude Code") {
 }
 
 const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")}</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached. What's the right fix?</p></div></div></div>`;
-const driveBody = `<p>Thanks for the detailed report! 🙌 <code>ECONNRESET</code> usually means the server closed the connection unexpectedly. A few things you can try:</p><p>1. Disable keep-alive for now<br>2. Increase your request timeout<br>3. Make sure you're on the latest version</p><p>Hope this helps! Let me know if the issue persists.</p>`;
-function driveComment() {
-  const av = `<div class="av" style="background:#bc4c00">D</div>`;
-  if (s.mode === "today") return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="drive"><div class="hd"><b>drive-by-dev</b> ${when("commented 5 hours ago", "5h ago")}</div><div class="bd">${driveBody}</div></div></div>`;
-  if (s.filter === "hide") return "";
-  if (s.filter === "collapse" && !s.expanded) return `<div class="collapsed"><b>drive-by-dev</b> ${tagHTML("drive-by-dev", "")} left 1 comment 5 hours ago · <button class="expand">show</button></div>`;
-  return `<div class="c">${av}<div class="box"><div class="hd"><b>drive-by-dev</b> ${tagHTML("drive-by-dev", "")} ${when("commented 5 hours ago", "5h ago")}</div><div class="bd">${driveBody}</div></div></div>`;
-}
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can go out on a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
 const humanBody = `<p>Changing the default timeout won't fix this. Idle timeouts vary by server and by every proxy in between, so any fixed value loses this race somewhere. Your server sends <code>Keep-Alive: timeout=5</code>: the pool should honor that header, and retry idempotent requests that hit <code>ECONNRESET</code> on a reused socket.</p>`;
 const pickable = () => s.mode === "today";
 const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 10 minutes ago", "10m ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
 
 const PROMPTS = {
-  ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. So does everyone else's. <b>Click a comment you think an agent wrote.</b>"],
-  one:     ["That's one. The other is signed github-user-a.", "drive-by-dev's agent was the easy catch. github-user-a's own agent sounded right and still got it wrong. One fix covers both: the token marks everything an agent posts. Hover a tag, then try the controls below the thread."],
-  right:   ["Good eye. That one even sounded right.", "Two of these replies came from agents: drive-by-dev's, and github-user-a's own. Nobody reviewed either. One fix covers both: the token marks everything an agent posts. Hover a tag, then try the controls below the thread."],
-  wrong:   ["Nope. That's the only human reply.", "The other two came from agents posting with their owners' tokens: drive-by-dev's, and github-user-a's own. Same name, opposite advice. One fix covers both. Hover a tag, then try the controls below the thread."],
-  shown:   ["Same thread, GitHub tomorrow.", "Every agent's token marks what it posts: drive-by-dev's and github-user-a's own. Hover a tag, switch to github-user-a's view to endorse their agent's reply, or try the reader filter."],
-  back:    ["Back to today. Can you still spot them?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
-  endorsed:["Endorsed. Now it's github-user-a's, mistakes and all.", "Endorsing means github-user-a read it and stands behind it. Their tag is gone; drive-by-dev's agent is still labeled."],
+  ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. Same for everyone else in this thread. <b>Click the comment you think an agent wrote.</b>"],
+  right:   ["Good eye. It sounded right, though.", "ozzie-dev's agent posted it with ozzie-dev's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag, then try the controls below the thread."],
+  wrong:   ["Nope. That one's the human.", "The confident fix above came from ozzie-dev's agent, posted with ozzie-dev's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag, then try the controls below the thread."],
+  shown:   ["Same thread, GitHub tomorrow.", "The token ozzie-dev's agent used marks everything it posts, right next to ozzie-dev's name. Hover the tag, switch to ozzie-dev's view to endorse it, or try the reader filter."],
+  back:    ["Back to today. Can you still spot it?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
+  endorsed:["Endorsed. Now it's ozzie-dev's, mistakes and all.", "Endorsing means ozzie-dev read it and stands behind it. The tag is gone, and the timeline records who vouched for it."],
 };
 function promptKey() {
   if (s.mode === "today") return s.guess ? "back" : "ask";
@@ -264,20 +256,22 @@ function promptKey() {
 }
 
 function agentComment() {
+  const av = `<div class="av" style="background:#8250df">O</div>`;
+  const head = tagged => `<b>${AGENT_OWNER}</b> ${tagged ? tagHTML() + " " : ""}${when("commented 2 hours ago", "2h ago")} <span class="role">Contributor</span>`;
   if (s.mode === "today") {
-    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>`;
+    return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>`;
   }
   if (s.endorsed) {
-    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>
-      <div class="event"><span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#1a7f37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span><span><b>github-user-a</b> reviewed and endorsed the agent's comment above · just now</span></div>`;
+    return `<div class="c">${av}<div class="box"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>
+      <div class="event"><span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#1a7f37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span><span><b>${AGENT_OWNER}</b> reviewed and endorsed the agent's comment above · just now</span></div>`;
   }
   if (s.filter === "hide") return "";
   if (s.filter === "collapse" && !s.expanded) {
-    return `<div class="collapsed"><b>github-user-a</b> ${tagHTML()} left 1 comment 2 hours ago · <button class="expand">show</button></div>`;
+    return `<div class="collapsed"><b>${AGENT_OWNER}</b> ${tagHTML()} left 1 comment 2 hours ago · <button class="expand">show</button></div>`;
   }
   const endorse = s.viewer === "author"
     ? `<div class="banner flash"><p><b>Your agent posted this without your review.</b><br><small>Only you see this box. Endorsing removes the tag for everyone.</small></p><button class="ghbtn go" id="endorse">Endorse as mine</button></div>` : "";
-  return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> ${tagHTML()} ${when("commented 2 hours ago", "2h ago")} <span class="via">· via Claude Code</span><span class="role">Member</span></div><div class="bd">${endorse}${agentBody}</div></div></div>`;
+  return `<div class="c">${av}<div class="box"><div class="hd">${head(true)}</div><div class="bd">${endorse}${agentBody}</div></div></div>`;
 }
 
 function placeThumb() {
@@ -286,9 +280,8 @@ function placeThumb() {
   th.style.width = act.offsetWidth + "px"; th.style.transform = `translateX(${act.offsetLeft}px)`;
 }
 function render() {
-  const hiddenCount = s.mode === "proposal" && s.filter === "hide" ? (s.endorsed ? 1 : 2) : 0;
-  const note = hiddenCount && s.viewer === "author" ? `<div class="hidden-note">${hiddenCount} unreviewed agent comment${hiddenCount > 1 ? "s are" : " is"} hidden by your filter.</div>` : "";
-  document.getElementById("thread").innerHTML = alice + note + driveComment() + agentComment() + humanComment();
+  const note = s.mode === "proposal" && s.filter === "hide" && !s.endorsed && s.viewer === "author" ? `<div class="hidden-note">1 unreviewed agent comment is hidden by your filter.</div>` : "";
+  document.getElementById("thread").innerHTML = alice + note + agentComment() + humanComment();
   const [h, sub] = PROMPTS[promptKey()];
   const touch = matchMedia("(hover: none)").matches;
   document.getElementById("prompt").innerHTML = `<h1>${h}</h1><p>${touch ? sub.replace(/Hover the tag/g, "Tap the tag") : sub}</p>`;
@@ -328,7 +321,7 @@ addEventListener("resize", sizePrompt);
 if (document.fonts) document.fonts.ready.then(sizePrompt);
 document.getElementById("thread").addEventListener("click", ev => {
   const box = ev.target.closest(".pick"); if (!box) return;
-  s.guess = { drive: "one", agent: "right", human: "wrong" }[box.dataset.pick]; s.mode = "proposal"; s.justRevealed = true;
+  s.guess = box.dataset.pick === "agent" ? "right" : "wrong"; s.mode = "proposal"; s.justRevealed = true;
   const seg = document.querySelector(".seg.mode"); seg.classList.remove("reveal"); void seg.offsetWidth; seg.classList.add("reveal");
   clearTimeout(window.__revealT); window.__revealT = setTimeout(() => seg.classList.remove("reveal"), 2300);
   render();
