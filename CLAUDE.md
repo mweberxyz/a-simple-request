@@ -16,9 +16,11 @@
 >
 > **Public by design:** Matt's first name, the placeholder `mweber` handle in the mockups, the five cited repos, and the drafts in `outreach/` and `LAUNCH.md`. If the repo goes public before launch, those drafts are visible early, so time the visibility switch with launch.
 >
+> **Private context goes in `CLAUDE.local.md`** (gitignored). Machine paths, tool locations, environment notes, and private working context belong there, never here. Read it at the start of every session if it exists.
+>
 > **Before every commit**, run this check. Anything it prints needs a deliberate decision. The section above is expected to match its own examples.
 > ```bash
-> git diff --cached | grep -n -i -E '/(Users|home|private|var/folders|Applications|Library)/|~/|\b([0-9]{1,3}\.){3}[0-9]{1,3}\b|\.(local|lan|internal)\b|Darwin|ghp_|github_pat_|token=|password|secret|\.env'
+> git diff --cached | grep -n -i -E '/(Users|home|private|var/folders|Applications|Library)/|~/|\b([0-9]{1,3}\.){3}[0-9]{1,3}\b|\.(local|lan|internal)\b|Darwin|ghp_|github_pat_|token=|password|secret|\.env' | grep -v 'CLAUDE\.local\.md'
 > ```
 >
 > **Last audit: 2026-11-06.** Full history, all files, and PNG metadata were checked for paths, machine, network, and environment details, and for secrets. The only finding was the Chrome install path in the render commands, which was replaced with `$CHROME`.
@@ -95,6 +97,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - [x] Moved into this repo (2026-11-06).
 - [x] "Full feature request" page on the site, rendered live from the request markdown.
 - [ ] Iterate on content and design with Matt. ← **current**
+- [x] Added `CLAUDE.local.md` (gitignored) for private, machine-specific context.
 - [ ] Duplicate check: GitHub changelog plus community discussions.
 - [ ] Decide on hosting. GitHub Pages serves from the repo root or `/docs` only, not `/site`, so either move the folder or use a Pages workflow. Either way, the deploy must **copy the symlinked files as real files** (e.g. `cp -RL site/ out/`), because hosts may not follow symlinks.
 - [ ] Fill placeholders, then launch per `LAUNCH.md`.
@@ -107,3 +110,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Added `site/request.html`, which renders the feature request live from the markdown via symlinks, so the site and the request can be reviewed together while iterating. The comparison table stacks on phones.
 - **2026-11-06:** Clarified with Matt that the GitHub email and handle are already public, so commit authorship is fine but they shouldn't be repeated in files. The real concern is machine, network, path, and environment details. Re-audited: the Chrome install path in the render commands (in earlier commits) was the only finding, and it's now `$CHROME`.
 - **2026-11-06:** The repo will be published on GitHub with full history. A privacy audit found nothing to fix; the only identifying detail is the commit author email. Added the public-repo warning section and a pre-commit check to the top of this file.
+- **2026-11-06:** Added a gitignored `CLAUDE.local.md` for private, cross-session context, and moved machine-specific notes into it.
