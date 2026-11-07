@@ -37,13 +37,11 @@ a { color: var(--brand); }
 code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: color-mix(in srgb, var(--ink) 8%, transparent); padding: .1em .35em; border-radius: 4px; }
 
 /* top bar */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; padding-bottom: 18px; flex-wrap: wrap; }
-.brand { font-weight: 700; font-size: 15px; letter-spacing: -.01em; margin: 0; }
-.brand span { color: var(--ink-3); font-weight: 500; }
+.top { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 18px; padding-bottom: 18px; flex-wrap: wrap; }
 .top nav { display: flex; align-items: center; gap: 14px; }
 .top nav a.plain { color: var(--ink-2); text-decoration: none; font-weight: 600; font-size: 14px; }
 .top nav a.plain:hover { color: var(--ink); }
-@media (max-width: 560px) { .top { flex-wrap: nowrap; } .brand { font-size: 14px; } .brand span, .top nav a.plain { display: none; } }
+@media (max-width: 560px) { .top { flex-wrap: nowrap; } }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 16px; text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: var(--surface); cursor: pointer; }
 .btn.sm { padding: 7px 14px; font-size: 14px; border-radius: 8px; }
 .btn.primary { background: var(--brand); color: var(--brand-ink); border-color: transparent; }
@@ -161,7 +159,6 @@ main.wrap { max-width: 1140px; }
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="gl" viewBox="0 0 16 16"><path d="M7.25 1h1.5v2h3A2.25 2.25 0 0 1 14 5.25v6.5A2.25 2.25 0 0 1 11.75 14h-7.5A2.25 2.25 0 0 1 2 11.75v-6.5A2.25 2.25 0 0 1 4.25 3h3V1ZM4.25 4.5a.75.75 0 0 0-.75.75v6.5c0 .41.34.75.75.75h7.5a.75.75 0 0 0 .75-.75v-6.5a.75.75 0 0 0-.75-.75h-7.5ZM6 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></symbol></svg>
 
 <header class="top wrap">
-  <p class="brand">A simple request to GitHub <span>· a proposal</span></p>
   <nav><a class="plain" href="request.html">The full request</a><a class="btn sm primary js-request" href="#">Support it ↗</a></nav>
 </header>
 
