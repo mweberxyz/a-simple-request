@@ -1,5 +1,27 @@
 # A simple request to GitHub
 
+> ## ⚠️ This whole repo will be published on GitHub
+>
+> Matt plans to publish the entire repo, including its full git history, on GitHub, and to serve the site from it. **Treat every commit as public from the moment it's made.** Rewriting history after pushing doesn't really take anything back.
+>
+> **Never commit:**
+> - Personal info: email addresses, phone numbers, home or work details, or names of people other than public GitHub handles we cite on purpose.
+> - Absolute local paths (`/Users/...`, `~/...`, app or scratch folders), machine names, or anything else from this computer. Use repo-relative paths only.
+> - Secrets of any kind: tokens, keys, `.env` files, cookies, or screenshots that contain them.
+> - Private conversation details, or other people's content that isn't already public.
+> - Image metadata. PNGs are rendered with headless Chrome, which writes none. Check any image that comes from somewhere else.
+>
+> **Before every commit**, run this check. Anything it prints needs a deliberate decision:
+> ```bash
+> git diff --cached | grep -n -i -E '/Users/|/home/|~/|@[a-z0-9-]+\.(dev|xyz|com|io)|ghp_|github_pat_|token=|password|secret|\.env'
+> ```
+>
+> **Commit identity is public too.** Commits are currently authored with the email in Matt's global git config. Matt has been told this and hasn't yet decided whether to switch to a GitHub `noreply` address. Until Matt decides, don't change git config or rewrite history.
+>
+> **Already public by design:** Matt's first name, the `mweber` handle in the mockups, the five cited repos, and the drafts in `outreach/` and `LAUNCH.md`. If the repo goes public before launch, those drafts are visible early, so time the visibility switch with launch.
+>
+> **Last audit: 2026-11-06.** Full history, all files, and PNG metadata were checked. No personal info, local paths, or secrets were found. The commit author email above is the only identifying detail.
+
 ## What this is
 
 Matt is asking GitHub for a feature: let a credential (PAT, OAuth grant, GitHub App user token, `gh` login) be marked as an **agent session**. Anything created with it shows an `agent` tag next to the user's name, so readers can tell what the person actually reviewed from what an agent posted on their behalf without review.
@@ -72,6 +94,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - [x] Moved into this repo (2026-11-06).
 - [x] "Full feature request" page on the site, rendered live from the request markdown.
 - [ ] Iterate on content and design with Matt. ← **current**
+- [ ] Decide the commit email: keep the current global git email or switch to a GitHub noreply address (would rewrite the local history before the first push).
 - [ ] Duplicate check: GitHub changelog plus community discussions.
 - [ ] Decide on hosting. GitHub Pages serves from the repo root or `/docs` only, not `/site`, so either move the folder or use a Pages workflow. Either way, the deploy must **copy the symlinked files as real files** (e.g. `cp -RL site/ out/`), because hosts may not follow symlinks.
 - [ ] Fill placeholders, then launch per `LAUNCH.md`.
@@ -82,3 +105,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Added working agreements to commit proactively and keep CLAUDE.md current.
 - **2026-11-06:** Cut the "What this isn't" section from the site to make it punchier. The Non-goals section stays in the feature request.
 - **2026-11-06:** Added `site/request.html`, which renders the feature request live from the markdown via symlinks, so the site and the request can be reviewed together while iterating. The comparison table stacks on phones.
+- **2026-11-06:** The repo will be published on GitHub with full history. A privacy audit found nothing to fix; the only identifying detail is the commit author email. Added the public-repo warning section and a pre-commit check to the top of this file.
