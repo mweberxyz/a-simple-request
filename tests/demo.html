@@ -88,6 +88,7 @@ const h1 = w => $(w, "#prompt h1").textContent.trim();
 const mode = (w, v) => $(w, `[data-key=mode] [data-v=${v}]`).click();
 const pick = (w, who) => $(w, `.pick[data-pick=${who}]`).click();
 const reset = w => w.startOver();
+const next = w => w.eval("step(1)");
 const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.getBoundingClientRect().top + w.scrollY).toFixed(1)).join(",");
 
 (async () => {
@@ -100,14 +101,15 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       eq(h1(w), "Spot the slop.", "headline");
       eq($$(w, ".pick").length, 2, "clickable replies");
       eq($$(w, "#thread .tag").length, 0, "no agent tag today");
-      assert(w.getComputedStyle($(w, "#tagctl")).visibility === "hidden", "tag control hidden today");
+      assert(w.getComputedStyle($(w, "#examples")).visibility === "hidden", "example chips hidden today");
     });
 
     await test(`picking the agent's comment is right ${tag}`, async () => {
       reset(w); pick(w, "agent");
       assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
       eq($$(w, "#thread .tag").length, 1, "agent tagged");
-      assert(w.getComputedStyle($(w, "#tagctl")).visibility === "visible", "tag control visible tomorrow");
+      eq(w.eval("s.mode"), "proposal", "a guess goes to tomorrow, not to the examples");
+      assert(w.getComputedStyle($(w, "#examples")).visibility === "hidden", "chips stay hidden tomorrow");
       assert($(w, ".seg.mode").classList.contains("reveal"), "reveal animation triggered");
     });
 
@@ -115,12 +117,12 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w); mode(w, "proposal");
       const t = $(w, "#thread .tag");
       assert(t && t.classList.contains("pop") && t.classList.contains("pop-quick"), "tag should pop in on a direct switch");
-      $(w, "[data-key=style] [data-v=purple]").click();
+      mode(w, "build");
       assert(!$(w, "#thread .tag").classList.contains("pop"), "tag should not re-pop on later changes");
       reset(w); pick(w, "human"); mode(w, "today");
       $(w, "#prompt [data-go=proposal]").click();
       assert($(w, "#thread .tag").classList.contains("pop-quick"), "Show me tomorrow link should pop the tag too");
-      $(w, "[data-key=style] [data-v=purple]").click(); reset(w);
+      reset(w);
     });
 
     await test(`the result screens don't link away ${tag}`, async () => {
@@ -129,10 +131,10 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w);
     });
 
-    await test(`the tag is purple by default, with no grey option ${tag}`, async () => {
+    await test(`the tag is purple tomorrow ${tag}`, async () => {
       reset(w); mode(w, "proposal");
-      assert($(w, "#thread .tag").classList.contains("purple"), "default tag should be purple");
-      assert(!$(w, "[data-key=style] [data-v=grey]"), "grey option should be gone");
+      assert($(w, "#thread .tag").classList.contains("purple"), "tomorrow's tag should be purple");
+      eq($(w, "#thread .tag .txt").textContent, "agent", "plain label");
       reset(w);
     });
 
@@ -148,6 +150,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       };
       reset(w); check("today");
       mode(w, "proposal"); check("tomorrow");
+      mode(w, "build"); check("build");
       reset(w);
     });
 
@@ -155,7 +158,6 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w); pick(w, "human");
       assert(h1(w).startsWith("Nope"), `headline was "${h1(w)}"`);
     });
-
 
     await test(`can guess again after going back to today ${tag}`, async () => {
       reset(w); pick(w, "human"); mode(w, "today");
@@ -168,142 +170,126 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`thread never moves between states ${tag}`, async () => {
       reset(w); const seen = { today: positions(w) };
       mode(w, "proposal"); seen.tomorrow = positions(w);
+      // The examples are other conversations, so only the window has to hold still there.
+      const winTop = () => ($(w, ".win").getBoundingClientRect().top + w.scrollY).toFixed(1), top = winTop();
+      mode(w, "build"); eq(winTop(), top, "window moved on the examples");
+      next(w); eq(winTop(), top, "window moved between examples");
       mode(w, "today"); seen.back = positions(w);
       reset(w); pick(w, "agent"); seen.right = positions(w);
       reset(w); pick(w, "human"); seen.wrong = positions(w);
       const distinct = new Set(Object.values(seen));
       assert(distinct.size === 1, "positions differ: " + JSON.stringify(seen));
+      reset(w);
     });
 
     await test(`no horizontal scroll and one-line headers ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      for (let i = 0, n = w.eval("TURBO.length"); i < n; i++) {
+      reset(w); mode(w, "build");
+      for (let i = 0, n = w.eval("EXAMPLES.length"); i < n; i++) {
         eq(w.document.documentElement.scrollWidth, width, "page width");
         assert(!$$(w, "#thread .hd").some(h => h.scrollWidth > h.clientWidth + 1), `a comment header overflows (${$(w, "#thread .tag .txt").textContent})`);
-        w.turboTick();
+        next(w);
       }
       reset(w);
     });
 
-    await test(`only the tag control remains, above the thread on the right ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      for (const k of ["viewer", "filter"]) assert(!$(w, `[data-key=${k}]`), `${k} control should be gone`);
-      eq([...$$(w, "[data-key=style] button")].map(b => b.textContent).join("|"), "Boring|Turbo", "tag options");
-      const turbo = $(w, "[data-key=style] [data-v=custom]");
-      assert(w.getComputedStyle(turbo).animationName.includes("turboNudge"), "Turbo should wiggle until chosen");
-      assert(w.getComputedStyle(turbo.querySelector(".rb")).animationName === "rainbow", "Turbo text should be a moving rainbow");
-      turbo.click();
-      assert(!w.getComputedStyle(turbo).animationName.includes("turboNudge"), "wiggle stops once Turbo is on");
-      const c = $(w, "#tagctl").getBoundingClientRect(), win = $(w, ".win").getBoundingClientRect();
-      assert(c.bottom <= win.top, "tag control should sit above the thread");
-      assert(Math.abs(c.right - win.right) < 2, `tag control should be flush right (${c.right} vs ${win.right})`);
+    await test(`the switch has three steps, and example chips show only in the third ${tag}`, async () => {
+      reset(w);
+      for (const k of ["viewer", "filter", "style"]) assert(!$(w, `[data-key=${k}]`), `${k} control should be gone`);
+      const labels = $$(w, ".seg.mode button").map(b => [...b.children].find(c => w.getComputedStyle(c).display !== "none").textContent);
+      eq(labels.join("|"), width <= 560 ? "Today|Tomorrow|The future 🔥" : "GitHub today|GitHub tomorrow|What you could build", "switch labels");
+      eq($$(w, ".seg.mode button").map(b => b.dataset.v).join("|"), "today|proposal|build", "steps");
+      mode(w, "build");
+      const ex = $(w, "#examples");
+      eq(w.getComputedStyle(ex).visibility, "visible", "chips show in the third step");
+      eq($$(w, "#examples button").map(b => b.textContent).join("|"), w.eval("EXAMPLES.map(e => e.name).join('|')"), "one chip per example");
+      assert(ex.getBoundingClientRect().bottom <= $(w, ".win").getBoundingClientRect().top, "chips sit above the thread");
+      for (const gone of ["#cycle", "#cycctl", "#pause", "#tagctl"]) assert(!$(w, gone), `${gone} should be gone`);
       reset(w);
     });
 
-    if (width <= 560) await test(`on phones both toggles span the full width ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      const win = $(w, ".win").getBoundingClientRect();
-      for (const sel of [".seg.mode", "#tagctl .seg"]) {
-        const r = $(w, sel).getBoundingClientRect();
-        assert(Math.abs(r.left - win.left) < 2 && Math.abs(r.right - win.right) < 2, `${sel} should span the thread's width (${r.left}-${r.right} vs ${win.left}-${win.right})`);
-        const bw = [...$(w, sel).querySelectorAll("button")].map(b => b.getBoundingClientRect().width);
-        assert(Math.abs(bw[0] - bw[1]) < 2, `${sel} buttons should split the width evenly (${bw.join(" vs ")})`);
-      }
+    if (width <= 560) await test(`on phones the switch spans the full width and the chips fit ${tag}`, async () => {
+      reset(w); mode(w, "build");
+      const win = $(w, ".win").getBoundingClientRect(), r = $(w, ".seg.mode").getBoundingClientRect();
+      assert(Math.abs(r.left - win.left) < 2 && Math.abs(r.right - win.right) < 2, `switch should span the thread's width (${r.left}-${r.right} vs ${win.left}-${win.right})`);
+      const bw = $$(w, ".seg.mode button").map(b => b.getBoundingClientRect().width);
+      assert(Math.max(...bw) - Math.min(...bw) < 2, `switch buttons should split the width evenly (${bw.join(" vs ")})`);
+      assert($$(w, ".seg.mode button").every(b => b.scrollWidth <= b.clientWidth + 1), "switch labels fit");
+      assert($$(w, "#examples button").every(b => { const c = b.getBoundingClientRect(); return c.left >= win.left - 1 && c.right <= win.right + 1; }), "chips stay inside the column");
       reset(w);
     });
 
-    await test(`Turbo cycles its own colors and labels, with nothing to pick ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      assert(!$(w, "#tagctl input") && !$(w, "#swatches"), "no picker");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      assert(w.__turboT, "cycle should be running");
-      const look = () => $(w, "#thread .tag .txt").textContent + " " + $(w, "#thread .tag").style.color;
-      const first = look(); w.turboTick();
-      assert(look() !== first, "label and color should change");
-      assert($(w, "#thread .tag").classList.contains("swap"), "change should animate");
-      $(w, "[data-key=style] [data-v=purple]").click();
-      assert(!w.__turboT, "Boring stops the cycle");
-      $(w, "[data-key=style] [data-v=custom]").click(); reset(w);
-      assert(!w.__turboT, "reset stops the cycle");
+    await test(`chips switch examples, colored like the tag they show ${tag}`, async () => {
+      reset(w); mode(w, "build");
+      const chips = $$(w, "#examples button");
+      eq(chips.filter(c => c.getAttribute("aria-pressed") === "true").length, 1, "one chip selected");
+      chips[2].click();
+      eq(w.eval("s.ex"), 2, "clicking a chip shows that example");
+      eq(chips[2].getAttribute("aria-pressed"), "true", "chip marked selected");
+      const t = $(w, "#thread .tag"), ex = w.eval("EXAMPLES[2]");
+      eq(t.querySelector(".txt").textContent, "agent · " + ex.text, "tag label");
+      assert(t.getAttribute("style").includes("color:" + ex.fg), "tag uses the example's color");
+      eq(chips[2].style.getPropertyValue("--fg"), ex.fg, "chip uses the same color");
+      assert(t.classList.contains("swap"), "the change animates");
+      reset(w);
     });
 
-    await test(`Turbo swaps in a conversation that fits each label, and the page stays put ${tag}`, async () => {
+    await test(`each example has its own conversation and caption, and the page stays put ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       const win = () => { const r = $(w, ".win").getBoundingClientRect(); return `${r.top.toFixed(1)}/${r.height.toFixed(1)}`; };
-      const agentText = () => $(w, "[data-pick=agent], #thread .c:last-child .bd").textContent;
       const before = win(), mainTitle = $(w, "#title").textContent;
-      $(w, "[data-key=style] [data-v=custom]").click();
-      const seen = new Set();
-      for (let i = 0, n = w.eval("TURBO.length"); i < n; i++) {
+      mode(w, "build");
+      const seen = new Set(), caps = new Set();
+      for (let i = 0, n = w.eval("EXAMPLES.length"); i < n; i++) {
         eq(win(), before, `window moved or resized on "${$(w, "#thread .tag .txt").textContent}"`);
+        eq(h1(w), "One small marker. Look what it unlocks.", "heading");
+        caps.add($(w, "#prompt p").textContent);
         seen.add($(w, "#title").textContent + "|" + $(w, "#thread .c:last-child .bd").textContent);
-        assert(!$(w, "#title").textContent.includes("ECONNRESET when reusing"), "Turbo should swap the issue");
-        w.turboTick();
+        assert(!$(w, "#title").textContent.includes("ECONNRESET when reusing"), "examples swap the issue");
+        next(w);
       }
-      eq(seen.size, w.eval("TURBO.length"), "each label gets its own conversation");
-      $(w, "[data-key=style] [data-v=purple]").click();
-      eq($(w, "#title").textContent, mainTitle, "Boring brings back the puzzle thread");
-      eq(win(), before, "window after Boring");
+      eq(seen.size, w.eval("EXAMPLES.length"), "each example gets its own conversation");
+      eq(caps.size, w.eval("EXAMPLES.length"), "each example gets its own caption");
+      mode(w, "proposal");
+      eq($(w, "#title").textContent, mainTitle, "tomorrow brings back the puzzle thread");
+      eq(win(), before, "window after going back");
       reset(w);
     });
 
-    await test(`a countdown bar along the window bar matches the tag color ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      const bar = $(w, "#cycle");
-      assert(!bar.classList.contains("on"), "no bar with Boring");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      try {
-      for (let i = 0; i < 2; i++) {
-        assert(bar.classList.contains("on") && bar.classList.contains("run"), "bar should be counting down");
-        eq(bar.style.getPropertyValue("--c"), w.eval("TURBO[s.turbo].fg"), "bar color = tag color");
-        assert($(w, "#thread .tag").getAttribute("style").includes("color:" + w.eval("TURBO[s.turbo].fg")), "tag uses the same color");
-        w.turboTick();
-      }
-      const top = $(w, ".win .bar").getBoundingClientRect(), b = bar.getBoundingClientRect();
-      assert(Math.abs(b.bottom - top.bottom) < 1 && b.top < top.bottom - 1 && b.top >= top.top, `bar sits on the window bar's bottom border (${b.top}-${b.bottom} vs ${top.bottom})`);
-      $(w, "[data-key=style] [data-v=purple]").click();
-      assert(!bar.classList.contains("on"), "Boring hides the bar");
-      } finally { reset(w); }
+    await test(`examples only change when the visitor changes them ${tag}`, async () => {
+      reset(w); mode(w, "build");
+      const at = w.eval("s.ex"); await sleep(400);
+      eq(w.eval("s.ex"), at, "no automatic switching");
+      reset(w);
     });
 
-    await test(`left and right arrows step through Turbo ${tag}`, async () => {
+    await test(`left and right arrows step through the examples ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       const key = k => w.document.dispatchEvent(new w.KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
-      const label = () => $(w, "#thread .tag .txt").textContent;
-      const boring = label(); key("ArrowRight");
-      eq(label(), boring, "arrows do nothing outside Turbo");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      try {
-        const n = w.eval("TURBO.length"), at = () => w.eval("s.turbo");
-        const start = at();
-        key("ArrowRight"); eq(at(), (start + 1) % n, "right goes forward");
-        key("ArrowLeft"); key("ArrowLeft"); eq(at(), (start - 1 + n) % n, "left goes back, wrapping around");
-        assert($(w, "#cycle").classList.contains("run") && w.__turboT, "countdown restarts");
-      } finally { reset(w); }
+      const at = () => w.eval("s.ex"), n = w.eval("EXAMPLES.length");
+      key("ArrowRight"); eq(at(), 0, "arrows do nothing outside the examples");
+      mode(w, "build");
+      key("ArrowRight"); eq(at(), 1, "right goes forward");
+      key("ArrowLeft"); key("ArrowLeft"); eq(at(), n - 1, "left goes back, wrapping around");
+      reset(w);
     });
 
-    await test(`a horizontal swipe on the window steps through Turbo ${tag}`, async () => {
+    await test(`a horizontal swipe on the window steps through the examples ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       const win = $(w, ".win"), r = win.getBoundingClientRect(), y = r.top + 120, x0 = r.left + r.width / 2;
       const swipe = (dx, dy = 0, type = "touch") => {
         const ev = (name, x, yy) => win.dispatchEvent(new w.PointerEvent(name, { pointerId: 7, pointerType: type, clientX: x, clientY: yy, bubbles: true }));
         ev("pointerdown", x0, y); ev("pointerup", x0 + dx, y + dy);
       };
-      const at = () => w.eval("s.turbo"), n = w.eval("TURBO.length");
-      const before = at(); swipe(-100);
-      eq(at(), before, "swipes do nothing outside Turbo");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      try {
-        const start = at();
-        swipe(-100); eq(at(), (start + 1) % n, "swipe left goes forward");
-        swipe(100); swipe(100); eq(at(), (start - 1 + n) % n, "swipe right goes back, wrapping around");
-        const mid = at();
-        swipe(-20); eq(at(), mid, "a short drag is not a swipe");
-        swipe(-60, 120); eq(at(), mid, "a mostly vertical drag is a scroll, not a swipe");
-        swipe(-100, 0, "mouse"); eq(at(), mid, "mouse drags don't swipe");
-        eq(w.getComputedStyle(win).touchAction, "pan-y", "vertical scrolling stays native");
-      } finally { reset(w); }
+      const at = () => w.eval("s.ex"), n = w.eval("EXAMPLES.length");
+      swipe(-100); eq(at(), 0, "swipes do nothing outside the examples");
+      mode(w, "build");
+      swipe(-100); eq(at(), 1, "swipe left goes forward");
+      swipe(100); swipe(100); eq(at(), n - 1, "swipe right goes back, wrapping around");
+      swipe(-20); eq(at(), n - 1, "a short drag is not a swipe");
+      swipe(-60, 120); eq(at(), n - 1, "a mostly vertical drag is a scroll, not a swipe");
+      swipe(-100, 0, "mouse"); eq(at(), n - 1, "mouse drags don't swipe");
+      eq(w.getComputedStyle(win).touchAction, "pan-y", "vertical scrolling stays native");
+      reset(w);
     });
 
     await test(`a keyboard can make the guess, and lands on the answer ${tag}`, async () => {
@@ -334,27 +320,8 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       assert($$(w, "#thread .av").every(a => a.getAttribute("aria-hidden") === "true"), "avatars hidden from screen readers");
       eq($$(w, "h1").length, 1, "one h1"); assert($(w, ".win h2#title"), "issue title is an h2");
       assert(/new tab/.test($(w, ".js-request").textContent), "new-tab links say so");
-    });
-
-    await test(`Turbo can be paused, stepped, and holds while focus is in the thread ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      assert(w.getComputedStyle($(w, "#cycctl")).visibility === "hidden", "no Turbo controls with Boring");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      try {
-        const at = () => w.eval("s.turbo"), n = w.eval("TURBO.length"), start = at();
-        assert(w.getComputedStyle($(w, "#cycctl")).visibility === "visible", "controls show in Turbo");
-        const prompt = $(w, "#prompt h1");
-        $(w, "#pause").click();
-        assert(!w.__turboT && $(w, "#cycle").classList.contains("paused"), "paused: clock and bar stop");
-        eq($(w, "#pause").getAttribute("aria-label"), "Play examples", "button now offers play");
-        $(w, "#cycctl [data-step='1']").click(); eq(at(), (start + 1) % n, "next works while paused");
-        assert(!w.__turboT, "stepping keeps it paused");
-        $(w, "#cycctl [data-step='-1']").click(); eq(at(), start, "previous works");
-        $(w, "#pause").click(); assert(w.__turboT, "play resumes the clock");
-        eq($(w, "#prompt h1"), prompt, "the live prompt isn't re-announced on a swap");
-        $(w, "#thread .tag").focus(); assert(!w.__turboT, "focus in the thread holds the clock");
-        $(w, "#pause").focus(); assert(w.__turboT, "leaving the thread resumes it");
-      } finally { reset(w); }
+      eq($(w, "#examples").getAttribute("aria-label"), "Examples", "chips are a named group");
+      assert(w.eval("document.getElementById('examples').inert"), "hidden chips can't be tabbed to");
     });
 
     if (width === 1280) await test(`every visible text passes contrast, in every state`, async () => {
@@ -363,28 +330,19 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       const check = label => { const b = lowContrast(w); if (b.length) fails.push(`${label}: ${b.join(", ")}`); };
       reset(w); check("today");
       pick(w, "agent"); check("after a guess");
-      $(w, "[data-key=style] [data-v=custom]").click();
-      try { check("Turbo"); $(w, "#thread .tag").focus(); check("tooltip open"); }
-      finally { $(w, "#thread .tag").blur(); reset(w); }
+      mode(w, "build");
+      try {
+        for (let i = 0, n = w.eval("EXAMPLES.length"); i < n; i++) { check(`example ${i}`); next(w); }
+        $(w, "#thread .tag").focus(); check("tooltip open");
+      } finally { $(w, "#thread .tag").blur(); reset(w); }
       assert(!fails.length, `${scheme} mode: ` + fails.join("; "));
     });
 
-    await test(`text and the Turbo rainbow meet contrast minimums ${tag}`, async () => {
-      reset(w); mode(w, "proposal");
-      const bg = w.getComputedStyle(w.document.body).backgroundColor;
-      for (const sel of ["#prompt p", "#reset"]) {
-        const el = $(w, sel); if (!el || !el.offsetWidth) continue;
-        const r = contrast(w.getComputedStyle(el).color, bg);
-        assert(r >= 4.5, `${sel} contrast ${r.toFixed(2)}`);
-      }
-      const stops = w.getComputedStyle($(w, "[data-key=style]")).getPropertyValue("--rb").split(",").map(c => c.trim());
-      const probe = w.document.createElement("span"); w.document.body.appendChild(probe);
-      const surface = w.getComputedStyle($(w, "[data-key=style] [data-v=purple]")).backgroundColor;
-      for (const c of stops) {
-        probe.style.color = c; const r = contrast(w.getComputedStyle(probe).color, w.getComputedStyle(w.document.body).backgroundColor);
-        assert(r >= 4.5, `rainbow ${c} contrast ${r.toFixed(2)}`);
-      }
-      probe.remove(); reset(w);
+    await test(`prompt text meets contrast minimums ${tag}`, async () => {
+      reset(w); mode(w, "build");
+      const r = contrast(w.getComputedStyle($(w, "#prompt p")).color, w.getComputedStyle(w.document.body).backgroundColor);
+      assert(r >= 4.5, `#prompt p contrast ${r.toFixed(2)}`);
+      reset(w);
     });
 
     await test(`reset cancels a reveal in progress ${tag}`, async () => {
