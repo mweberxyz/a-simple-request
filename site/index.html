@@ -301,7 +301,7 @@ function render() {
   placeThumb();
   s.justRevealed = false; s.swapped = false;
   const cycling = s.mode === "proposal" && s.style === "custom";
-  if (cycling && !window.__turboT) window.__turboT = setInterval(turboTick, 5000);
+  if (cycling && !window.__turboT) window.__turboT = setInterval(turboTick, 10000);
   if (!cycling && window.__turboT) { clearInterval(window.__turboT); window.__turboT = null; }
 }
 
