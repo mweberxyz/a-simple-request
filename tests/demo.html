@@ -201,6 +201,18 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w);
     });
 
+    if (width <= 560) await test(`on phones both toggles span the full width ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      const win = $(w, ".win").getBoundingClientRect();
+      for (const sel of [".seg.mode", "#tagctl .seg"]) {
+        const r = $(w, sel).getBoundingClientRect();
+        assert(Math.abs(r.left - win.left) < 2 && Math.abs(r.right - win.right) < 2, `${sel} should span the thread's width (${r.left}-${r.right} vs ${win.left}-${win.right})`);
+        const bw = [...$(w, sel).querySelectorAll("button")].map(b => b.getBoundingClientRect().width);
+        assert(Math.abs(bw[0] - bw[1]) < 2, `${sel} buttons should split the width evenly (${bw.join(" vs ")})`);
+      }
+      reset(w);
+    });
+
     await test(`Turbo cycles its own colors and labels, with nothing to pick ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       assert(!$(w, "#tagctl input") && !$(w, "#swatches"), "no picker");

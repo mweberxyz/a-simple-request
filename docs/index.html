@@ -98,7 +98,9 @@ main.wrap { max-width: 1140px; }
 .tag.swap { animation: tagSwap .4s cubic-bezier(.3,1.6,.5,1); }
 @keyframes tagSwap { from { transform: scale(.7); opacity: .3; } to { transform: scale(1); opacity: 1; } }
 @keyframes tagPop { 0% { transform: scale(.2); opacity: 0; box-shadow: 0 0 0 0 rgba(130,80,223,.6); } 60% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 0 8px rgba(130,80,223,.25); } 100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(130,80,223,0); } }
-@media (max-width: 560px) { .switch { gap: 10px; } .seg.mode button { font-size: 15px; padding: 12px 16px; } }
+@media (max-width: 560px) { .switch { gap: 10px; } .seg.mode button { font-size: 15px; padding: 12px 16px; }
+  /* Phones: both toggles span the row, buttons split it evenly. */
+  .seg.mode, .tagctl { flex: 1 1 100%; margin-left: 0; } .tagctl .seg { flex: 1; } .seg.mode button, .tagctl .seg button { flex: 1; } }
 .pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
 .pick:hover { box-shadow: 0 0 0 3px var(--brand); transform: translateY(-1px); }
 .pick { position: relative; }
