@@ -84,7 +84,7 @@ main.wrap { max-width: 1140px; }
 .reset:hover { color: var(--ink); }
 .pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
 .pick:hover { box-shadow: 0 0 0 3px var(--brand); transform: translateY(-1px); }
-.pick .hd::after { content: "← I think github-user-a wrote this"; margin-left: auto; color: var(--brand); font-weight: 600; font-size: 12px; opacity: 0; transition: opacity .15s; }
+.pick .hd::after { content: "← the agent wrote this"; margin-left: auto; color: var(--brand); font-weight: 600; font-size: 12px; opacity: 0; transition: opacity .15s; }
 .pick:hover .hd::after { opacity: 1; }
 .pick .role { margin-left: 8px; }
 
@@ -215,17 +215,17 @@ function tagHTML() {
 
 const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")}</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can be written to a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
-const humanBody = `<p>I'd rather fix this by honoring the server's <code>Keep-Alive: timeout</code> header than by changing the default. I'm taking a look.</p>`;
+const humanBody = `<p>Lowering the timeout just moves the race. Anything behind a proxy with a shorter idle timeout will still reset, and 20,000 local requests won't show that. Let's honor the server's <code>Keep-Alive: timeout</code> header and retry idempotent requests on <code>ECONNRESET</code>. Closing #4190.</p>`;
 const pickable = () => s.mode === "today" && !s.guess;
 const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 10 minutes ago", "10m ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
 
 const PROMPTS = {
-  ask:     ["Two of these comments are from github-user-a. github-user-a never read one of them.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. <b>Click the comment you think github-user-a actually wrote.</b>"],
-  right:   ["You picked the right one, but you had to guess.", "With this proposal, nobody has to. The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, then try the controls."],
-  wrong:   ["Nope. An agent posted that one with github-user-a's token.", "Nobody reviewed it, and today there's no way to tell. With this proposal, the token marks everything the agent posts, right next to github-user-a's name. Hover the tag, then try the controls."],
+  ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. <b>Click the comment you think the agent wrote.</b>"],
+  right:   ["Good eye. It sounded right, though.", "The agent's fix passes locally but only moves the race. With this proposal you wouldn't have to read that closely: the agent's token marks everything it posts. Hover the tag, then try the controls."],
+  wrong:   ["Nope. That's the human catching the agent's mistake.", "The confident fix above came from an agent using github-user-a's token, and nobody reviewed it. With this proposal, the token marks everything the agent posts. Hover the tag, then try the controls."],
   shown:   ["Same thread, GitHub tomorrow.", "The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, switch to github-user-a's view to endorse it, or try the reader filter."],
-  back:    ["Back to today. Which one did the agent write?", "Nobody reading the thread can tell either. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
-  endorsed:["Endorsed. Now it really is github-user-a's.", "github-user-a reviewed the agent's comment and took responsibility for it. The tag is gone, and the timeline records it."],
+  back:    ["Back to today. Can you still spot it?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
+  endorsed:["Endorsed. Now it's github-user-a's, mistakes and all.", "Endorsing means github-user-a read it and stands behind it. The tag is gone, and the timeline records who vouched for it."],
 };
 function promptKey() {
   if (s.mode === "today") return s.guess ? "back" : "ask";
@@ -289,7 +289,7 @@ addEventListener("resize", sizePrompt);
 if (document.fonts) document.fonts.ready.then(sizePrompt);
 document.getElementById("thread").addEventListener("click", ev => {
   const box = ev.target.closest(".pick"); if (!box) return;
-  s.guess = box.dataset.pick === "human" ? "right" : "wrong"; s.mode = "proposal"; render();
+  s.guess = box.dataset.pick === "agent" ? "right" : "wrong"; s.mode = "proposal"; render();
   const tag = document.querySelector("#thread .tag");
   if (tag) { const r = tag.getBoundingClientRect(); if (r.bottom > innerHeight - 40 || r.top < 0) tag.closest(".c").scrollIntoView({ behavior: "smooth", block: "end" }); }
 });
