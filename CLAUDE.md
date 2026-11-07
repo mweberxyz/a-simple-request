@@ -49,6 +49,8 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **Nothing goes out without Matt.** Claude never posts, deploys, files, or pushes anything external. Matt posts the request and the Reddit post personally, by hand. A proposal about labeling agent posts loses credibility if an agent posts it.
 - **Facts get checked before they're cited.** Any link or claim that will appear under Matt's name is looked up first.
 - **Iteration mode (since 2026-11-06):** Matt is iterating. Don't end turns with "what's next / ready to launch?" questions until Matt says they're ready.
+- **Commit proactively.** After each meaningful change (a finished edit, a re-rendered asset, a decision applied), commit it without being asked. Keep each commit to one change, with a short message that says what changed and why. Re-render any PNG whose HTML source changed before committing, so assets never fall behind their sources. Local commits only. Never push or add a remote unless Matt asks.
+- **Keep this file current.** Update CLAUDE.md in the same commit as the change it describes: check off Progress items, move the "← current" marker, add a dated Log line for decisions and findings, update "Placeholders still to fill" and "The proposal (settled decisions)" when they change, and remove anything that's no longer true. A new session should be able to read this file and pick up where the last one left off.
 - Matt rewrites copy in their own voice. Treat the drafted text as a starting point, not final.
 
 ## Placeholders still to fill
@@ -73,3 +75,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 ## Log
 
 - **2026-11-06:** Initial mockups, site, request, outreach drafts. A side session researched prior art and the five workaround repos were verified and added.
+- **2026-11-06:** Added working agreements to commit proactively and keep CLAUDE.md current.
