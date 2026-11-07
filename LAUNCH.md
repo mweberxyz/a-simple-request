@@ -25,8 +25,8 @@ The site and the GitHub discussion need to link to each other, so the order matt
 - [x] Reply in the pinned discussion "Which maintainer improvements would help you most?" (same category, started by GitHub staff) with a short note in your own words linking to the request. Don't paste the request there.
 
 ## 3. Connect the site to the request
-- [x] Set `REQUEST_URL` in `docs/index.html` (done; push it). Pages redeploys on its own.
-- [ ] Open the live site and click "Add your 👍" to confirm it opens the discussion.
+- [x] Set `REQUEST_URL` in `docs/index.html` and pushed. Pages redeploys on its own.
+- [x] Open the live site and click "Add your 👍" to confirm it opens the discussion.
 - [ ] Paste SITE_URL into a link-preview checker to confirm the image and title appear.
 
 ## 4. Go public

@@ -203,3 +203,4 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 - **2026-11-07:** Added the live demo link to the end of the request ("Interactive demo: https://mweberxyz.github.io/a-simple-request/") and removed the reminder to add it.
 - **2026-11-07:** Filled SITE_URL (https://mweberxyz.github.io/a-simple-request/) in the Reddit draft; only REQUEST_URL is left there.
 - **2026-11-07:** Matt posted the request: https://github.com/orgs/community/discussions/212317 (title without a prefix, category Other Feature Feedback, type Product Feedback, area Other). Set `REQUEST_URL` on the site so "Add your 👍" opens it, and filled it in the Reddit draft. Needs a push to go live.
+- **2026-11-07:** Matt pushed; Pages redeployed. Verified the live "Add your 👍" opens discussion #212317 in a new tab. Note: browsers may show the old cached page for a few minutes after a deploy.
