@@ -88,7 +88,7 @@ main.wrap { max-width: 1140px; }
 .tag.pop.pop-quick { animation-delay: .2s; }
 .win { position: relative; touch-action: pan-y; } /* vertical scrolling stays native; horizontal swipes step Turbo */
 /* Turbo countdown: fills under the conversation until the next one swaps in, in the current tag's color. */
-.cycle { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(31,35,40,.06); opacity: 0; transition: opacity .3s; }
+.cycle { position: absolute; z-index: 1; left: 0; right: 0; top: 37px; height: 3px; background: transparent; /* on the window bar's bottom border (bar is 40px) */ opacity: 0; transition: opacity .3s; }
 .cycle.on { opacity: 1; }
 .cycle i { display: block; height: 100%; background: var(--c, #8250df); transform: scaleX(0); transform-origin: left; transition: background-color .4s; }
 .cycle.run i { animation: cycleFill linear forwards; }
@@ -183,12 +183,12 @@ main.wrap { max-width: 1140px; }
 
     <div class="win" role="region" aria-label="Mockup of a GitHub-style issue thread">
       <div class="bar"><i></i><i></i><i></i>&nbsp; acme / <b>http-client</b> › Issues › <span id="num"></span><span class="cyc off" id="cycctl" role="group" aria-label="Turbo examples"><button type="button" data-step="-1" aria-label="Previous example">‹</button><button type="button" id="pause" aria-label="Pause examples">❚❚</button><button type="button" data-step="1" aria-label="Next example">›</button></span></div>
+      <div class="cycle" id="cycle" aria-hidden="true"><i></i></div>
       <div class="body" id="issue">
         <h2 id="title"></h2>
         <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
         <div id="thread"></div>
       </div>
-      <div class="cycle" id="cycle" aria-hidden="true"><i></i></div>
     </div>
 
   </div>

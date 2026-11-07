@@ -248,7 +248,7 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w);
     });
 
-    await test(`a countdown bar under the conversation matches the tag color ${tag}`, async () => {
+    await test(`a countdown bar along the window bar matches the tag color ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       const bar = $(w, "#cycle");
       assert(!bar.classList.contains("on"), "no bar with Boring");
@@ -260,8 +260,8 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
         assert($(w, "#thread .tag").getAttribute("style").includes("color:" + w.eval("TURBO[s.turbo].fg")), "tag uses the same color");
         w.turboTick();
       }
-      const win = $(w, ".win").getBoundingClientRect(), b = bar.getBoundingClientRect();
-      assert(Math.abs(b.bottom - win.bottom) < 2 && b.top > $(w, "#thread .c:last-child").getBoundingClientRect().bottom, "bar sits under the conversation");
+      const top = $(w, ".win .bar").getBoundingClientRect(), b = bar.getBoundingClientRect();
+      assert(Math.abs(b.bottom - top.bottom) < 1 && b.top < top.bottom - 1 && b.top >= top.top, `bar sits on the window bar's bottom border (${b.top}-${b.bottom} vs ${top.bottom})`);
       $(w, "[data-key=style] [data-v=purple]").click();
       assert(!bar.classList.contains("on"), "Boring hides the bar");
       } finally { reset(w); }
