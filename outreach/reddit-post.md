@@ -24,9 +24,9 @@ How Claude helped: I had the idea but no good way to show it, so I used Claude C
 
 The request is on GitHub Discussions. Someone in the thread already laid out today's workarounds and why the token setting should be the baseline, if you have thoughts on it: **https://github.com/orgs/community/discussions/212317**
 
-Wouldn't it be nice if I didn't have to tell you Claude helped write this?
-
 TL;DR: Let good agents self-identify their requests and surface it visually so I can create automations without human review.
+
+*I drafted this with Claude and reviewed every line before posting. Wouldn't it be nice if I didn't have to say this?*
 
 ---
 
