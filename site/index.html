@@ -66,8 +66,10 @@ main.wrap { max-width: 1140px; }
 .prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
 .tagctl { margin-left: auto; position: relative; display: flex; align-items: center; gap: 7px; }
 .tagctl.off { visibility: hidden; }
+.tagctl .seg { padding: 4px; border-radius: 11px; }
+.tagctl .seg button { font-size: 15px; padding: 10px 16px; border-radius: 8px; }
 /* Turbo: rainbow text that keeps flowing, plus a little wiggle every few seconds until someone tries it. */
-.seg button.turbo { font-size: 16px; font-weight: 800; padding: 6px 14px; animation: turboNudge 3.2s ease-in-out 1.5s infinite, turboGlow 2.4s linear infinite; }
+.seg button.turbo { font-size: 17px; font-weight: 800; padding: 9px 16px; animation: turboNudge 3.2s ease-in-out 1.5s infinite, turboGlow 2.4s linear infinite; }
 .seg button.turbo[aria-pressed="true"] { animation: turboGlow 2.4s linear infinite; }
 .turbo .rb { background: linear-gradient(90deg, #ff4d6d, #ff9f1c, #e8c400, #2ec4b6, #3a86ff, #8338ec, #ff4d6d) 0 0 / 56px 100% repeat-x; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow 1.6s linear infinite; }
 @keyframes rainbow { to { background-position: 56px 0; } }
