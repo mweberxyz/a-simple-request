@@ -325,6 +325,15 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
   // Reduced motion: the catch-all rule exists and, applied, stops everything.
   {
     const w = await load(SITE, 1280);
+    await test("titles and link previews tell one story", async () => {
+      const meta = (d, k) => (d.querySelector(`meta[name="${k}"], meta[property="${k}"]`) || {}).content;
+      const d = w.document, line = "An agent using your token looks exactly like you.";
+      eq(d.title, "Spot the slop · A simple request to GitHub", "tab title");
+      eq(meta(d, "og:title"), "A simple request to GitHub", "preview title");
+      assert(meta(d, "og:description").startsWith(line) && meta(d, "description") === meta(d, "og:description"), "preview and search text share the line");
+      reset(w); assert(d.querySelector("#prompt").textContent.replace(/\s+/g, " ").includes("an agent using your token looks exactly like you"), "the page says the same thing");
+    });
+
     await test("prefers-reduced-motion stops all motion", async () => {
       const rule = [...w.document.styleSheets[0].cssRules].find(r => r.media && r.media.mediaText.includes("prefers-reduced-motion"));
       assert(rule, "no prefers-reduced-motion rule");
