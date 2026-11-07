@@ -214,7 +214,7 @@ const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div>
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can go out on a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
 const humanBody = `<p>Changing the default timeout won't fix this. Idle timeouts vary by server and by every proxy in between, so any fixed value loses this race somewhere. Your server sends <code>Keep-Alive: timeout=5</code>: the pool should honor that header, and retry idempotent requests that hit <code>ECONNRESET</code> on a reused socket.</p>`;
 const pickable = () => s.mode === "today";
-const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 10 minutes ago", "10m ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
+const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
 
 // Where the reveal sends people next. While iterating: the local request page.
 // At launch: NEXT_URL = REQUEST_URL, NEXT_LABEL = "Back the proposal on GitHub ↗" (see LAUNCH.md).
@@ -224,7 +224,7 @@ const NEXT = ` <a class="next" href="${NEXT_URL}">${NEXT_LABEL}</a>`;
 const PROMPTS = {
   ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. Same for everyone else in this thread. <b>Click the comment you think an agent wrote.</b>"],
   right:   ["Good eye. It sounded right, though.", "github-user-b's agent posted it with github-user-b's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag." + NEXT + ""],
-  wrong:   ["Nope. That one's the human.", "The confident fix above came from github-user-b's agent, posted with github-user-b's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag." + NEXT + ""],
+  wrong:   ["Nope. That one's the human.", "The confident fix below it came from github-user-b's agent, posted with github-user-b's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag." + NEXT + ""],
   shown:   ["Same thread, GitHub tomorrow.", "The token github-user-b's agent used marks everything it posts, right next to github-user-b's name. Hover the tag." + NEXT + ""],
   back:    ["Back to today. Can you still spot it?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
 };
@@ -248,7 +248,7 @@ function placeThumb() {
   th.style.width = act.offsetWidth + "px"; th.style.transform = `translateX(${act.offsetLeft}px)`;
 }
 function render() {
-  document.getElementById("thread").innerHTML = alice + agentComment() + humanComment();
+  document.getElementById("thread").innerHTML = alice + humanComment() + agentComment();
   const [h, sub] = PROMPTS[promptKey()];
   const touch = matchMedia("(hover: none)").matches;
   document.getElementById("prompt").innerHTML = `<h1>${h}</h1><p>${touch ? sub.replace(/Hover the tag/g, "Tap the tag") : sub}</p>`;
