@@ -55,8 +55,9 @@ section { padding: 56px 0; }
 .sec-head .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
 h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.015em; margin: 6px 0 12px; }
 .sec-head p { color: var(--ink-2); margin: 0; }
-.stage { max-width: 1040px; margin: 0 auto; padding: 12px 0 40px; display: flex; flex-direction: column; }
-@media (max-width: 1100px) { .stage .toolbar { order: 3; margin: 16px 0 0; flex-wrap: wrap; align-items: flex-start; } .toolbar .modegrp { width: 100%; } .toolbar .grp { flex-wrap: wrap; flex-shrink: 1; max-width: 100%; } .toolbar .custom { position: static; box-shadow: none; border: 0; padding: 0; background: none; flex-basis: 100%; margin-left: 2px; } .toolbar .custom.off { display: none; } .stage .more { order: 4; } }
+main.wrap { max-width: 1140px; }
+.stage { max-width: 1076px; margin: 0 auto; padding: 12px 0 40px; display: flex; flex-direction: column; }
+@media (max-width: 1150px) { .stage .toolbar { order: 3; margin: 16px 0 0; flex-wrap: wrap; align-items: flex-start; } .toolbar .modegrp { width: 100%; } .toolbar .grp { flex-wrap: wrap; flex-shrink: 1; max-width: 100%; } .toolbar .custom { position: static; box-shadow: none; border: 0; padding: 0; background: none; flex-basis: 100%; margin-left: 2px; } .toolbar .custom.off { display: none; } .stage .more { order: 4; } }
 @media (max-width: 720px) { .prompt { min-height: 0; margin-bottom: 16px; } .prompt h1 { font-size: 25px; } .prompt p { font-size: 15.5px; } }
 .prompt { margin: 8px 0 22px; }
 .prompt h1 { font-size: clamp(26px, 4.2vw, 40px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 10px; }
@@ -245,15 +246,15 @@ footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align:
 </section>
 
 <footer class="wrap">
-  A proposal by <a class="js-author" href="#">AUTHOR_NAME</a>. Concept mockups only. Not affiliated with or endorsed by GitHub.<br>
+  A proposal by <a class="js-author" href="https://github.com/github-user-a">Matt Weber</a>. Concept mockups only. Not affiliated with or endorsed by GitHub.<br>
   Drafted with an AI agent and reviewed by a human, which is the workflow this proposal is meant to make visible.
 </footer>
 
 <script>
 // ---- Fill these in at launch ----
 const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
-const AUTHOR_URL  = "https://github.com/REPLACE_ME";
-const AUTHOR_NAME = "REPLACE_ME";
+const AUTHOR_URL  = "https://github.com/github-user-a";
+const AUTHOR_NAME = "Matt Weber";
 // ---------------------------------
 document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; });
 document.querySelectorAll(".js-author").forEach(a => { a.href = AUTHOR_URL; a.textContent = AUTHOR_NAME; });

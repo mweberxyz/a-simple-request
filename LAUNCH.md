@@ -6,14 +6,12 @@ The site and the GitHub discussion need to link to each other, so the order matt
 
 ## 0. Before launch day
 - [ ] Read through `request/feature-request.md`, `outreach/reddit-post.md`, and the site, and rewrite anything that doesn't sound like you.
-- [ ] Decide on the handle and repo used in the mockups (currently `mweber` and `acme/http-client`).
 - [ ] Choose where the site lives. GitHub Pages fits the topic: a repo such as `agent-tag` whose root contains the files in `site/`. A subdomain of your own site also works.
 - [ ] Read the r/ClaudeAI rules on self-promotion and post flair.
 - [ ] **Check for duplicates.** Search the GitHub changelog (github.blog/changelog) and community discussions for "agent", "on behalf of", and "AI attribution". If something has shipped, rethink the request. If a matching discussion already exists, support and link that one instead of filing a new one; the site and Reddit post just point to its URL.
 - [ ] Know that linking the five example issues/PRs from a GitHub discussion adds a "mentioned this" reference on each of them, so their maintainers will see it. That's probably welcome, but it is visible to them.
 
 ## 1. Deploy the site with placeholders
-- [ ] In `site/index.html`, set `AUTHOR_NAME` and `AUTHOR_URL` in the script block at the bottom. Leave `REQUEST_URL` for now.
 - [ ] Change `<meta property="og:image" content="og.png">` to the full URL, e.g. `https://you.github.io/agent-tag/og.png`. Link-preview scrapers need an absolute URL.
 - [ ] Deploy. Write down the site URL (**SITE_URL**).
 
