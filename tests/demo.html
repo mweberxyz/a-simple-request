@@ -104,6 +104,21 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w);
     });
 
+    await test(`role badges line up on the right, like GitHub ${tag}`, async () => {
+      const check = label => {
+        const offs = $$(w, "#thread .hd").map(h => {
+          const r = h.querySelector(".role");
+          if (!r || w.getComputedStyle(r).display === "none") return null;
+          return Math.round(h.getBoundingClientRect().right - r.getBoundingClientRect().right);
+        }).filter(v => v !== null);
+        if (!offs.length) return;  // badges are hidden on phones
+        assert(new Set(offs).size === 1, `${label}: badges not aligned ${JSON.stringify(offs)}`);
+      };
+      reset(w); check("today");
+      mode(w, "proposal"); check("tomorrow");
+      reset(w);
+    });
+
     await test(`picking the human's comment is wrong ${tag}`, async () => {
       reset(w); pick(w, "human");
       assert(h1(w).startsWith("Nope"), `headline was "${h1(w)}"`);

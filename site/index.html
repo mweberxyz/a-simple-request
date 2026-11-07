@@ -96,9 +96,9 @@ main.wrap { max-width: 1140px; }
 .reset:hover { color: var(--ink); }
 .pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
 .pick:hover { box-shadow: 0 0 0 3px var(--brand); transform: translateY(-1px); }
-.pick .hd::after { content: "← the agent wrote this"; margin-left: auto; color: var(--brand); font-weight: 600; font-size: 12px; opacity: 0; transition: opacity .15s; }
-.pick:hover .hd::after { opacity: 1; }
-.pick .role { margin-left: 8px; }
+.pick { position: relative; }
+.pick::after { content: "I think an agent wrote this"; position: absolute; right: 10px; top: 0; transform: translateY(-50%); z-index: 2; background: var(--brand); color: var(--brand-ink); font-weight: 700; font-size: 12px; line-height: 1; padding: 5px 9px; border-radius: 99px; white-space: nowrap; opacity: 0; transition: opacity .15s; pointer-events: none; }
+.pick:hover::after { opacity: 1; }
 
 /* github-ish window (always light, it's a screenshot) */
 .win { background: #fff; color: var(--gh-fg); border-radius: 14px; border: 1px solid #d8dde3; box-shadow: var(--shadow); overflow: hidden; font-size: 14px; line-height: 1.5; color-scheme: light; }
@@ -126,7 +126,7 @@ main.wrap { max-width: 1140px; }
 .box .hd .tag { margin: -1px 0; min-width: 0; }
 .tag .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .when .short { display: none; }
-@media (max-width: 560px) { .box .hd { flex-wrap: nowrap; white-space: nowrap; } .box .hd b, .box .hd .when { flex-shrink: 0; } .box .hd .tag { flex-shrink: 1; } .box .hd .role, .box .hd .via { display: none; } .when .long { display: none; } .when .short { display: inline; } .pick .hd::after { content: none; } }
+@media (max-width: 560px) { .box .hd { flex-wrap: nowrap; white-space: nowrap; } .box .hd b, .box .hd .when { flex-shrink: 0; } .box .hd .tag { flex-shrink: 1; } .box .hd .role, .box .hd .via { display: none; } .when .long { display: none; } .when .short { display: inline; } .pick::after { content: none; } }
 .tag svg { width: 12px; height: 12px; fill: currentColor; display: none; }
 .tag.purple { color: #8250df; border-color: #d8b9ff; background: #fbefff; }
 .tag.glyph svg { display: block; }
