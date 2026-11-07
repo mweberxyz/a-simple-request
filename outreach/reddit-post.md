@@ -2,13 +2,15 @@
 
 **Title:** A simple request to GitHub
 
-**Type:** Text post with the demo link near the top. Check the sub's rules on self-promotion and flair first; if link posts fit better, link https://mweberxyz.github.io/a-simple-request/ and put the body in a first comment.
+**Flair:** Built with Claude. (Rule 7: say what was built, how Claude helped in detail, and that it's free. Rule 10: never ask for Reddit upvotes. Posting needs more than 100 karma.)
+
+**Type:** Text post with the demo link near the top. Check the sub's rules first; if link posts fit better, link https://mweberxyz.github.io/a-simple-request/ and put the body in a first comment.
 
 **Body:**
 
 More and more of what's posted under my name on GitHub comes from Claude Code using my token. On GitHub it looks exactly like something I wrote. Nobody reading it can tell the difference, and I'd like them to be able to.
 
-I made a quick demo: a GitHub thread where one reply came from an agent. See if you can spot it: **https://mweberxyz.github.io/a-simple-request/**
+I made a quick demo: a GitHub thread where one reply came from an agent. See if you can spot it (free, no sign-up): **https://mweberxyz.github.io/a-simple-request/**
 
 So I'm asking GitHub for one small thing: let well-behaved agents identify themselves, and show a marker next to the author's name when they do. It isn't AI detection and it doesn't restrict anything. It's just a standard way for an agent to say "an agent did this."
 
@@ -16,7 +18,7 @@ Projects are already rolling their own: signature lines, "AI-generated" footers,
 
 If you'd want this, a 👍 on the request is what GitHub counts: **https://github.com/orgs/community/discussions/212317**
 
-(Claude helped me build the demo and draft this. I read every line before posting.)
+How Claude helped: I had the idea but no good way to show it, so I used Claude Code to visualize it. I described what I had in mind, and it turned that into something you can actually play with: first static mockups, then the interactive thread above. Iterating on the demo changed the idea too. Every time we simplified the demo, it got clearer, and that showed me the request itself could be much smaller than my first draft. Claude also helped draft this post, and I read every line before posting.
 
 ---
 
