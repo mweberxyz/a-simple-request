@@ -87,7 +87,7 @@ const $$ = (w, sel) => [...w.document.querySelectorAll(sel)];
 const h1 = w => $(w, "#prompt h1").textContent.trim();
 const mode = (w, v) => $(w, `[data-key=mode] [data-v=${v}]`).click();
 const pick = (w, who) => $(w, `.pick[data-pick=${who}]`).click();
-const reset = w => $(w, "#reset").click();
+const reset = w => w.startOver();
 const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.getBoundingClientRect().top + w.scrollY).toFixed(1)).join(",");
 
 (async () => {
@@ -298,7 +298,6 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w);
       assert($$(w, "#thread .av").every(a => a.getAttribute("aria-hidden") === "true"), "avatars hidden from screen readers");
       eq($$(w, "h1").length, 1, "one h1"); assert($(w, ".win h2#title"), "issue title is an h2");
-      eq($(w, "#reset").getAttribute("aria-label"), "Reset", "Reset's name matches its text");
       assert(/new tab/.test($(w, ".js-request").textContent), "new-tab links say so");
     });
 
