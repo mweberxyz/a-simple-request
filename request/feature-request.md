@@ -11,6 +11,8 @@ Increasingly, what's posted under my name on GitHub comes from an agent using my
 
 I'd like a standard way for an agent to say "an agent did this," and a marker next to the author's name when it does.
 
+This is a smaller first step toward [First-class agent identities linked to user accounts](https://github.com/orgs/community/discussions/203213), which asks for full agent personas.
+
 Projects are already inventing their own markers: [drivecore/mycoder#368](https://github.com/drivecore/mycoder/issues/368), [kornia/kornia#6223](https://github.com/kornia/kornia/pull/6223), [humlab-speech/visible-speech-deployment#259](https://github.com/humlab-speech/visible-speech-deployment/pull/259), [Adam-S-Daniel/_agent-guidance#319](https://github.com/Adam-S-Daniel/_agent-guidance/issues/319), [noahdgrant/nightshift#682](https://github.com/noahdgrant/nightshift/issues/682). Each uses its own format, and none can mark actions that have no text, like approvals, merges, and closes.
 
 Possible implementations:

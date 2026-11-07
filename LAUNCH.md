@@ -9,7 +9,7 @@ The site and the GitHub discussion need to link to each other, so the order matt
 - [x] Where the site lives: **GitHub Pages**, served from `docs/` in this repo, at https://mweberxyz.github.io/a-simple-request/ (assumes the repo is named `a-simple-request`; if not, change `og:image` and `og:url` in `docs/index.html`).
 - [ ] Read the r/ClaudeAI rules on self-promotion and post flair.
 - [ ] **Check for duplicates.** Search the GitHub changelog (github.blog/changelog) and community discussions for "agent", "on behalf of", and "AI attribution". If something has shipped, rethink the request. If a matching discussion already exists, support and link that one instead of filing a new one; the site and Reddit post just point to its URL.
-- [ ] Know that linking the five example issues/PRs (and the "Allow to mute bots" discussion) from a GitHub discussion adds a "mentioned this" reference on each of them, so their maintainers and participants will see it. That's probably welcome, but it is visible to them.
+- [ ] Know that linking the five example issues/PRs (and the "Allow to mute bots" and "First-class agent identities" discussions) from a GitHub discussion adds a "mentioned this" reference on each of them, so their maintainers and participants will see it. That's probably welcome, but it is visible to them.
 
 ## 1. Deploy the site with placeholders
 - [ ] On GitHub, create a **public** repo named `a-simple-request` (Pages on a free account needs it public). Making it public publishes everything in it, including these drafts, so do this on launch day.
