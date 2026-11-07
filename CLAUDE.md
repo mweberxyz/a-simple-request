@@ -29,6 +29,8 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 |---|---|
 | `request/feature-request.md` | GitHub discussion text. Has `SITE_URL` placeholder and image slots. |
 | `site/index.html` | The demo site: one self-contained file with inline CSS and JS, light and dark themes. URLs and author are set in constants at the bottom of the file. |
+| `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the proposal section and the CTA on `index.html`. |
+| `site/request.md`, `site/mockups` | **Symlinks** to `../request/feature-request.md` and `../mockups`. The request page always shows the current text and mockups, so edit the originals and never these. |
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
 | `mockups/*.html`, `mock.css` | Sources for the four mockup PNGs attached to the request. |
 | `outreach/reddit-post.md` | Reddit post plus notes for r/github, HN, and social media. |
@@ -57,6 +59,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 
 - `mweber` handle and `acme/http-client` repo in the mockups and demo (decide whether to use the real handle).
 - In `site/index.html`: `REQUEST_URL`, `AUTHOR_URL`, `AUTHOR_NAME`, and an absolute `og:image` URL.
+- In `site/request.html`: `REQUEST_URL` (keep it the same as in index.html) and an absolute `og:image` URL.
 - `SITE_URL` in `request/feature-request.md`; `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
 
 ## Progress
@@ -67,9 +70,10 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - [x] Interactive demo site plus OG image, checked on desktop, mobile, and dark mode.
 - [x] Reddit post draft and launch checklist.
 - [x] Moved into this repo (2026-11-06).
+- [x] "Full feature request" page on the site, rendered live from the request markdown.
 - [ ] Iterate on content and design with Matt. ← **current**
 - [ ] Duplicate check: GitHub changelog plus community discussions.
-- [ ] Decide on hosting. GitHub Pages serves from the repo root or `/docs` only, not `/site`, so either move the folder or use a Pages workflow.
+- [ ] Decide on hosting. GitHub Pages serves from the repo root or `/docs` only, not `/site`, so either move the folder or use a Pages workflow. Either way, the deploy must **copy the symlinked files as real files** (e.g. `cp -RL site/ out/`), because hosts may not follow symlinks.
 - [ ] Fill placeholders, then launch per `LAUNCH.md`.
 
 ## Log
@@ -77,3 +81,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Initial mockups, site, request, outreach drafts. A side session researched prior art and the five workaround repos were verified and added.
 - **2026-11-06:** Added working agreements to commit proactively and keep CLAUDE.md current.
 - **2026-11-06:** Cut the "What this isn't" section from the site to make it punchier. The Non-goals section stays in the feature request.
+- **2026-11-06:** Added `site/request.html`, which renders the feature request live from the markdown via symlinks, so the site and the request can be reviewed together while iterating. The comparison table stacks on phones.
