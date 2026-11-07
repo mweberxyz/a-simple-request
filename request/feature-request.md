@@ -18,7 +18,7 @@ Possible implementations:
 - A request header that agents send on every API call
 - A setting on the token, chosen when it's created
 
-What comes next:
+What this would enable:
 
 - Muting or filtering agents, the way [Allow to mute bots](https://github.com/orgs/community/discussions/5793) asks for bots
 - Letting the person mark an agent's post as reviewed
