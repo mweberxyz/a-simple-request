@@ -54,7 +54,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 |---|---|
 | `request/feature-request.md` | GitHub discussion text. Has `SITE_URL` placeholder and image slots. |
 | `site/index.html` | The demo site: one self-contained file with inline CSS and JS, light and dark themes. URLs and author are set in constants at the bottom of the file. |
-| `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the proposal section and the CTA on `index.html`. |
+| `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the call-out card right below the demo and from the CTA on `index.html`. |
 | `site/request.md`, `site/mockups` | **Symlinks** to `../request/feature-request.md` and `../mockups`. The request page always shows the current text and mockups, so edit the originals and never these. |
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
 | `mockups/*.html`, `mock.css` | Sources for the four mockup PNGs attached to the request. |
@@ -113,3 +113,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** The repo will be published on GitHub with full history. A privacy audit found nothing to fix; the only identifying detail is the commit author email. Added the public-repo warning section and a pre-commit check to the top of this file.
 - **2026-11-06:** Added a gitignored `CLAUDE.local.md` for private, cross-session context, and moved machine-specific notes into it.
 - **2026-11-06:** Re-signed all commits with Matt's GPG key (contents and author dates unchanged) and turned on signing for this repo.
+- **2026-11-06:** Landing page principle: the demo hooks people, and the full feature request is where they go next. Anything the request already covers well comes off the landing page. Removed "The proposal: four small pieces" and replaced it with a prominent "Read the full feature request" card right below the demo.
