@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Agent session tokens</title><link rel="stylesheet" href="mock.css">
+<html><head><meta charset="utf-8"><title>Agent attribution on tokens</title><link rel="stylesheet" href="mock.css">
 <style>
   .field { margin-bottom: 22px; }
   .field > label { display: block; font-weight: 600; margin-bottom: 6px; }
@@ -28,7 +28,7 @@
     </div>
 
     <div class="field">
-      <label>Session type <span class="mk">1</span></label>
+      <label>Attribution <span class="mk">1</span></label>
       <div class="radio">
         <span class="r"></span>
         <div><b>Personal</b><span class="d">You review what's sent with this token. Content appears under your name as it does today.</span></div>
@@ -55,7 +55,7 @@
 
 <div class="notes">
   <div class="title">Mockup 2 of 4</div>
-  <h2>The credential sets the session type, not the client</h2>
+  <h2>The credential sets the attribution, not the client</h2>
   <div class="note"><span class="marker">1</span><p><b>Chosen when you create the credential.</b> The same choice belongs on the OAuth / GitHub App authorization screen, on SSH keys, and in <code>gh auth login --agent</code>.</p></div>
   <div class="note"><span class="marker">2</span><p><b>The agent can't remove it.</b> A tag the client sets on itself is easy to skip. A tag tied to the credential is reliable. "Personal" stays the default, so nothing changes for anyone who doesn't opt in.</p></div>
   <div class="note"><span class="marker">3</span><p><b>Named for the person, not the vendor.</b> You choose the label, so you can tell your own agents apart.</p></div>

@@ -259,7 +259,7 @@ function tagHTML(owner = AGENT_OWNER, via = "") {
     if (s.swapped) cls += " swap";
   }
   if (s.justRevealed) cls += s.justRevealed === "toggle" ? " pop pop-quick" : " pop";
-  return `<button type="button" class="${cls}" style="${style}" aria-labelledby="tagtxt" aria-describedby="tagtip"><svg aria-hidden="true"><use href="#gl"/></svg><span class="txt" id="tagtxt">${label}</span><span class="tip" role="tooltip" id="tagtip"><b>Posted by an agent on ${owner}'s behalf</b>${via ? `Sent via ${via}. ` : ""}${owner} hasn't reviewed this. The agent session was authorized by ${owner}${via ? " on Nov 4" : ""}.</span></button>`;
+  return `<button type="button" class="${cls}" style="${style}" aria-labelledby="tagtxt" aria-describedby="tagtip"><svg aria-hidden="true"><use href="#gl"/></svg><span class="txt" id="tagtxt">${label}</span><span class="tip" role="tooltip" id="tagtip"><b>Posted by an agent on ${owner}'s behalf</b>${via ? `Sent via ${via}. ` : ""}${owner} hasn't reviewed this. ${owner} turned on agent attribution for this token${via ? " on Nov 4" : ""}.</span></button>`;
 }
 
 const pickable = () => s.mode === "today";

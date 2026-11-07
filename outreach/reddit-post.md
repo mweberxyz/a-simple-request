@@ -10,7 +10,7 @@ I've spent years building trust with the people I work with on GitHub. When my n
 
 Now Claude Code (and other agents) post issues, comments, and PRs with my credentials. Most of it is fine and I don't review all of it. Reviewing everything would defeat the purpose. But on GitHub, an unreviewed agent comment looks exactly like something I wrote myself.
 
-So I'm asking GitHub for one small thing: **let me mark a token or login as an agent session.** Anything created with it gets a small `agent` tag next to my name. I can "endorse" the items I review, which removes the tag. Readers can collapse unreviewed agent activity if they want.
+So I'm asking GitHub for one small thing: **agent attribution: let me mark a token or login as an agent's.** Anything created with it gets a small `agent` tag next to my name. I can "endorse" the items I review, which removes the tag. Readers can collapse unreviewed agent activity if they want.
 
 I'm not the only one dealing with this. Projects like kornia already require agents to sign posts "Posted on behalf of @handle by Agent," and others add AI-generated footers or move agents to separate bot accounts. Each project uses its own format, it all relies on the honor system, and none of it can mark an approval or a merge. The full request links to five examples.
 
@@ -26,6 +26,6 @@ If you'd use this, the feature request is here. An upvote, or a comment about yo
 
 ## Optional extra places (only post where it fits the rules)
 
-- **r/github**: same body with the first paragraph trimmed. Title: "Feature request: let agent sessions tag what they post under your name"
+- **r/github**: same body with the first paragraph trimmed. Title: "Feature request: agent attribution for what agents post under your name"
 - **Hacker News**: link to SITE_URL, title "A simple request to GitHub: tag what agents post under your name". Don't ask for upvotes on HN.
 - **Your own social accounts / Bluesky / Mastodon**: one line plus SITE_URL. The link-preview image does the rest.

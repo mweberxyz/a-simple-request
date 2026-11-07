@@ -5,13 +5,13 @@
   Attach the four numbered PNGs from mockups/ by dragging them into the editor at the marked spots.
 -->
 
-# Agent sessions: mark content an agent posted for you, without your review
+# Agent attribution: mark content an agent posted for you, without your review
 
 ## Summary
 
-Let users mark a credential (PAT, OAuth grant, GitHub App user token, `gh` login) as an **agent session**. Anything created with that credential, such as comments, issues, PRs, reviews, and pushes, shows a small `agent` tag next to the user's name. The user can later **endorse** an item, which removes the tag. Readers and maintainers can filter on the tag.
+Let users turn on **agent attribution** for a credential (PAT, OAuth grant, GitHub App user token, `gh` login). Anything created with that credential, such as comments, issues, PRs, reviews, and pushes, shows a small `agent` tag next to the user's name. The user can later **endorse** an item, which removes the tag. Readers and maintainers can filter on the tag.
 
-This adds no new account type. The tag is a fact about the session, stored next to the user's identity.
+This adds no new account type. The tag is a fact about the credential, stored next to the user's identity.
 
 ## The problem
 
@@ -25,7 +25,7 @@ The useful line isn't *"a machine typed this."* It's *"the person named here has
 
 ## Proposal
 
-### 1. The session type belongs to the credential
+### 1. Attribution belongs to the credential
 When you create a PAT, authorize an OAuth app or GitHub App, or run `gh auth login`, you choose **Personal** (the default, same as today) or **Agent**. The choice is fixed when the credential is created. The client using it can't remove it. A label a client applies to itself is easy to skip. One tied to the credential is reliable.
 
 Optionally, the user names the agent (for example "Claude Code" or "triage bot"), and the name appears as "via …".
@@ -33,7 +33,7 @@ Optionally, the user names the agent (for example "Claude Code" or "triage bot")
 <!-- attach 2-token-settings.png -->
 
 ### 2. An `agent` tag next to the user's name
-Content created by an agent session shows an `agent` tag beside the author's name, in the same family as the existing `bot` label. Hovering explains it: *"Posted by an agent on @user's behalf. @user hasn't reviewed this."* The account, the permissions, and the responsibility stay with the user.
+Content created with agent attribution shows an `agent` tag beside the author's name, in the same family as the existing `bot` label. Hovering explains it: *"Posted by an agent on @user's behalf. @user hasn't reviewed this."* The account, the permissions, and the responsibility stay with the user.
 
 <!-- attach 1-comment-thread.png -->
 
@@ -43,7 +43,7 @@ The user can review any agent-created item and **endorse** it. The tag is remove
 ### 4. Filters for readers, and the API
 - In a repo, readers can **show / collapse / hide** unreviewed agent activity. Maintainers can set the repo default.
 - Notification filters can exclude unreviewed agent activity.
-- REST/GraphQL expose the field, similar to the existing `performed_via_github_app`, e.g. `agent_session: { name, endorsed_by, endorsed_at }`.
+- REST/GraphQL expose the field, similar to the existing `performed_via_github_app`, e.g. `agent_attribution: { name, endorsed_by, endorsed_at }`.
 
 <!-- attach 3-pull-request.png -->
 
@@ -79,14 +79,14 @@ All of these rely on the honor system, each project invents its own format, and 
 ## Non-goals
 
 - **Detecting AI-written text.** This is declared provenance, not detection.
-- **Shaming or limiting agent use.** Agent sessions keep the same permissions. The tag only says whether a person reviewed the content.
+- **Shaming or limiting agent use.** Credentials with agent attribution keep the same permissions. The tag only says whether a person reviewed the content.
 - **Enforcing honesty.** A user can still give an agent a Personal token. The goal is to make the honest path the easy and expected one, and the API field lets orgs require agent tokens for automation if they want to.
 
 ## Open questions
 
 - **Commits:** tag commits pushed by an agent credential, mark a signing key as an agent key ("Verified · agent"), or both?
-- **Bulk endorse** for a PR or a whole session?
-- Should orgs be able to **require** that automation uses agent sessions?
+- **Bulk endorse** for a PR, or for everything an agent credential posted in a time range?
+- Should orgs be able to **require** agent attribution on credentials used for automation?
 
 ---
 *I drafted this request and the mockups with an AI agent, then reviewed every line before posting. That's the workflow this proposal is meant to make visible.*

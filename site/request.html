@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agent sessions · Feature request</title>
+<title>Agent attribution · Feature request</title>
 <meta name="description" content="Mark what an agent posts with your credentials, so people can tell it from what you reviewed.">
 <meta property="og:title" content="A simple request to GitHub: the full proposal">
 <meta property="og:description" content="Mark what an agent posts with your credentials, so people can tell it from what you reviewed.">
@@ -83,14 +83,14 @@ document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.
 
 // Alt text says what each mockup shows; the caption under it says what it's for.
 const ALTS = {
-  "1-comment-thread.png": "A GitHub issue thread. github-user-a's comment has a purple agent tag next to the name and \"via Claude Code\". A tooltip reads: Posted by an agent on github-user-a's behalf. github-user-a hasn't reviewed this comment. The agent session was authorized by github-user-a on Nov 4.",
-  "2-token-settings.png": "GitHub's new fine-grained token page with a Session type choice: Personal (you review what's sent) or Agent (an automated agent acts for you without review, and everything it creates is tagged agent). An optional agent name is set to Claude Code, with a preview of a tagged comment.",
+  "1-comment-thread.png": "A GitHub issue thread. github-user-a's comment has a purple agent tag next to the name and \"via Claude Code\". A tooltip reads: Posted by an agent on github-user-a's behalf. github-user-a hasn't reviewed this comment. github-user-a turned on agent attribution for this token on Nov 4.",
+  "2-token-settings.png": "GitHub's new fine-grained token page with an Attribution choice: Personal (you review what's sent) or Agent (an automated agent acts for you without review, and everything it creates is tagged agent). An optional agent name is set to Claude Code, with a preview of a tagged comment.",
   "3-pull-request.png": "A pull request opened by github-user-a with the agent tag. A banner only the author sees offers Review changes or Endorse as mine. A filter for unreviewed agent activity offers Show, Collapse, or Hide. Further down, collapsed agent activity, and a timeline entry saying github-user-a reviewed and endorsed the agent's changes.",
   "4-tag-styles.png": "Three tag styles side by side: A, grey like the existing bot label; B, purple with a robot glyph; C, a style the user picks in profile settings, with a label suffix and a color from a fixed palette that leaves out green.",
 };
 const CAPTIONS = {
   "1-comment-thread.png": "Mockup 1: the agent tag on a comment.",
-  "2-token-settings.png": "Mockup 2: choosing the session type when creating a token.",
+  "2-token-settings.png": "Mockup 2: turning on agent attribution when creating a token.",
   "3-pull-request.png": "Mockup 3: endorsing an agent's PR, and filtering agent activity.",
   "4-tag-styles.png": "Mockup 4: tag style options.",
 };

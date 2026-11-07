@@ -27,7 +27,7 @@
 
 ## What this is
 
-Matt is asking GitHub for a feature: let a credential (PAT, OAuth grant, GitHub App user token, `gh` login) be marked as an **agent session**. Anything created with it shows an `agent` tag next to the user's name, so readers can tell what the person actually reviewed from what an agent posted on their behalf without review.
+Matt is asking GitHub for a feature: let a credential (PAT, OAuth grant, GitHub App user token, `gh` login) be marked for **agent attribution**. Anything created with it shows an `agent` tag next to the user's name, so readers can tell what the person actually reviewed from what an agent posted on their behalf without review.
 
 The goal is to keep a person's name meaningful on GitHub while agents post with their credentials. The question that matters is not "did a machine type this?" but "did the person named here look at this?"
 
@@ -40,7 +40,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 
 ## The proposal (settled decisions)
 
-- **The credential carries the session type.** Personal (the default) or Agent, fixed when the credential is created, so the client can't remove the tag. A label the client applies to itself is not reliable.
+- **The credential carries the attribution.** Personal (the default) or Agent, fixed when the credential is created, so the client can't remove the tag. A label the client applies to itself is not reliable.
 - **An `agent` tag next to the user's own name,** in the same family as the existing `bot` label. It stays the same account and the same responsibility. Hovering explains the tag. "via <agent name>" shows the name the user gave the agent.
 - **Endorse as mine.** The user reviews an item and endorses it. The tag is removed and the timeline records the endorsement.
 - **Filters.** Readers and maintainers can show, collapse, or hide unreviewed agent activity, with matching notification filters and an API field (similar to `performed_via_github_app`).
@@ -51,6 +51,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **Non-goals:** AI detection, penalizing agent use, separate bot accounts.
 - **Evidence of demand:** five verified repos already have their own workarounds (footers, signature lines, labels, separate identities): drivecore/mycoder#368, kornia/kornia#6223, humlab-speech/visible-speech-deployment#259, Adam-S-Daniel/_agent-guidance#319, noahdgrant/nightshift#682. They are cited in the request (so they also appear on the site's full-request page) and in the Reddit post.
 
+- **The feature is called "agent attribution"** (not "agent sessions"). Use it in the request, mockups, site, and outreach: a credential has agent attribution turned on; content created with it is attributed to an agent; the API field is `agent_attribution`. The token setting is labeled "Attribution" (Personal or Agent).
 - **One name, one line.** Every title and preview uses the name *A simple request to GitHub* and the line *An agent using your token looks exactly like you.*, the same words the demo opens with. Landing tab: "Spot the slop · A simple request to GitHub". Preview and search text: "An agent using your token looks exactly like you. One small change would let GitHub tell you apart." The request page keeps the request's professional voice: tab "Agent sessions · Feature request". Change them together (a test checks they match).
 
 ## Layout
@@ -163,3 +164,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Left and right arrow keys step through the Turbo conversations (wrapping around) and restart the countdown. They do nothing unless Turbo is cycling, or with a modifier key held. Tests: 66 checks.
 - **2026-11-06:** Accessibility pass. Guessing works by keyboard: each reply has a real "I think an agent wrote this" button (the old hover pill), and a keyboard guess moves focus to the revealed tag. The agent tag is a button named by its label and described by its tooltip; Escape hides the tooltip. Turbo has pause/play and previous/next controls in the window's top bar (it changes content on its own, so it needs a pause: WCAG 2.2.2), and it holds while focus is in the thread. The live prompt is only rewritten (and re-announced) when its text changes, not on every Turbo swap. Contrast: light-theme muted text darkened to 5:1 on both pages, and the Turbo rainbow uses darker stops in light mode and a lighter purple in dark mode (all at least 4.5:1). The Turbo wiggle stops after four nudges. Also: avatars hidden from screen readers, issue title is an h2, Reset's accessible name matches its text and it has a 32px target, visible focus rings, and new-tab links say so. Request page: mockups are figures with descriptive alt text separate from the captions. Tests: 86 checks.
 - **2026-11-06:** Made the titles and metadata consistent (see "One name, one line"). Replaced the generic tab titles ("Agent-Tagged Posts", "The Feature Request") and the first-person preview line ("Let me tell people when an agent posted for me") with the reader-facing line from the demo. Re-rendered og.png. Tests: 87 checks.
+- **2026-11-06:** Renamed the feature from "agent sessions" to **agent attribution** everywhere (Matt): request title and text, API field (`agent_attribution`), mockups 1 and 2 (tooltip, token setting labeled "Attribution"), site tooltip ("X turned on agent attribution for this token"), request page title, alt text and captions, Reddit draft, and this file. Re-rendered mockups 1 and 2. "Session" now only means a working session (Claude's or a browser's).
