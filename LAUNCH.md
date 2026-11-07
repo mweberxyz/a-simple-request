@@ -12,10 +12,10 @@ The site and the GitHub discussion need to link to each other, so the order matt
 - [ ] Know that linking the five example issues/PRs (and the "Allow to mute bots" discussion) from a GitHub discussion adds a "mentioned this" reference on each of them, so their maintainers and participants will see it. That's probably welcome, but it is visible to them.
 
 ## 1. Deploy the site with placeholders
-- [ ] On GitHub, create a **public** repo named `a-simple-request` (Pages on a free account needs it public). Making it public publishes everything in it, including these drafts, so do this on launch day.
-- [ ] Push `main` (commands are in CLAUDE.md under "Deploying").
-- [ ] Repo Settings → Pages → Build and deployment: **Deploy from a branch**, branch `main`, folder **/docs**. Save, and wait a minute for the first deploy.
-- [ ] Open https://mweberxyz.github.io/a-simple-request/ and play the demo once. That URL is **SITE_URL**.
+- [x] On GitHub, create a **public** repo named `a-simple-request` (Pages on a free account needs it public). Making it public publishes everything in it, including these drafts, so do this on launch day.
+- [x] Push `main` (commands are in CLAUDE.md under "Deploying").
+- [x] Repo Settings → Pages → Build and deployment: **Deploy from a branch**, branch `main`, folder **/docs**. Save, and wait a minute for the first deploy.
+- [x] Open https://mweberxyz.github.io/a-simple-request/ and play the demo once. That URL is **SITE_URL**.
 
 ## 2. File the feature request
 - [ ] Go to github.com/orgs/community/discussions → New discussion. Category: **💭 Other Feature Feedback, Questions, & Ideas** (under "Questions & Other Feedback"). The ask spans issues, PRs, reviews, and the API, so no single product category owns it, and similar cross-cutting requests live there. If the form asks for a feedback type, choose **Product Feedback**.
