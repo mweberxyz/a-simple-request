@@ -23,7 +23,7 @@
 <script>
 // Loads the real site in iframes at several widths and checks the demo's behavior.
 // Run headless with tests/run.sh, or open /tests/demo.html from a server rooted at the repo.
-const SITE = "../site/index.html", DRAFT = "../request/feature-request.md";
+const SITE = "../site/index.html", REQUEST = "../site/request.html";
 const WIDTHS = [1280, 1024, 375, 360];  // 360 = common Android width
 const results = [];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -123,9 +123,13 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       $(w, "[data-key=style] [data-v=purple]").click(); reset(w);
     });
 
-    await test(`the result screens don't link away ${tag}`, async () => {
-      reset(w); pick(w, "agent");
-      assert(!$(w, "#prompt a"), "no link in the result");
+    await test(`the reveal links to the proposal ${tag}`, async () => {
+      reset(w);
+      assert(!$(w, "#prompt a.next"), "no proposal link before a guess");
+      assert(!$(w, ".more"), "old card should be gone");
+      pick(w, "agent");
+      const a = $(w, "#prompt a.next");
+      assert(a && a.getAttribute("href"), "proposal link after a guess");
       reset(w);
     });
 
@@ -386,15 +390,25 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     });
   }
 
-  // The discussion draft stays short, like popular requests in the category.
-  await test("discussion draft is short and has no images or placeholders", async () => {
-    const md = (await fetch(DRAFT, { cache: "no-store" }).then(r => r.text())).replace(/^\s*<!--[\s\S]*?-->\s*/, "");
-    assert(md.startsWith("# Allow well-behaved agents to self identify"), "title");
-    const words = md.replace(/\]\([^)]*\)/g, "]").trim().split(/\s+/).length;
-    assert(words < 250, `draft should stay short (${words} words)`);
-    assert(/Possible implementations/.test(md), "lists possible implementations");
-    assert(!/!\[|<img|SITE_URL|attach /.test(md), "no images or placeholders");
-  });
+  // The full feature request page renders from the markdown, with images.
+  {
+    const w = await load(REQUEST, 1024);
+    await test("full request page renders", async () => {
+      for (let i = 0; i < 30 && !$(w, "#doc h1"); i++) await sleep(100);
+      assert($(w, "#doc h1"), "no title rendered (markdown or marked.js failed to load)");
+      eq($(w, "#doc h1").textContent, "Allow well-behaved agents to self identify", "title");
+      const words = $(w, "#doc").textContent.trim().split(/\s+/).length;
+      assert(words < 250, `request should be short like popular requests (${words} words)`);
+      assert(/Possible implementations/.test($(w, "#doc").textContent), "lists possible implementations");
+      eq($$(w, "#doc a[href*='github.com/']").length >= 5, true, "links the five workaround repos");
+      eq($$(w, "#doc img").length, 0, "no screenshots in the request");
+      assert(!$(w, "#doc pre"), "no code demo in the request");
+      assert(!w.document.body.innerText.includes("SITE_URL"), "SITE_URL placeholder visible");
+      assert(!$(w, "#doc").innerHTML.includes("&lt;!--"), "HTML comment visible");
+      assert($$(w, "#doc a[target=_blank]").every(a => /new tab/.test(a.textContent)), "new-tab links say so");
+      { const b = lowContrast(w); assert(!b.length, "request page contrast: " + b.join(", ")); }
+    });
+  }
 
   // Report
   const failed = results.filter(r => !r.ok);
