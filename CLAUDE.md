@@ -110,7 +110,7 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
 - In `docs/index.html`: `REQUEST_URL`. (`og:image`/`og:url` already point at https://mweberxyz.github.io/a-simple-request/; change them if the repo gets another name.)
-`SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
+- `REQUEST_URL` in `outreach/reddit-post.md` (SITE_URL is filled in).
 
 ## Progress
 
@@ -201,3 +201,4 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 - **2026-11-07:** Added `LICENSE`: CC0 1.0 Universal, Matt's choice, from the official Creative Commons plain-text copy.
 - **2026-11-07:** Live on GitHub Pages at https://mweberxyz.github.io/a-simple-request/ (Matt created the public repo, pushed over HTTPS, and enabled Pages from `/docs`). Verified: page and og.png load, the live HTML matches `docs/index.html`, and the demo plays. `REQUEST_URL` is still the placeholder until the discussion is posted.
 - **2026-11-07:** Added the live demo link to the end of the request ("Interactive demo: https://mweberxyz.github.io/a-simple-request/") and removed the reminder to add it.
+- **2026-11-07:** Filled SITE_URL (https://mweberxyz.github.io/a-simple-request/) in the Reddit draft; only REQUEST_URL is left there.
