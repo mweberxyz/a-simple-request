@@ -1,0 +1,67 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Agent tag styles</title><link rel="stylesheet" href="mock.css">
+<style>
+  .opt { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 18px; overflow: hidden; }
+  .opt .oh { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 10px; }
+  .opt .oh .tag { font-weight: 700; }
+  .opt .oh .d { color: var(--muted); font-size: 13px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #eef1f4; }
+  .row:last-child { border-bottom: 0; }
+  .row .ctx { color: var(--muted); font-size: 13px; }
+  .row b { color: var(--fg); }
+  .settings { display: flex; gap: 22px; padding: 14px; }
+  .settings .col { flex: 1; }
+  .settings label { display: block; font-weight: 600; font-size: 13px; margin: 0 0 6px; }
+  .input { border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; background: #fff; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+  .fixed { color: var(--muted); background: var(--canvas); border-radius: 4px; padding: 0 6px; }
+  .sw { display: flex; gap: 8px; }
+  .sw span { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--border); }
+  .sw span.on { box-shadow: 0 0 0 2px var(--fg); }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+</style></head>
+<body><div class="frame">
+<svg width="0" height="0" style="position:absolute"><symbol id="gl" viewBox="0 0 16 16"><path d="M7.25 1h1.5v2h3A2.25 2.25 0 0 1 14 5.25v6.5A2.25 2.25 0 0 1 11.75 14h-7.5A2.25 2.25 0 0 1 2 11.75v-6.5A2.25 2.25 0 0 1 4.25 3h3V1ZM4.25 4.5a.75.75 0 0 0-.75.75v6.5c0 .41.34.75.75.75h7.5a.75.75 0 0 0 .75-.75v-6.5a.75.75 0 0 0-.75-.75h-7.5ZM6 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></symbol></svg>
+<div class="page">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="crumbs">&nbsp; <b>Agent tag: style options</b></span></div>
+  <div class="content">
+
+    <div class="opt">
+      <div class="oh"><span class="tag">A · Grey</span><span class="d">Same as the existing <code>bot</code> label. Quiet, and needs no new design.</span></div>
+      <div class="row"><b>github-user-a</b> <span class="pill agent">agent</span> <span class="ctx">commented 2 hours ago · via Claude Code</span></div>
+      <div class="row"><b>github-user-a</b> <span class="pill agent">agent</span> <span class="ctx">wants to merge 3 commits into <code>main</code></span></div>
+    </div>
+
+    <div class="opt">
+      <div class="oh"><span class="tag">B · Purple with glyph</span><span class="d">Stands out at a glance, and the glyph still reads without color.</span></div>
+      <div class="row"><b>github-user-a</b> <span class="pill agent purple"><svg class="gl"><use href="#gl"/></svg>agent</span> <span class="ctx">commented 2 hours ago · via Claude Code</span></div>
+      <div class="row"><b>github-user-a</b> <span class="pill agent purple"><svg class="gl"><use href="#gl"/></svg>agent</span> <span class="ctx">wants to merge 3 commits into <code>main</code></span></div>
+    </div>
+
+    <div class="opt" style="margin-bottom:0">
+      <div class="oh"><span class="tag">C · You choose the style</span><span class="d">Settings › Profile › Agent tag</span></div>
+      <div class="settings">
+        <div class="col">
+          <label>Label</label>
+          <div class="input"><span class="fixed"><svg class="gl" width="12" height="12" style="fill:#59636e;vertical-align:-1px"><use href="#gl"/></svg> agent</span> · <span>github-user-a-bot</span></div>
+          <div class="hint">The glyph and the word "agent" are always shown. You can add up to 16 characters after them.</div>
+        </div>
+        <div class="col" style="flex:.8">
+          <label>Color</label>
+          <div class="sw"><span style="background:#eaeef2"></span><span style="background:#d8b9ff"></span><span style="background:#54aeff"></span><span class="on" style="background:#eac54f"></span><span style="background:#ff8182"></span></div>
+          <div class="hint">Colors come from a fixed, accessible palette. Green isn't offered, so the tag can't look like a "verified" badge.</div>
+        </div>
+      </div>
+      <div class="row"><span class="ctx">Preview:</span> <b>github-user-a</b> <span class="pill agent custom"><svg class="gl"><use href="#gl"/></svg>agent · github-user-a-bot</span> <span class="ctx">commented just now</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="notes">
+  <div class="title">Mockup 4 of 4</div>
+  <h2>How should the tag look?</h2>
+  <div class="note"><span class="marker">A</span><p><b>Grey</b> is the easiest to ship and matches GitHub's existing bot label. The downside is that it's easy to miss.</p></div>
+  <div class="note"><span class="marker">B</span><p><b>Purple with a glyph</b> stands out more, and the glyph works for colorblind readers and screen readers (<code>aria-label="posted by an agent"</code>).</p></div>
+  <div class="note"><span class="marker">C</span><p><b>You choose the style</b> lets each person show how they work, for example "agent · triage" next to "agent · docs". The word "agent", the glyph, and the shape always stay the same, so the tag is recognizable everywhere and nobody can style it to look like a human post.</p></div>
+</div>
+</div></body></html>

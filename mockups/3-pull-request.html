@@ -1,0 +1,63 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Agent pull request</title><link rel="stylesheet" href="mock.css">
+<style>
+  .banner { border: 1px solid var(--border); background: var(--canvas); border-radius: 6px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+  .banner p { margin: 0; flex: 1; }
+  .banner .who { color: var(--muted); font-size: 12px; }
+  .filter { display: flex; align-items: center; gap: 10px; justify-content: flex-end; margin: -6px 0 16px; color: var(--muted); font-size: 13px; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .seg span { padding: 2px 10px; border-right: 1px solid var(--border); background: #fff; }
+  .seg span:last-child { border-right: 0; }
+  .seg span.on { background: var(--canvas); color: var(--fg); font-weight: 600; }
+  .collapsed { margin: 0 0 18px 54px; border: 1px dashed var(--border); border-radius: 6px; padding: 7px 14px; color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .collapsed b { color: var(--fg); }
+</style></head>
+<body><div class="frame">
+<div class="page">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="crumbs">&nbsp; acme / <b>http-client</b> &nbsp;›&nbsp; Pull requests &nbsp;›&nbsp; #4190</span></div>
+  <div class="content">
+    <h1>Honor server <code style="font-size:20px">Keep-Alive: timeout</code> when pooling sockets <span class="num">#4190</span></h1>
+    <div class="sub"><span class="state">⇄ Open</span> <b>github-user-a</b> <span class="pill agent">agent</span> wants to merge 3 commits into <code>main</code> from <code>fix/keepalive-timeout</code></div>
+
+    <div class="banner">
+      <span class="mk">1</span>
+      <p><b>An agent opened this pull request for you without your review.</b><br><span class="who">Only you see this. Others see the <span class="pill agent">agent</span> tag until you endorse it.</span></p>
+      <span class="btn">Review changes</span>
+      <span class="btn primary">Endorse as mine</span>
+    </div>
+
+    <div class="filter"><span class="mk">2</span> Unreviewed agent activity: <span class="seg"><span>Show</span><span class="on">Collapse</span><span>Hide</span></span></div>
+
+    <div class="comment">
+      <div class="av c-dev">D</div>
+      <div class="box">
+        <div class="hd"><b>devon-k</b> reviewed 1 hour ago <span class="spacer"></span><span class="pill role">Maintainer</span></div>
+        <div class="bd"><p>Approach looks right. Can we clamp to a 1s minimum so a bad header can't cause churn?</p></div>
+      </div>
+    </div>
+
+    <div class="collapsed"><span class="mk">2</span> <b>github-user-a</b> <span class="pill agent">agent</span> pushed 1 commit and left 2 comments · <span style="color:var(--accent)">show</span></div>
+
+    <div class="event">
+      <span class="ic"><svg viewBox="0 0 16 16"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span>
+      <span><b>github-user-a</b> reviewed and endorsed the agent's changes, so they now count as theirs · 5 minutes ago <span class="mk">3</span></span>
+    </div>
+
+    <div class="comment" style="margin-bottom:0">
+      <div class="av c-matt">M</div>
+      <div class="box">
+        <div class="hd"><b>github-user-a</b> commented 5 minutes ago <span class="spacer"></span><span class="pill role">Member</span></div>
+        <div class="bd"><p>Added the 1s clamp. I've read the whole diff, so this is ready for another look.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notes">
+  <div class="title">Mockup 3 of 4</div>
+  <h2>Endorsing work, and filtering by it</h2>
+  <div class="note"><span class="marker">1</span><p><b>"Endorse as mine."</b> The author reviews the agent's work and takes it on as their own. The tag goes away, and the timeline keeps a record that it was endorsed. Review what matters and let the rest go out honestly tagged.</p></div>
+  <div class="note"><span class="marker">2</span><p><b>Readers choose how much agent activity to see.</b> Maintainers can collapse or hide unreviewed agent activity per repo, and the API and notification filters get the same option.</p></div>
+  <div class="note"><span class="marker">3</span><p><b>The record shows who stands behind each change.</b> Endorsing is visible and permanent, so whose review backs a change is never in doubt.</p></div>
+</div>
+</div></body></html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Agent tag on comments</title><link rel="stylesheet" href="mock.css"></head>
+<body><div class="frame">
+<div class="page">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="crumbs">&nbsp; acme / <b>http-client</b> &nbsp;›&nbsp; Issues &nbsp;›&nbsp; #4182</span></div>
+  <div class="content">
+    <h1>Intermittent <code style="font-size:20px">ECONNRESET</code> when reusing keep-alive sockets <span class="num">#4182</span></h1>
+    <div class="sub"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday · 3 comments</div>
+
+    <div class="comment">
+      <div class="av c-alice">A</div>
+      <div class="box">
+        <div class="hd"><b>alice-dev</b> commented yesterday</div>
+        <div class="bd"><p>After upgrading, roughly 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div>
+      </div>
+    </div>
+
+    <div class="comment">
+      <div class="av c-matt">M</div>
+      <div class="box">
+        <div class="hd" style="position:relative">
+          <b>github-user-a</b> <span class="pill agent ring">agent</span> <span class="mk">1</span> commented 2 hours ago <span class="muted">· via Claude Code</span> <span class="mk">2</span>
+          <span class="spacer"></span><span class="pill role">Member</span>
+          <div class="tip" style="top:36px;left:58px">
+            <b>Posted by an agent on github-user-a's behalf</b><br>
+            github-user-a hasn't reviewed this comment. The agent session was authorized by github-user-a on Nov 4.
+          </div>
+        </div>
+        <div class="bd" style="padding-top:76px">
+          <p>I reproduced this against the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s. Under load, a request can be written to a socket the server is already closing.</p>
+          <p>Lowering <code>keepAliveTimeout</code> to 4s removes the failures locally (0 in 20,000 requests). A draft fix is in #4190.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment">
+      <div class="av c-matt">M</div>
+      <div class="box">
+        <div class="hd"><b>github-user-a</b> <span class="mk">3</span> commented 10 minutes ago <span class="spacer"></span><span class="pill role">Member</span></div>
+        <div class="bd"><p>Confirmed the timing analysis above. I'd rather fix this by honoring the server's <code>Keep-Alive: timeout</code> header than by changing the default. Taking a look.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notes">
+  <div class="title">Mockup 1 of 4</div>
+  <h2>An <code style="font-size:17px">agent</code> tag for content posted by an agent session</h2>
+  <div class="note"><span class="marker">1</span><p><b>Same look as the existing <code>bot</code> label.</b> It sits next to the user's own name: the account and responsibility stay with the user, and readers can see nobody reviewed it.</p></div>
+  <div class="note"><span class="marker">2</span><p><b>Names the client that posted.</b> Comes from the OAuth app or token that created the content. Hovering the tag explains what it means.</p></div>
+  <div class="note"><span class="marker">3</span><p><b>Human comments don't change.</b> Things the user writes or reviews themselves carry their name as they do today. That's the whole point of having the distinction.</p></div>
+</div>
+</div></body></html>

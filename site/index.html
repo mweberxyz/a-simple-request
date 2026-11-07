@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent-Tagged Posts</title>
+<meta name="description" content="A simple request to GitHub: let credentials mark content as posted by an agent on your behalf, so your name still means you.">
+<meta property="og:title" content="A simple request to GitHub">
+<meta property="og:description" content="Let me tell people when an agent posted for me, so my name still means I looked at it.">
+<meta property="og:image" content="og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1d21; --ink-2: #4a4e57; --ink-3: #737885;
+  --line: #e4e2dc; --brand: #6d3fd6; --brand-ink: #fff; --brand-soft: #f1ebff;
+  --gh-fg: #1f2328; --gh-muted: #59636e; --gh-border: #d1d9e0; --gh-canvas: #f6f8fa; --gh-green: #1a7f37;
+  --shadow: 0 1px 2px rgba(20,20,30,.06), 0 12px 32px rgba(20,20,30,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131318; --surface: #1b1b22; --ink: #f0eff4; --ink-2: #b9b8c4; --ink-3: #8b8a97;
+    --line: #2c2c36; --brand: #a98bff; --brand-ink: #160b33; --brand-soft: #241c3d;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131318; --surface: #1b1b22; --ink: #f0eff4; --ink-2: #b9b8c4; --ink-3: #8b8a97;
+  --line: #2c2c36; --brand: #a98bff; --brand-ink: #160b33; --brand-soft: #241c3d;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--brand); }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 720px) { .wrap { padding: 0 32px; } }
+code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: color-mix(in srgb, var(--ink) 8%, transparent); padding: .1em .35em; border-radius: 4px; }
+
+/* hero */
+header.hero { padding: 72px 0 40px; text-align: center; }
+.kicker { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); background: var(--brand-soft); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
+h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.05; letter-spacing: -.025em; margin: 0 auto 20px; max-width: 14em; }
+h1 em { font-style: normal; color: var(--brand); }
+.lede { font-size: clamp(17px, 2.2vw, 21px); color: var(--ink-2); max-width: 36em; margin: 0 auto 30px; }
+.ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 16px; text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: var(--surface); cursor: pointer; }
+.btn.primary { background: var(--brand); color: var(--brand-ink); border-color: transparent; }
+.btn:hover { filter: brightness(1.05); }
+
+/* demo */
+section { padding: 56px 0; }
+.sec-head { max-width: 40em; margin-bottom: 28px; }
+.sec-head .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.015em; margin: 6px 0 12px; }
+.sec-head p { color: var(--ink-2); margin: 0; }
+.demo { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
+@media (min-width: 900px) { .demo { grid-template-columns: 280px 1fr; } }
+.controls { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+@media (min-width: 900px) { .controls { position: sticky; top: 20px; } }
+.ctrl { margin-bottom: 18px; }
+.ctrl:last-child { margin-bottom: 0; }
+.ctrl > .lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; display: block; }
+.seg { display: flex; background: color-mix(in srgb, var(--ink) 6%, transparent); border-radius: 9px; padding: 3px; gap: 2px; }
+.seg button { flex: 1; border: 0; background: transparent; color: var(--ink-2); font: 600 13px/1 inherit; font-family: inherit; padding: 8px 6px; border-radius: 7px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.swatches { display: flex; gap: 8px; margin-top: 10px; }
+.swatches button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
+.swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
+.suffix { margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-3); }
+.suffix input { flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.hint { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; line-height: 1.45; }
+.reset { background: none; border: 0; color: var(--brand); font: inherit; font-size: 13px; cursor: pointer; padding: 0; }
+
+/* github-ish window (always light, it's a screenshot) */
+.win { background: #fff; color: var(--gh-fg); border-radius: 14px; border: 1px solid #d8dde3; box-shadow: var(--shadow); overflow: hidden; font-size: 14px; line-height: 1.5; color-scheme: light; }
+.win .bar { height: 40px; background: var(--gh-canvas); border-bottom: 1px solid var(--gh-border); display: flex; align-items: center; gap: 8px; padding: 0 14px; color: var(--gh-muted); font-size: 13px; white-space: nowrap; overflow: hidden; }
+.win .bar i { width: 10px; height: 10px; border-radius: 50%; background: #d1d9e0; flex: none; }
+.win .bar b { color: var(--gh-fg); }
+.win .body { padding: 18px 16px 20px; }
+@media (min-width: 720px) { .win .body { padding: 22px 26px 26px; } }
+.win h3 { font-size: 22px; font-weight: 400; margin: 0 0 6px; line-height: 1.25; }
+.win h3 span { color: var(--gh-muted); }
+.win code { background: rgba(175,184,193,.2); }
+.meta { color: var(--gh-muted); padding-bottom: 14px; margin-bottom: 18px; border-bottom: 1px solid var(--gh-border); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.meta b { color: var(--gh-fg); }
+.state { background: var(--gh-green); color: #fff; border-radius: 99px; padding: 3px 11px; font-size: 13px; font-weight: 500; margin-right: 4px; }
+.c { display: flex; gap: 12px; margin-bottom: 16px; }
+.av { width: 36px; height: 36px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-weight: 600; }
+@media (max-width: 560px) { .av { display: none; } }
+.box { flex: 1; min-width: 0; border: 1px solid var(--gh-border); border-radius: 6px; }
+.box .hd { background: var(--gh-canvas); border-bottom: 1px solid var(--gh-border); padding: 7px 12px; color: var(--gh-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; border-radius: 6px 6px 0 0; position: relative; }
+.box .hd b { color: var(--gh-fg); }
+.box .bd { padding: 10px 12px; }
+.box .bd p { margin: 0 0 8px; } .box .bd p:last-child { margin: 0; }
+.role { margin-left: auto; border: 1px solid var(--gh-border); border-radius: 99px; padding: 0 8px; font-size: 12px; }
+.tag { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--gh-border); color: var(--gh-muted); border-radius: 99px; padding: 0 7px; font-size: 12px; font-weight: 500; line-height: 18px; cursor: help; position: relative; white-space: nowrap; }
+.tag svg { width: 12px; height: 12px; fill: currentColor; display: none; }
+.tag.purple { color: #8250df; border-color: #d8b9ff; background: #fbefff; }
+.tag.glyph svg { display: block; }
+.tag .tip { display: none; position: absolute; left: -6px; top: calc(100% + 8px); z-index: 5; width: 260px; background: #25292e; color: #fff; font-size: 12px; font-weight: 400; line-height: 1.45; padding: 8px 10px; border-radius: 6px; white-space: normal; box-shadow: 0 6px 18px rgba(0,0,0,.2); cursor: default; }
+.tag .tip b { color: #fff; display: block; }
+.tag:hover .tip, .tag:focus .tip { display: block; }
+.via { color: var(--gh-muted); }
+.banner { border: 1px solid var(--gh-border); background: var(--gh-canvas); border-radius: 6px; padding: 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.banner p { margin: 0; flex: 1 1 260px; }
+.banner small { color: var(--gh-muted); }
+.ghbtn { border: 1px solid rgba(31,35,40,.15); background: var(--gh-canvas); color: var(--gh-fg); border-radius: 6px; padding: 5px 12px; font: 500 13px/1.4 inherit; font-family: inherit; cursor: pointer; }
+.ghbtn.go { background: var(--gh-green); color: #fff; }
+.collapsed { margin: 0 0 16px 48px; border: 1px dashed var(--gh-border); border-radius: 6px; padding: 7px 12px; color: var(--gh-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+@media (max-width: 560px) { .collapsed, .event { margin-left: 0 !important; } }
+.collapsed b { color: var(--gh-fg); }
+.collapsed button { border: 0; background: none; color: #0969da; cursor: pointer; font: inherit; padding: 0; }
+.event { margin: 0 0 16px 48px; display: flex; gap: 10px; align-items: center; color: var(--gh-muted); font-size: 13px; animation: pop .35s ease; }
+.event .ic { width: 26px; height: 26px; border-radius: 50%; background: #dafbe1; display: grid; place-items: center; flex: none; }
+.event b { color: var(--gh-fg); }
+@keyframes pop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+.hidden-note { margin: 0 0 16px 48px; color: var(--gh-muted); font-size: 13px; font-style: italic; }
+.flash { animation: flash 1s ease; }
+@keyframes flash { 0% { background: #fff8c5; } 100% { background: var(--gh-canvas); } }
+
+/* problem / how */
+.cards { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+.card .n { font-size: 13px; font-weight: 700; color: var(--brand); margin-bottom: 6px; }
+.quote { font-size: clamp(22px, 3vw, 30px); line-height: 1.3; letter-spacing: -.01em; max-width: 26em; margin: 0 auto; text-align: center; color: var(--ink); }
+.quote span { color: var(--ink-3); }
+.steps { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+.isnt { display: grid; gap: 10px; grid-template-columns: 1fr; padding: 0; margin: 0; list-style: none; }
+@media (min-width: 760px) { .isnt { grid-template-columns: repeat(3, 1fr); } }
+.isnt li { border-left: 3px solid var(--line); padding: 4px 0 4px 14px; color: var(--ink-2); font-size: 15.5px; }
+.isnt li b { color: var(--ink); display: block; }
+
+.proof { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .proof { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .proof { grid-template-columns: repeat(3, 1fr); } }
+.proof a { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; color: var(--ink-2); text-decoration: none; font-size: 15px; line-height: 1.5; }
+.proof a:hover { border-color: var(--brand); }
+.proof .ref { display: block; font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand); margin-bottom: 6px; overflow-wrap: anywhere; }
+
+/* cta */
+.cta { background: var(--brand); color: var(--brand-ink); border-radius: 22px; padding: 44px 24px; text-align: center; }
+.cta h2 { margin-top: 0; }
+.cta p { max-width: 34em; margin: 0 auto 24px; opacity: .9; }
+.cta .btn { background: var(--brand-ink); color: var(--brand); border: 0; font-size: 17px; padding: 14px 24px; }
+.cta .small { font-size: 14px; opacity: .8; margin: 18px auto 0; }
+footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align: center; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="gl" viewBox="0 0 16 16"><path d="M7.25 1h1.5v2h3A2.25 2.25 0 0 1 14 5.25v6.5A2.25 2.25 0 0 1 11.75 14h-7.5A2.25 2.25 0 0 1 2 11.75v-6.5A2.25 2.25 0 0 1 4.25 3h3V1ZM4.25 4.5a.75.75 0 0 0-.75.75v6.5c0 .41.34.75.75.75h7.5a.75.75 0 0 0 .75-.75v-6.5a.75.75 0 0 0-.75-.75h-7.5ZM6 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></symbol></svg>
+
+<header class="hero wrap">
+  <div class="kicker">A simple request to GitHub</div>
+  <h1>Let me tell people when <em>an agent</em> posted for me.</h1>
+  <p class="lede">More and more of what's posted under my name comes from agents. I can't review all of it, and you can't tell which parts I did review. A small tag next to my name would fix that.</p>
+  <div class="ctas">
+    <a class="btn primary js-request" href="#">Support the feature request ↗</a>
+    <a class="btn" href="#demo">Try the demo ↓</a>
+  </div>
+</header>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Interactive demo</div>
+      <h2>Same account, an honest tag.</h2>
+      <p>Hover the <b>agent</b> tag. Switch to <b>github-user-a's</b> view to endorse the agent's comment. Try the reader filter and the tag styles.</p>
+    </div>
+    <div class="demo">
+      <div class="controls" aria-label="Demo controls">
+        <div class="ctrl">
+          <span class="lbl">Looking at it as</span>
+          <div class="seg" data-key="viewer"><button data-v="reader" aria-pressed="true">A reader</button><button data-v="author" aria-pressed="false">github-user-a</button></div>
+        </div>
+        <div class="ctrl">
+          <span class="lbl">Unreviewed agent activity</span>
+          <div class="seg" data-key="filter"><button data-v="show" aria-pressed="true">Show</button><button data-v="collapse" aria-pressed="false">Collapse</button><button data-v="hide" aria-pressed="false">Hide</button></div>
+        </div>
+        <div class="ctrl">
+          <span class="lbl">Tag style</span>
+          <div class="seg" data-key="style"><button data-v="grey" aria-pressed="true">Grey</button><button data-v="purple" aria-pressed="false">Purple</button><button data-v="custom" aria-pressed="false">Mine</button></div>
+          <div id="customCtl" hidden>
+            <div class="swatches" id="swatches"></div>
+            <div class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></div>
+            <div class="hint">Your color and suffix. The glyph and the word "agent" always stay, so the tag is recognizable everywhere.</div>
+          </div>
+        </div>
+        <div class="ctrl"><button class="reset" id="reset">↺ Reset demo</button></div>
+      </div>
+
+      <div class="win" role="img" aria-label="Mockup of a GitHub-style issue thread">
+        <div class="bar"><i></i><i></i><i></i>&nbsp; acme / <b>http-client</b> › Issues › #4182</div>
+        <div class="body">
+          <h3>Intermittent <code>ECONNRESET</code> when reusing keep-alive sockets <span>#4182</span></h3>
+          <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
+          <div id="thread"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="quote">The useful question isn't <span>"did a machine type this?"</span><br>It's <b>"did the person named here actually look at this?"</b></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">The problem</div><h2>Your name is only worth what you put behind it.</h2></div>
+    <div class="cards">
+      <div class="card"><h3>Trust gets used up quietly</h3><p>Peers learned that your name means you thought about something. Agent output nobody reviewed uses up that trust, and you don't see it happening.</p></div>
+      <div class="card"><h3>Reviewing everything defeats the point</h3><p>The only safe option today is to read every message before it goes out, which takes away most of the reason to delegate.</p></div>
+      <div class="card"><h3>So readers trust everything less</h3><p>When nobody can tell which comments got a person's attention, every comment gets less trust. That's part of why GitHub feels hostile lately.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">This is already happening</div><h2>Developers are working around it one repo at a time.</h2><p>Footers, signature lines, labels, separate bot accounts. Each project invents its own format and relies on the honor system, and none of them can mark an approval, a merge, or a label change.</p></div>
+    <div class="proof">
+      <a href="https://github.com/drivecore/mycoder/issues/368" target="_blank" rel="noopener"><span class="ref">drivecore/mycoder#368</span>The agent uses the maintainer's token, so it "can appear that I am talking to myself."</a>
+      <a href="https://github.com/kornia/kornia/pull/6223" target="_blank" rel="noopener"><span class="ref">kornia/kornia#6223</span>Agents must sign every post "Posted on behalf of @handle by Agent (model)."</a>
+      <a href="https://github.com/humlab-speech/visible-speech-deployment/pull/259" target="_blank" rel="noopener"><span class="ref">humlab-speech/…#259</span>Requires an "AI-generated" footer on anything an agent posts.</a>
+      <a href="https://github.com/Adam-S-Daniel/_agent-guidance/issues/319" target="_blank" rel="noopener"><span class="ref">Adam-S-Daniel/_agent-guidance#319</span>Uses a footer, a label, and a commit trailer, but merges and approvals still look human.</a>
+      <a href="https://github.com/noahdgrant/nightshift/issues/682" target="_blank" rel="noopener"><span class="ref">noahdgrant/nightshift#682</span>Moving agents to a separate identity so the person's own words can be verified.</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">The proposal</div><h2>Four small pieces.</h2></div>
+    <div class="steps">
+      <div class="card"><div class="n">1</div><h3>The credential says it's an agent</h3><p>When you create a token, authorize an app, or run <code>gh auth login</code>, choose <b>Personal</b> (the default) or <b>Agent</b>. It's fixed when the credential is created, so the agent can't remove the tag.</p></div>
+      <div class="card"><div class="n">2</div><h3>A tag next to your name</h3><p>Everything an agent session creates gets a small <b>agent</b> tag, like the existing <code>bot</code> label. It's still your account and still your responsibility, and it's honestly labeled.</p></div>
+      <div class="card"><div class="n">3</div><h3>Endorse as mine</h3><p>Review an agent's comment or PR and endorse it. The tag goes away, and the timeline records that you did. Review what matters and let the rest go out tagged.</p></div>
+      <div class="card"><div class="n">4</div><h3>Readers choose what they see</h3><p>Show, collapse, or hide unreviewed agent activity per repo, in notifications, and in the API. Maintainers get a signal they can actually use.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">What this isn't</div><h2>No detection, no shaming, no new accounts.</h2></div>
+    <ul class="isnt">
+      <li><b>Not AI detection.</b>The tag comes from what you declared about the session. Nothing guesses from the text.</li>
+      <li><b>Not a penalty.</b>Agent sessions keep the same permissions. The tag only says whether a person reviewed the content.</li>
+      <li><b>Not bot accounts.</b>Bot accounts break the link to the responsible person. This keeps that link.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <h2>If you want this, say so where GitHub will see it.</h2>
+      <p>The feature request is a GitHub Community discussion. Upvotes and short comments about how you'd use it are what get a request noticed.</p>
+      <a class="btn js-request" href="#">Support the request on GitHub ↗</a>
+      <p class="small">An upvote is enough. Comments that describe your own workflow help even more.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  A proposal by <a class="js-author" href="#">AUTHOR_NAME</a>. Concept mockups only. Not affiliated with or endorsed by GitHub.<br>
+  Drafted with an AI agent and reviewed by a human, which is the workflow this proposal is meant to make visible.
+</footer>
+
+<script>
+// ---- Fill these in at launch ----
+const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
+const AUTHOR_URL  = "https://github.com/REPLACE_ME";
+const AUTHOR_NAME = "REPLACE_ME";
+// ---------------------------------
+document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll(".js-author").forEach(a => { a.href = AUTHOR_URL; a.textContent = AUTHOR_NAME; });
+
+const COLORS = [
+  { name: "grey",   fg: "#59636e", bd: "#d1d9e0", bg: "#f6f8fa" },
+  { name: "purple", fg: "#8250df", bd: "#d8b9ff", bg: "#fbefff" },
+  { name: "blue",   fg: "#0969da", bd: "#80ccff", bg: "#ddf4ff" },
+  { name: "yellow", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
+  { name: "red",    fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
+];
+const initial = () => ({ viewer: "reader", filter: "show", style: "grey", color: 3, suffix: "triage", endorsed: false, expanded: false });
+let s = initial();
+try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function tagHTML() {
+  let cls = "tag", style = "", label = "agent";
+  if (s.style === "purple") cls += " purple glyph";
+  if (s.style === "custom") {
+    const c = COLORS[s.color]; cls += " glyph";
+    style = `color:${c.fg};border-color:${c.bd};background:${c.bg}`;
+    if (s.suffix.trim()) label += " · " + esc(s.suffix.trim());
+  }
+  return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg>${label}<span class="tip" role="tooltip"><b>Posted by an agent on github-user-a's behalf</b>github-user-a hasn't reviewed this. The agent session was authorized by github-user-a on Nov 4.</span></span>`;
+}
+
+const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> commented yesterday</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
+const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can be written to a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
+const human = `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> commented 10 minutes ago <span class="role">Member</span></div><div class="bd"><p>I'd rather fix this by honoring the server's <code>Keep-Alive: timeout</code> header than by changing the default. I'm taking a look.</p></div></div></div>`;
+
+function agentComment() {
+  if (s.endorsed) {
+    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> commented 2 hours ago <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>
+      <div class="event"><span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#1a7f37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span><span><b>github-user-a</b> reviewed and endorsed the agent's comment above · just now</span></div>`;
+  }
+  if (s.filter === "hide") return s.viewer === "author" ? `<div class="hidden-note">1 unreviewed agent comment is hidden by your filter.</div>` : "";
+  if (s.filter === "collapse" && !s.expanded) {
+    return `<div class="collapsed"><b>github-user-a</b> ${tagHTML()} left 1 comment 2 hours ago · <button id="expand">show</button></div>`;
+  }
+  const endorse = s.viewer === "author"
+    ? `<div class="banner flash"><p><b>Your agent posted this without your review.</b><br><small>Only you see this box. Endorsing removes the tag for everyone.</small></p><button class="ghbtn go" id="endorse">Endorse as mine</button></div>` : "";
+  return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> ${tagHTML()} commented 2 hours ago <span class="via">· via Claude Code</span><span class="role">Member</span></div><div class="bd">${endorse}${agentBody}</div></div></div>`;
+}
+
+function render() {
+  document.getElementById("thread").innerHTML = alice + agentComment() + human;
+  document.querySelectorAll(".seg").forEach(seg => {
+    const key = seg.dataset.key;
+    seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === s[key])));
+  });
+  document.getElementById("customCtl").hidden = s.style !== "custom";
+  document.querySelectorAll("#swatches button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === s.color)));
+  const e = document.getElementById("endorse"); if (e) e.onclick = () => { s.endorsed = true; render(); };
+  const x = document.getElementById("expand"); if (x) x.onclick = () => { s.expanded = true; render(); };
+  try { localStorage.setItem("agent-demo-style", JSON.stringify({ style: s.style, color: s.color, suffix: s.suffix })); } catch (err) {}
+}
+
+document.getElementById("swatches").innerHTML = COLORS.map(c => `<button style="background:${c.bd}" aria-label="${c.name}"></button>`).join("");
+document.querySelectorAll("#swatches button").forEach((b, i) => b.onclick = () => { s.color = i; render(); });
+document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", ev => {
+  const b = ev.target.closest("button"); if (!b) return;
+  s[seg.dataset.key] = b.dataset.v; if (seg.dataset.key === "filter") s.expanded = false; render();
+}));
+const sfx = document.getElementById("suffix"); sfx.value = s.suffix;
+sfx.addEventListener("input", () => { s.suffix = sfx.value; render(); });
+document.getElementById("reset").onclick = () => { s = initial(); sfx.value = s.suffix; render(); };
+render();
+</script>
+</body>
+</html>

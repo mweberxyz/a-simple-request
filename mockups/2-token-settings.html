@@ -1,0 +1,63 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Agent session tokens</title><link rel="stylesheet" href="mock.css">
+<style>
+  .field { margin-bottom: 22px; }
+  .field > label { display: block; font-weight: 600; margin-bottom: 6px; }
+  .input { border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; width: 420px; background: #fff; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+  .radio { display: flex; gap: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; margin-bottom: 8px; align-items: flex-start; }
+  .radio.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; background: #f6faff; }
+  .radio .r { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #818b98; flex: none; margin-top: 3px; background: #fff; }
+  .radio.on .r { border: 5px solid var(--accent); }
+  .radio b { display: block; }
+  .radio span.d { color: var(--muted); font-size: 13px; }
+  .sec { font-size: 20px; font-weight: 400; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .preview { margin-top: 10px; border: 1px dashed var(--border); border-radius: 6px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+  .preview b { color: var(--fg); }
+  .lock { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; margin-top: 8px; }
+</style></head>
+<body><div class="frame">
+<div class="page">
+  <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="crumbs">&nbsp; Settings &nbsp;›&nbsp; Developer settings &nbsp;›&nbsp; Personal access tokens &nbsp;›&nbsp; <b>New fine-grained token</b></span></div>
+  <div class="content">
+    <h2 class="sec">New fine-grained personal access token</h2>
+
+    <div class="field">
+      <label>Token name</label>
+      <div class="input">laptop: claude-code autonomous</div>
+    </div>
+
+    <div class="field">
+      <label>Session type <span class="mk">1</span></label>
+      <div class="radio">
+        <span class="r"></span>
+        <div><b>Personal</b><span class="d">You review what's sent with this token. Content appears under your name as it does today.</span></div>
+      </div>
+      <div class="radio on">
+        <span class="r"></span>
+        <div><b>Agent</b><span class="d">An automated agent acts for you without review. Everything it creates is tagged <span class="pill agent">agent</span> next to your name.</span></div>
+      </div>
+      <div class="lock"><svg width="12" height="12" viewBox="0 0 16 16" fill="#59636e"><path d="M4 7V5a4 4 0 1 1 8 0v2h.5A1.5 1.5 0 0 1 14 8.5v5A1.5 1.5 0 0 1 12.5 15h-9A1.5 1.5 0 0 1 2 13.5v-5A1.5 1.5 0 0 1 3.5 7H4Zm1.5 0h5V5a2.5 2.5 0 0 0-5 0v2Z"/></svg> Fixed when the token is created. The client using the token can't remove the tag. <span class="mk">2</span></div>
+    </div>
+
+    <div class="field">
+      <label>Agent name <span class="muted" style="font-weight:400">(optional)</span> <span class="mk">3</span></label>
+      <div class="input">Claude Code</div>
+      <div class="preview">Preview: <b>github-user-a</b> <span class="pill agent">agent</span> commented just now · via Claude Code</div>
+    </div>
+
+    <div class="field" style="margin-bottom:0">
+      <label>Expiration</label>
+      <div class="input" style="width:200px">30 days</div>
+    </div>
+  </div>
+</div>
+
+<div class="notes">
+  <div class="title">Mockup 2 of 4</div>
+  <h2>The credential sets the session type, not the client</h2>
+  <div class="note"><span class="marker">1</span><p><b>Chosen when you create the credential.</b> The same choice belongs on the OAuth / GitHub App authorization screen, on SSH keys, and in <code>gh auth login --agent</code>.</p></div>
+  <div class="note"><span class="marker">2</span><p><b>The agent can't remove it.</b> A tag the client sets on itself is easy to skip. A tag tied to the credential is reliable. "Personal" stays the default, so nothing changes for anyone who doesn't opt in.</p></div>
+  <div class="note"><span class="marker">3</span><p><b>Named for the person, not the vendor.</b> You choose the label, so you can tell your own agents apart.</p></div>
+</div>
+</div></body></html>
