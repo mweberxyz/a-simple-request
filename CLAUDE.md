@@ -73,6 +73,8 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **Check for layout shift** after any demo change: in the browser console, record the top of `.win` and each `#thread .box` in every state (today, tomorrow, each tag style, after a guess). The numbers must match at 1280, 1024, and 375 px wide, with no horizontal scroll.
 - **Re-render the OG image** (1x, 1200×630) from `mockups/og-card.html` into `site/og.png`.
 
+- **Motion:** the site respects `prefers-reduced-motion` with a single catch-all rule at the end of the `<style>` in `site/index.html` (no animation, transitions, or smooth scrolling), plus a check in the JS auto-scroll. New motion is covered automatically. Make sure every animated element still looks right in its final, unanimated state.
+
 ## Working agreements
 
 - **Nothing goes out without Matt.** Claude never posts, deploys, files, or pushes anything external. Matt posts the request and the Reddit post personally, by hand. A proposal about labeling agent posts loses credibility if an agent posts it.
@@ -125,3 +127,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Headline is now **"Spot the slop."** (Matt's call). The demo thread was rewritten to justify it: the agent's comment is plausible and passes locally (lowers the keep-alive timeout, "0 failures in 20,000 requests") but misses the real problem, and mweberxyz's follow-up supplies the insight (that only moves the race; honor `Keep-Alive: timeout` and retry idempotent requests on `ECONNRESET`; closes the agent's PR). Visitors now pick the *agent's* comment. The landing page can be punchy; the feature request keeps its professional tone.
 - **2026-11-06:** Matt confirmed the two-tone split: the site is punchy and the feature request stays professional, so the mockups keep the original wording.
 - **2026-11-06:** The "GitHub today | GitHub tomorrow" switch is now large (18px, sliding purple highlight) and is the only control above the thread; the rest moved below it. When a guess flips the switch from the opening state, it plays a reveal: the highlight eases across with a slight overshoot, the switch swells with a pulse ring, and the agent tag pops in about 1s later. Reset cancels the animation. Nothing animates when reduced motion is on.
+- **2026-11-06:** Reduced-motion audit. Six motions weren't covered (smooth scroll, JS auto-scroll, comment hover lift and hint fade, endorsed event pop, endorse banner flash, switch label fades). Replaced the separate rules with one catch-all and made the JS scroll respect the setting. Verified by applying the rule and running the whole demo: no running animations, and every final state is correct.
