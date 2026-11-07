@@ -23,7 +23,7 @@
 > git diff --cached | grep -n -i -E '/(Users|home|private|var/folders|Applications|Library)/|~/|\b([0-9]{1,3}\.){3}[0-9]{1,3}\b|\.(local|lan|internal)\b|Darwin|ghp_|github_pat_|token=|password|secret|\.env' | grep -v 'CLAUDE\.local\.md'
 > ```
 >
-> **Last audit: 2026-11-06.** Full history, all files, and PNG metadata were checked for paths, machine, network, and environment details, and for secrets. The only finding was the Chrome install path in the render commands, which was replaced with `$CHROME`.
+> **Last audit: 2026-11-07.** Full history, all files, and PNG metadata were checked for paths, machine, network, and environment details, and for secrets. The only finding was the Chrome install path in the early render commands. It was replaced with `$CHROME` in every commit (history rewritten 2026-11-07), so no commit contains it.
 
 ## What this is
 
@@ -180,3 +180,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Dropped "The full request" from the landing page's top bar (Matt); only "Add your 👍 ↗" remains. The request page is still reached from "Join the discussion →" after a guess (it points there until launch).
 - **2026-11-06:** The discussion draft is done (Matt), so the site no longer shows it. Removed `site/request.html`, the `site/request.md` and `site/mockups` symlinks, and the "Join the discussion →" link after a guess. The only way off the landing page is now "Add your 👍 ↗". The draft lives only in `request/feature-request.md`; a test still checks it stays short, with no images or placeholders.
 - **2026-11-06:** Undid the revert (Matt): the request page, its symlinks, and the "Join the discussion" link are removed again. Matt says he's ready to launch.
+- **2026-11-07:** Rewrote history to remove the Chrome install path from the early commits (now `"$CHROME"` everywhere). Every commit re-signed; the latest files are unchanged. Re-ran the privacy check across every commit: nothing else found.
