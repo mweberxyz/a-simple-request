@@ -233,7 +233,7 @@ function tagHTML(owner = AGENT_OWNER, via = "") {
   return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg><span class="txt">${label}</span><span class="tip" role="tooltip"><b>Posted by an agent on ${owner}'s behalf</b>${via ? `Sent via ${via}. ` : ""}${owner} hasn't reviewed this. The agent session was authorized by ${owner}${via ? " on Nov 4" : ""}.</span></span>`;
 }
 
-const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")}</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached. What's the right fix?</p></div></div></div>`;
+const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")} <span class="role">Member</span></div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached. What's the right fix?</p></div></div></div>`;
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can go out on a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
 const humanBody = `<p>Changing the default timeout won't fix this. Idle timeouts vary by server and by every proxy in between, so any fixed value loses this race somewhere. Your server sends <code>Keep-Alive: timeout=5</code>: the pool should honor that header, and retry idempotent requests that hit <code>ECONNRESET</code> on a reused socket.</p>`;
 const pickable = () => s.mode === "today";
@@ -260,7 +260,7 @@ function promptKey() {
 
 function agentComment() {
   const av = `<div class="av" style="background:#8250df">C</div>`;
-  const head = tagged => `<b>${AGENT_OWNER}</b> ${tagged ? tagHTML() + " " : ""}${when("commented 2 hours ago", "2h ago")} <span class="role">Contributor</span>`;
+  const head = tagged => `<b>${AGENT_OWNER}</b> ${tagged ? tagHTML() + " " : ""}${when("commented 2 hours ago", "2h ago")} <span class="role">Member</span>`;
   if (s.mode === "today") {
     return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>`;
   }
