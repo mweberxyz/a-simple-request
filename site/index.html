@@ -88,15 +88,10 @@ main.wrap { max-width: 1140px; }
 @keyframes switchPop { 0% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } 25% { transform: scale(1.09); box-shadow: 0 0 0 10px color-mix(in srgb, var(--brand) 35%, transparent); } 55% { transform: scale(.98); } 100% { transform: scale(1); box-shadow: 0 0 0 28px transparent; } }
 .tag.pop { animation: tagPop .8s cubic-bezier(.3,1.7,.5,1) 1s both; }
 .tag.pop.pop-quick { animation-delay: .2s; }
+.tag.swap { animation: tagSwap .4s cubic-bezier(.3,1.6,.5,1); }
+@keyframes tagSwap { from { transform: scale(.7); opacity: .3; } to { transform: scale(1); opacity: 1; } }
 @keyframes tagPop { 0% { transform: scale(.2); opacity: 0; box-shadow: 0 0 0 0 rgba(130,80,223,.6); } 60% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 0 8px rgba(130,80,223,.25); } 100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(130,80,223,0); } }
 @media (max-width: 560px) { .switch { gap: 10px; } .seg.mode button { font-size: 15px; padding: 12px 16px; } .reset span { display: none; } .reset { font-size: 18px; } }
-.custom { position: absolute; z-index: 6; right: 0; top: calc(100% + 6px); display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; box-shadow: var(--shadow); white-space: nowrap; }
-.custom.off { display: none; }
-.swatches { display: flex; gap: 6px; }
-.swatches button { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
-.swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
-.suffix { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--ink-3); }
-.suffix input { width: 7.5em; font: inherit; font-size: 13px; padding: 5px 7px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 .reset { background: none; border: 0; color: var(--ink-3); font: inherit; font-size: 13px; cursor: pointer; padding: 8px 0; white-space: nowrap; }
 .reset:hover { color: var(--ink); }
 .pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
@@ -167,8 +162,7 @@ main.wrap { max-width: 1140px; }
       <div class="seg mode still" data-key="mode" role="group" aria-label="Show GitHub today or tomorrow"><span class="thumb" aria-hidden="true"></span><button data-v="today">GitHub today</button><button data-v="proposal">GitHub tomorrow</button></div>
       <button class="reset" id="reset" title="Start over" aria-label="Start over">↺ <span>Reset</span></button>
       <div class="tagctl off" id="tagctl" role="group" aria-label="Agent tag style">
-        <div class="seg" data-key="style"><button data-v="purple">Boring</button><button data-v="custom" class="turbo"><span class="rb">Turbo</span></button></div>
-        <div class="custom off" id="customCtl"><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div></div>
+        <div class="seg" data-key="style"><button data-v="purple">Boring</button><button data-v="custom" class="turbo"><span class="rb">Turbo</span></button></div></div>
     </div>
 
     <div class="win" role="region" aria-label="Mockup of a GitHub-style issue thread">
@@ -189,16 +183,16 @@ const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
 // ---------------------------------
 document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; });
 
-const COLORS = [
-  { name: "grey",   fg: "#59636e", bd: "#d1d9e0", bg: "#f6f8fa" },
-  { name: "purple", fg: "#8250df", bd: "#d8b9ff", bg: "#fbefff" },
-  { name: "blue",   fg: "#0969da", bd: "#80ccff", bg: "#ddf4ff" },
-  { name: "yellow", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
-  { name: "red",    fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
+// Turbo shows what people could build on top of the agent flag: it cycles through these on its own.
+const TURBO = [
+  { text: "triage",      fg: "#0969da", bd: "#80ccff", bg: "#ddf4ff" },
+  { text: "night shift", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
+  { text: "deps",        fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
+  { text: "docs",        fg: "#bf3989", bd: "#ff80c8", bg: "#ffeff7" },
+  { text: "flaky tests", fg: "#bc4c00", bd: "#ffb77c", bg: "#fff1e5" },
 ];
-const initial = () => ({ mode: "today", guess: null, style: "purple", color: 3, suffix: "triage" });
+const initial = () => ({ mode: "today", guess: null, style: "purple", turbo: 0 });
 let s = initial();
-try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style === "custom" ? "custom" : "purple"; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
 
 const when = (long, short) => `<span class="when"><span class="long">${long}</span><span class="short">${short}</span></span>`;
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -208,9 +202,10 @@ function tagHTML(owner = AGENT_OWNER, via = "") {
   let cls = "tag", style = "", label = "agent";
   if (s.style === "purple") cls += " purple glyph";
   if (s.style === "custom") {
-    const c = COLORS[s.color]; cls += " glyph";
+    const c = TURBO[s.turbo]; cls += " glyph";
     style = `color:${c.fg};border-color:${c.bd};background:${c.bg}`;
-    if (s.suffix.trim()) label += " · " + esc(s.suffix.trim());
+    label += " · " + esc(c.text);
+    if (s.swapped) cls += " swap";
   }
   if (s.justRevealed) cls += s.justRevealed === "toggle" ? " pop pop-quick" : " pop";
   return `<span class="${cls}" style="${style}" tabindex="0" aria-label="Posted by an agent"><svg aria-hidden="true"><use href="#gl"/></svg><span class="txt">${label}</span><span class="tip" role="tooltip"><b>Posted by an agent on ${owner}'s behalf</b>${via ? `Sent via ${via}. ` : ""}${owner} hasn't reviewed this. The agent session was authorized by ${owner}${via ? " on Nov 4" : ""}.</span></span>`;
@@ -263,22 +258,19 @@ function render() {
     const key = seg.dataset.key;
     seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === s[key])));
   });
-  const cc = document.getElementById("customCtl"); cc.classList.toggle("off", s.style !== "custom"); cc.inert = s.style !== "custom";
-  document.querySelectorAll("#swatches button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === s.color)));
   placeThumb();
-  s.justRevealed = false;
-  try { localStorage.setItem("agent-demo-style", JSON.stringify({ style: s.style, color: s.color, suffix: s.suffix })); } catch (err) {}
+  s.justRevealed = false; s.swapped = false;
+  const cycling = s.mode === "proposal" && s.style === "custom";
+  if (cycling && !window.__turboT) window.__turboT = setInterval(turboTick, 2000);
+  if (!cycling && window.__turboT) { clearInterval(window.__turboT); window.__turboT = null; }
 }
 
-document.getElementById("swatches").innerHTML = COLORS.map(c => `<button style="background:${c.bd}" aria-label="${c.name}"></button>`).join("");
-document.querySelectorAll("#swatches button").forEach((b, i) => b.onclick = () => { s.color = i; render(); });
+function turboTick() { s.turbo = (s.turbo + 1) % TURBO.length; s.swapped = true; render(); }
 document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", ev => {
   const b = ev.target.closest("button"); if (!b) return;
   if (seg.dataset.key === "mode" && b.dataset.v === "proposal" && s.mode !== "proposal") s.justRevealed = "toggle";
   s[seg.dataset.key] = b.dataset.v; render();
 }));
-const sfx = document.getElementById("suffix"); sfx.value = s.suffix;
-sfx.addEventListener("input", () => { s.suffix = sfx.value; render(); });
 // Keep the page still: size the prompt to its tallest message at this width.
 function sizePrompt() {
   const el = document.getElementById("prompt");
@@ -303,7 +295,7 @@ document.getElementById("thread").addEventListener("click", ev => {
 document.getElementById("prompt").addEventListener("click", ev => {
   const b = ev.target.closest("[data-go]"); if (!b) return; if (b.dataset.go === "proposal" && s.mode !== "proposal") s.justRevealed = "toggle"; s.mode = b.dataset.go; render();
 });
-document.getElementById("reset").onclick = () => { clearTimeout(window.__revealT); document.querySelector(".seg.mode").classList.remove("reveal"); s = initial(); sfx.value = s.suffix; render(); };
+document.getElementById("reset").onclick = () => { clearTimeout(window.__revealT); document.querySelector(".seg.mode").classList.remove("reveal"); s = initial(); render(); };
 render();
 sizePrompt();
 requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector(".seg.mode").classList.remove("still")));

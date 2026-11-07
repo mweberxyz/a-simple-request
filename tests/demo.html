@@ -147,10 +147,12 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`no horizontal scroll and one-line headers ${tag}`, async () => {
       reset(w); mode(w, "proposal");
       $(w, "[data-key=style] [data-v=custom]").click();
-      const input = $(w, "#suffix"); input.value = "sixteen-chars-xx"; input.dispatchEvent(new w.Event("input"));
-      eq(w.document.documentElement.scrollWidth, width, "page width");
-      assert(!$$(w, "#thread .hd").some(h => h.scrollWidth > h.clientWidth + 1), "a comment header overflows");
-      input.value = "triage"; input.dispatchEvent(new w.Event("input")); reset(w);
+      for (let i = 0, n = w.eval("TURBO.length"); i < n; i++) {
+        eq(w.document.documentElement.scrollWidth, width, "page width");
+        assert(!$$(w, "#thread .hd").some(h => h.scrollWidth > h.clientWidth + 1), `a comment header overflows (${$(w, "#thread .tag .txt").textContent})`);
+        w.turboTick();
+      }
+      reset(w);
     });
 
     await test(`only the tag control remains, above the thread on the right ${tag}`, async () => {
@@ -166,6 +168,21 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       assert(c.bottom <= win.top, "tag control should sit above the thread");
       assert(Math.abs(c.right - win.right) < 2, `tag control should be flush right (${c.right} vs ${win.right})`);
       reset(w);
+    });
+
+    await test(`Turbo cycles its own colors and labels, with nothing to pick ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      assert(!$(w, "#tagctl input") && !$(w, "#swatches"), "no picker");
+      $(w, "[data-key=style] [data-v=custom]").click();
+      assert(w.__turboT, "cycle should be running");
+      const look = () => $(w, "#thread .tag .txt").textContent + " " + $(w, "#thread .tag").style.color;
+      const first = look(); w.turboTick();
+      assert(look() !== first, "label and color should change");
+      assert($(w, "#thread .tag").classList.contains("swap"), "change should animate");
+      $(w, "[data-key=style] [data-v=purple]").click();
+      assert(!w.__turboT, "Boring stops the cycle");
+      $(w, "[data-key=style] [data-v=custom]").click(); reset(w);
+      assert(!w.__turboT, "reset stops the cycle");
     });
 
     await test(`reset cancels a reveal in progress ${tag}`, async () => {
