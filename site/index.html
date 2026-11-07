@@ -190,7 +190,7 @@ main.wrap { max-width: 1140px; }
     </div>
     <div class="toolbar" id="toolbar" aria-label="Demo controls" hidden>
       <div class="grp js-p"><span class="lbl">View as</span>
-        <div class="seg" data-key="viewer"><button data-v="reader">Reader</button><button data-v="author">ozzie-dev</button></div></div>
+        <div class="seg" data-key="viewer"><button data-v="reader">Reader</button><button data-v="author">github-user-b</button></div></div>
       <div class="grp js-p"><span class="lbl">Agent posts</span>
         <div class="seg" data-key="filter"><button data-v="show">Show</button><button data-v="collapse">Collapse</button><button data-v="hide">Hide</button></div></div>
       <div class="grp js-p"><span class="lbl">Tag</span>
@@ -222,7 +222,7 @@ try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null
 const when = (long, short) => `<span class="when"><span class="long">${long}</span><span class="short">${short}</span></span>`;
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-const AGENT_OWNER = "ozzie-dev";
+const AGENT_OWNER = "github-user-b";
 function tagHTML(owner = AGENT_OWNER, via = "") {
   let cls = "tag", style = "", label = "agent";
   if (s.style === "purple") cls += " purple glyph";
@@ -243,11 +243,11 @@ const humanComment = () => `<div class="c"><div class="av" style="background:#09
 
 const PROMPTS = {
   ask:     ["Spot the slop.", "That's GitHub today: an agent using <em class=\"you\">your</em> token looks exactly like <em class=\"you\">you</em>. Same for everyone else in this thread. <b>Click the comment you think an agent wrote.</b>"],
-  right:   ["Good eye. It sounded right, though.", "ozzie-dev's agent posted it with ozzie-dev's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag, then try the controls below the thread."],
-  wrong:   ["Nope. That one's the human.", "The confident fix above came from ozzie-dev's agent, posted with ozzie-dev's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag, then try the controls below the thread."],
-  shown:   ["Same thread, GitHub tomorrow.", "The token ozzie-dev's agent used marks everything it posts, right next to ozzie-dev's name. Hover the tag, switch to ozzie-dev's view to endorse it, or try the reader filter."],
+  right:   ["Good eye. It sounded right, though.", "github-user-b's agent posted it with github-user-b's token, and nobody reviewed it. The fix passes locally, but any fixed timeout loses the race somewhere. With this proposal the token marks it, so nobody has to read that closely. Hover the tag, then try the controls below the thread."],
+  wrong:   ["Nope. That one's the human.", "The confident fix above came from github-user-b's agent, posted with github-user-b's token and never reviewed. With this proposal, the token marks everything an agent posts. Hover the tag, then try the controls below the thread."],
+  shown:   ["Same thread, GitHub tomorrow.", "The token github-user-b's agent used marks everything it posts, right next to github-user-b's name. Hover the tag, switch to github-user-b's view to endorse it, or try the reader filter."],
   back:    ["Back to today. Can you still spot it?", "Nothing to go on but the writing. <button class=\"again\" data-go=\"proposal\">Show me tomorrow →</button>"],
-  endorsed:["Endorsed. Now it's ozzie-dev's, mistakes and all.", "Endorsing means ozzie-dev read it and stands behind it. The tag is gone, and the timeline records who vouched for it."],
+  endorsed:["Endorsed. Now it's github-user-b's, mistakes and all.", "Endorsing means github-user-b read it and stands behind it. The tag is gone, and the timeline records who vouched for it."],
 };
 function promptKey() {
   if (s.mode === "today") return s.guess ? "back" : "ask";
@@ -256,7 +256,7 @@ function promptKey() {
 }
 
 function agentComment() {
-  const av = `<div class="av" style="background:#8250df">O</div>`;
+  const av = `<div class="av" style="background:#8250df">C</div>`;
   const head = tagged => `<b>${AGENT_OWNER}</b> ${tagged ? tagHTML() + " " : ""}${when("commented 2 hours ago", "2h ago")} <span class="role">Contributor</span>`;
   if (s.mode === "today") {
     return `<div class="c">${av}<div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd">${head(false)}</div><div class="bd">${agentBody}</div></div></div>`;
