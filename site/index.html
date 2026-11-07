@@ -90,6 +90,13 @@ main.wrap { max-width: 1140px; }
 @keyframes switchPop { 0% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } 25% { transform: scale(1.09); box-shadow: 0 0 0 10px color-mix(in srgb, var(--brand) 35%, transparent); } 55% { transform: scale(.98); } 100% { transform: scale(1); box-shadow: 0 0 0 28px transparent; } }
 .tag.pop { animation: tagPop .8s cubic-bezier(.3,1.7,.5,1) 1s both; }
 .tag.pop.pop-quick { animation-delay: .2s; }
+.win { position: relative; }
+/* Turbo countdown: fills under the conversation until the next one swaps in, in the current tag's color. */
+.cycle { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(31,35,40,.06); opacity: 0; transition: opacity .3s; }
+.cycle.on { opacity: 1; }
+.cycle i { display: block; height: 100%; background: var(--c, #8250df); transform: scaleX(0); transform-origin: left; transition: background-color .4s; }
+.cycle.run i { animation: cycleFill linear forwards; }
+@keyframes cycleFill { to { transform: scaleX(1); } }
 .win .body.swap { animation: threadSwap .45s ease; }
 @keyframes threadSwap { from { opacity: .15; } to { opacity: 1; } }
 .tag.swap { animation: tagSwap .4s cubic-bezier(.3,1.6,.5,1); }
@@ -176,6 +183,7 @@ main.wrap { max-width: 1140px; }
         <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
         <div id="thread"></div>
       </div>
+      <div class="cycle" id="cycle" aria-hidden="true"><i></i></div>
     </div>
 
   </div>
@@ -301,11 +309,18 @@ function render() {
   placeThumb();
   s.justRevealed = false; s.swapped = false;
   const cycling = s.mode === "proposal" && s.style === "custom";
-  if (cycling && !window.__turboT) window.__turboT = setInterval(turboTick, 10000);
-  if (!cycling && window.__turboT) { clearInterval(window.__turboT); window.__turboT = null; }
+  const bar = document.getElementById("cycle");
+  bar.classList.toggle("on", cycling);
+  bar.style.setProperty("--c", TURBO[s.turbo].fg);
+  if (cycling && !window.__turboT) {
+    window.__turboT = setTimeout(turboTick, TURBO_MS);
+    bar.classList.remove("run"); void bar.offsetWidth; bar.querySelector("i").style.animationDuration = TURBO_MS + "ms"; bar.classList.add("run");
+  }
+  if (!cycling && window.__turboT) { clearTimeout(window.__turboT); window.__turboT = null; bar.classList.remove("run"); }
 }
 
-function turboTick() { s.turbo = (s.turbo + 1) % TURBO.length; s.swapped = true; render(); }
+const TURBO_MS = 10000;  // time on each Turbo conversation; the bar under the thread counts it down
+function turboTick() { clearTimeout(window.__turboT); window.__turboT = null; s.turbo = (s.turbo + 1) % TURBO.length; s.swapped = true; render(); }
 document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", ev => {
   const b = ev.target.closest("button"); if (!b) return;
   if (seg.dataset.key === "mode" && b.dataset.v === "proposal" && s.mode !== "proposal") s.justRevealed = "toggle";
