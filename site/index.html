@@ -57,10 +57,12 @@ main.wrap { max-width: 1140px; }
 .prompt { margin: 8px 0 22px; }
 .prompt h1 { font-size: clamp(26px, 4.2vw, 40px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 10px; }
 .prompt p { margin: 0; color: var(--ink-2); font-size: clamp(16px, 2vw, 18px); }
-.prompt .you { font-style: normal; font-weight: 800; color: var(--ink); display: inline-block; padding: 0 .18em; margin: 0 .02em; transform: rotate(-2deg); border-radius: .35em .6em .3em .55em; background: linear-gradient(100deg, color-mix(in srgb, var(--brand) 55%, transparent), color-mix(in srgb, var(--brand) 40%, transparent)) 0 85% / 100% 55% no-repeat; animation: marker .55s cubic-bezier(.3,.7,.3,1) both; }
-.prompt .you + .you, .prompt .you:nth-of-type(2) { transform: rotate(1.5deg); animation-delay: .35s; }
-@keyframes marker { from { background-size: 0% 55%; } to { background-size: 100% 55%; } }
-@media (prefers-reduced-motion: reduce) { .prompt .you { animation: none; } }
+.prompt .you { font-style: normal; font-weight: 800; color: var(--ink); display: inline-block; position: relative; z-index: 0; padding: 0 .08em; margin: 0 .2em; transform: rotate(-1.5deg); }
+.prompt .you::before { content: ""; position: absolute; z-index: -1; left: -.22em; right: -.22em; top: -.12em; bottom: -.14em; background: color-mix(in srgb, var(--brand) 45%, transparent); border-radius: .25em .55em .3em .5em / .5em .35em .55em .3em; transform: skewX(-8deg); transform-origin: left center; animation: marker .5s cubic-bezier(.3,.7,.3,1) both; }
+.prompt .you:nth-of-type(2) { transform: rotate(1.2deg); }
+.prompt .you:nth-of-type(2)::before { animation-delay: .35s; }
+@keyframes marker { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@media (prefers-reduced-motion: reduce) { .prompt .you::before { animation: none; } }
 .prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
 .toolbar { display: flex; flex-wrap: nowrap; align-items: center; gap: 10px 14px; margin-bottom: 14px; }
 .toolbar .grp { display: flex; flex-direction: row; align-items: center; gap: 7px; position: relative; flex-shrink: 0; }
