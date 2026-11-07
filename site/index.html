@@ -236,7 +236,7 @@ function tagHTML() {
 
 const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> ${when("commented yesterday", "1d ago")}</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can be written to a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
-const humanBody = `<p>Lowering the timeout just moves the race. Anything behind a proxy with a shorter idle timeout will still reset, and 20,000 local requests won't show that. Let's honor the server's <code>Keep-Alive: timeout</code> header and retry idempotent requests on <code>ECONNRESET</code>. Closing #4190.</p>`;
+const humanBody = `<p>Lowering the timeout just moves the race. Anything behind a proxy with a shorter idle timeout will still reset, and 20,000 local requests won't show that. Let's honor the server's <code>Keep-Alive: timeout</code> header and retry idempotent requests on <code>ECONNRESET</code>.</p>`;
 const pickable = () => s.mode === "today";
 const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> ${when("commented 10 minutes ago", "10m ago")} <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
 
