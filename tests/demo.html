@@ -157,6 +157,11 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       reset(w); mode(w, "proposal");
       for (const k of ["viewer", "filter"]) assert(!$(w, `[data-key=${k}]`), `${k} control should be gone`);
       eq([...$$(w, "[data-key=style] button")].map(b => b.textContent).join("|"), "Boring|Turbo", "tag options");
+      const turbo = $(w, "[data-key=style] [data-v=custom]");
+      assert(w.getComputedStyle(turbo).animationName.includes("turboNudge"), "Turbo should wiggle until chosen");
+      assert(w.getComputedStyle(turbo.querySelector(".rb")).animationName === "rainbow", "Turbo text should be a moving rainbow");
+      turbo.click();
+      assert(!w.getComputedStyle(turbo).animationName.includes("turboNudge"), "wiggle stops once Turbo is on");
       const c = $(w, "#tagctl").getBoundingClientRect(), win = $(w, ".win").getBoundingClientRect();
       assert(c.bottom <= win.top, "tag control should sit above the thread");
       assert(Math.abs(c.right - win.right) < 2, `tag control should be flush right (${c.right} vs ${win.right})`);

@@ -66,6 +66,13 @@ main.wrap { max-width: 1140px; }
 .prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
 .tagctl { margin-left: auto; position: relative; display: flex; align-items: center; gap: 7px; }
 .tagctl.off { visibility: hidden; }
+/* Turbo: rainbow text that keeps flowing, plus a little wiggle every few seconds until someone tries it. */
+.seg button.turbo { font-size: 16px; font-weight: 800; padding: 6px 14px; animation: turboNudge 3.2s ease-in-out 1.5s infinite, turboGlow 2.4s linear infinite; }
+.seg button.turbo[aria-pressed="true"] { animation: turboGlow 2.4s linear infinite; }
+.turbo .rb { background: linear-gradient(90deg, #ff4d6d, #ff9f1c, #e8c400, #2ec4b6, #3a86ff, #8338ec, #ff4d6d) 0 0 / 56px 100% repeat-x; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow 1.6s linear infinite; }
+@keyframes rainbow { to { background-position: 56px 0; } }
+@keyframes turboGlow { 0%, 100% { box-shadow: 0 0 0 1.5px #ff4d6d, 0 0 12px #ff4d6d80; } 20% { box-shadow: 0 0 0 1.5px #ff9f1c, 0 0 12px #ff9f1c80; } 40% { box-shadow: 0 0 0 1.5px #2ec4b6, 0 0 12px #2ec4b680; } 60% { box-shadow: 0 0 0 1.5px #3a86ff, 0 0 12px #3a86ff80; } 80% { box-shadow: 0 0 0 1.5px #8338ec, 0 0 12px #8338ec80; } }
+@keyframes turboNudge { 0%, 78%, 100% { transform: none; } 82% { transform: scale(1.14) rotate(-4deg); } 87% { transform: scale(1.14) rotate(4deg); } 92% { transform: scale(1.06) rotate(-2deg); } 96% { transform: scale(1); } }
 .tagctl .lbl { font-size: 12px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
 .seg { display: flex; background: color-mix(in srgb, var(--ink) 7%, transparent); border-radius: 9px; padding: 3px; gap: 2px; }
 .seg button { border: 0; background: transparent; color: var(--ink-2); font: 600 13px/1 inherit; font-family: inherit; padding: 8px 11px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
@@ -161,7 +168,7 @@ main.wrap { max-width: 1140px; }
       <div class="seg mode still" data-key="mode" role="group" aria-label="Show GitHub today or tomorrow"><span class="thumb" aria-hidden="true"></span><button data-v="today">GitHub today</button><button data-v="proposal">GitHub tomorrow</button></div>
       <button class="reset" id="reset" title="Start over" aria-label="Start over">↺ <span>Reset</span></button>
       <div class="tagctl off" id="tagctl"><span class="lbl">Tag</span>
-        <div class="seg" data-key="style"><button data-v="purple">Boring</button><button data-v="custom">Turbo</button></div>
+        <div class="seg" data-key="style"><button data-v="purple">Boring</button><button data-v="custom" class="turbo"><span class="rb">Turbo</span></button></div>
         <div class="custom off" id="customCtl"><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div></div>
     </div>
 
