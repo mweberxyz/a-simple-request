@@ -317,7 +317,13 @@ function render() {
 }
 
 const TURBO_MS = 7000;  // time on each Turbo conversation; the bar under the thread counts it down
-function turboTick() { clearTimeout(window.__turboT); window.__turboT = null; s.turbo = (s.turbo + 1) % TURBO.length; s.swapped = true; render(); }
+function turboTick(dir = 1) { clearTimeout(window.__turboT); window.__turboT = null; s.turbo = (s.turbo + dir + TURBO.length) % TURBO.length; s.swapped = true; render(); }
+// Left and right arrows step through the Turbo conversations (and restart the countdown).
+addEventListener("keydown", ev => {
+  if (!window.__turboT || ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
+  if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+  ev.preventDefault(); turboTick(ev.key === "ArrowRight" ? 1 : -1);
+});
 document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", ev => {
   const b = ev.target.closest("button"); if (!b) return;
   if (seg.dataset.key === "mode" && b.dataset.v === "proposal" && s.mode !== "proposal") s.justRevealed = "toggle";

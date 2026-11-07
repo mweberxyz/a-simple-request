@@ -223,6 +223,22 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       } finally { reset(w); }
     });
 
+    await test(`left and right arrows step through Turbo ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      const key = k => w.document.dispatchEvent(new w.KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
+      const label = () => $(w, "#thread .tag .txt").textContent;
+      const boring = label(); key("ArrowRight");
+      eq(label(), boring, "arrows do nothing outside Turbo");
+      $(w, "[data-key=style] [data-v=custom]").click();
+      try {
+        const n = w.eval("TURBO.length"), at = () => w.eval("s.turbo");
+        const start = at();
+        key("ArrowRight"); eq(at(), (start + 1) % n, "right goes forward");
+        key("ArrowLeft"); key("ArrowLeft"); eq(at(), (start - 1 + n) % n, "left goes back, wrapping around");
+        assert($(w, "#cycle").classList.contains("run") && w.__turboT, "countdown restarts");
+      } finally { reset(w); }
+    });
+
     await test(`reset cancels a reveal in progress ${tag}`, async () => {
       reset(w); pick(w, "agent"); reset(w);
       assert(!$(w, ".seg.mode").classList.contains("reveal"), "reveal class still set");
