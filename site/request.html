@@ -9,7 +9,7 @@
 <meta property="og:image" content="og.png">
 <style>
 :root {
-  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1d21; --ink-2: #4a4e57; --ink-3: #737885;
+  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1d21; --ink-2: #4a4e57; --ink-3: #676c78;
   --line: #e4e2dc; --brand: #6d3fd6; --brand-ink: #fff; --brand-soft: #f1ebff;
 }
 @media (prefers-color-scheme: dark) {
@@ -43,6 +43,9 @@ nav a.back { text-decoration: none; font-weight: 600; font-size: 15px; }
 #doc code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: color-mix(in srgb, var(--ink) 8%, transparent); padding: .1em .35em; border-radius: 4px; }
 #doc hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0 20px; }
 #doc img { display: block; max-width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); margin: 18px 0 8px; }
+#doc figure { margin: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 #doc .cap { font-size: 13px; color: var(--ink-3); margin: 0 0 20px; }
 .tbl { overflow-x: auto; margin: 16px 0; }
 #doc table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 480px; }
@@ -74,8 +77,16 @@ nav a.back { text-decoration: none; font-weight: 600; font-size: 15px; }
 // ---- Keep in sync with index.html ----
 const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
 // --------------------------------------
-document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; });
+const NEWTAB = '<span class="sr-only"> (opens in a new tab)</span>';
+document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; a.insertAdjacentHTML("beforeend", NEWTAB); });
 
+// Alt text says what each mockup shows; the caption under it says what it's for.
+const ALTS = {
+  "1-comment-thread.png": "A GitHub issue thread. github-user-a's comment has a purple agent tag next to the name and \"via Claude Code\". A tooltip reads: Posted by an agent on github-user-a's behalf. github-user-a hasn't reviewed this comment. The agent session was authorized by github-user-a on Nov 4.",
+  "2-token-settings.png": "GitHub's new fine-grained token page with a Session type choice: Personal (you review what's sent) or Agent (an automated agent acts for you without review, and everything it creates is tagged agent). An optional agent name is set to Claude Code, with a preview of a tagged comment.",
+  "3-pull-request.png": "A pull request opened by github-user-a with the agent tag. A banner only the author sees offers Review changes or Endorse as mine. A filter for unreviewed agent activity offers Show, Collapse, or Hide. Further down, collapsed agent activity, and a timeline entry saying github-user-a reviewed and endorsed the agent's changes.",
+  "4-tag-styles.png": "Three tag styles side by side: A, grey like the existing bot label; B, purple with a robot glyph; C, a style the user picks in profile settings, with a label suffix and a color from a fixed palette that leaves out green.",
+};
 const CAPTIONS = {
   "1-comment-thread.png": "Mockup 1: the agent tag on a comment.",
   "2-token-settings.png": "Mockup 2: choosing the session type when creating a token.",
@@ -91,11 +102,11 @@ const CAPTIONS = {
     let md = await res.text();
     md = md.replace(/^\s*<!--[\s\S]*?-->\s*/, "");                       // posting notes at the top
     md = md.replace(/<!--\s*attach\s+(\S+\.png)\s*-->/g, (_, f) =>        // image slots → images
-      `\n<img src="mockups/${f}" alt="${CAPTIONS[f] || f}" loading="lazy"><p class="cap">${CAPTIONS[f] || ""}</p>\n`);
+      `\n<figure><img src="mockups/${f}" alt="${ALTS[f] || ""}" loading="lazy"><figcaption class="cap">${CAPTIONS[f] || ""}</figcaption></figure>\n`);
     md = md.replace(/SITE_URL/g, location.origin + location.pathname.replace(/request\.html$/, ""));
     doc.innerHTML = marked.parse(md);
     doc.querySelectorAll("table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.replaceWith(w); w.appendChild(t); });
-    doc.querySelectorAll("a[href^='http']").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
+    doc.querySelectorAll("a[href^='http']").forEach(a => { a.target = "_blank"; a.rel = "noopener"; a.insertAdjacentHTML("beforeend", NEWTAB); });
     const lm = res.headers.get("Last-Modified");
     if (lm) document.getElementById("updated").textContent = "Last updated " + new Date(lm).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) + ".";
   } catch (e) {

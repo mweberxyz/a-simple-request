@@ -45,6 +45,12 @@ async function test(name, fn) {
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
 function eq(a, b, msg) { if (a !== b) throw new Error(`${msg}: expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`); }
 
+// WCAG contrast ratio between two computed "rgb(...)" colors.
+function contrast(a, b) {
+  const lum = c => { const [r, g, bl] = c.match(/[\d.]+/g).slice(0, 3).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * bl; };
+  const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05);
+}
+
 // Helpers that drive the demo the way a visitor would.
 const $ = (w, sel) => w.document.querySelector(sel);
 const $$ = (w, sel) => [...w.document.querySelectorAll(sel)];
@@ -239,6 +245,76 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       } finally { reset(w); }
     });
 
+    await test(`a keyboard can make the guess, and lands on the answer ${tag}`, async () => {
+      reset(w);
+      const btns = $$(w, "#thread .guess");
+      eq(btns.length, 2, "one guess button per reply");
+      assert(btns.every(b => b.tagName === "BUTTON" && /agent wrote this/.test(b.getAttribute("aria-label"))), "guess buttons are named");
+      $(w, ".pick[data-pick=agent] .guess").click();   // keyboard activation has event.detail 0
+      assert(h1(w).startsWith("Good eye"), `headline was "${h1(w)}"`);
+      eq(w.document.activeElement, $(w, "#thread .tag"), "focus moves to the agent tag");
+      reset(w);
+    });
+
+    await test(`the agent tag is a named button described by its tooltip ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      const t = $(w, "#thread .tag");
+      eq(t.tagName, "BUTTON", "tag element");
+      eq($(w, "#" + t.getAttribute("aria-labelledby")).textContent, "agent", "accessible name");
+      assert(/hasn't reviewed/.test($(w, "#" + t.getAttribute("aria-describedby")).textContent), "described by the tooltip");
+      t.focus(); assert(w.getComputedStyle($(w, "#tagtip")).display !== "none", "tooltip shows on focus");
+      w.document.dispatchEvent(new w.KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+      eq(w.getComputedStyle($(w, "#tagtip")).display, "none", "Escape hides the tooltip");
+      t.blur(); reset(w);
+    });
+
+    await test(`decoration is hidden, headings are in order ${tag}`, async () => {
+      reset(w);
+      assert($$(w, "#thread .av").every(a => a.getAttribute("aria-hidden") === "true"), "avatars hidden from screen readers");
+      eq($$(w, "h1").length, 1, "one h1"); assert($(w, ".win h2#title"), "issue title is an h2");
+      eq($(w, "#reset").getAttribute("aria-label"), "Reset", "Reset's name matches its text");
+      assert(/new tab/.test($(w, ".js-request").textContent), "new-tab links say so");
+    });
+
+    await test(`Turbo can be paused, stepped, and holds while focus is in the thread ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      assert(w.getComputedStyle($(w, "#cycctl")).visibility === "hidden", "no Turbo controls with Boring");
+      $(w, "[data-key=style] [data-v=custom]").click();
+      try {
+        const at = () => w.eval("s.turbo"), n = w.eval("TURBO.length"), start = at();
+        assert(w.getComputedStyle($(w, "#cycctl")).visibility === "visible", "controls show in Turbo");
+        const prompt = $(w, "#prompt h1");
+        $(w, "#pause").click();
+        assert(!w.__turboT && $(w, "#cycle").classList.contains("paused"), "paused: clock and bar stop");
+        eq($(w, "#pause").getAttribute("aria-label"), "Play examples", "button now offers play");
+        $(w, "#cycctl [data-step='1']").click(); eq(at(), (start + 1) % n, "next works while paused");
+        assert(!w.__turboT, "stepping keeps it paused");
+        $(w, "#cycctl [data-step='-1']").click(); eq(at(), start, "previous works");
+        $(w, "#pause").click(); assert(w.__turboT, "play resumes the clock");
+        eq($(w, "#prompt h1"), prompt, "the live prompt isn't re-announced on a swap");
+        $(w, "#thread .tag").focus(); assert(!w.__turboT, "focus in the thread holds the clock");
+        $(w, "#pause").focus(); assert(w.__turboT, "leaving the thread resumes it");
+      } finally { reset(w); }
+    });
+
+    await test(`text and the Turbo rainbow meet contrast minimums ${tag}`, async () => {
+      reset(w); mode(w, "proposal");
+      const bg = w.getComputedStyle(w.document.body).backgroundColor;
+      for (const sel of ["#prompt p", "#reset", ".top nav a.plain"]) {
+        const el = $(w, sel); if (!el || !el.offsetWidth) continue;
+        const r = contrast(w.getComputedStyle(el).color, bg);
+        assert(r >= 4.5, `${sel} contrast ${r.toFixed(2)}`);
+      }
+      const stops = w.getComputedStyle($(w, "[data-key=style]")).getPropertyValue("--rb").split(",").map(c => c.trim());
+      const probe = w.document.createElement("span"); w.document.body.appendChild(probe);
+      const surface = w.getComputedStyle($(w, "[data-key=style] [data-v=purple]")).backgroundColor;
+      for (const c of stops) {
+        probe.style.color = c; const r = contrast(w.getComputedStyle(probe).color, w.getComputedStyle(w.document.body).backgroundColor);
+        assert(r >= 4.5, `rainbow ${c} contrast ${r.toFixed(2)}`);
+      }
+      probe.remove(); reset(w);
+    });
+
     await test(`reset cancels a reveal in progress ${tag}`, async () => {
       reset(w); pick(w, "agent"); reset(w);
       assert(!$(w, ".seg.mode").classList.contains("reveal"), "reveal class still set");
@@ -276,6 +352,12 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
       for (const img of imgs) { img.loading = "eager"; if (!img.complete) await new Promise(r => { img.onload = img.onerror = r; }); assert(img.naturalWidth > 0, "image failed: " + img.getAttribute("src")); }
       assert(!w.document.body.innerText.includes("SITE_URL"), "SITE_URL placeholder visible");
       assert(!$(w, "#doc").innerHTML.includes("&lt;!--"), "HTML comment visible");
+      for (const img of imgs) {
+        assert(img.closest("figure") && img.closest("figure").querySelector("figcaption"), "mockup in a figure with a caption");
+        const alt = img.getAttribute("alt") || "";
+        assert(alt.length > 60 && alt !== img.closest("figure").querySelector("figcaption").textContent, "alt describes the image, not the caption: " + img.getAttribute("src"));
+      }
+      assert($$(w, "#doc a[target=_blank]").every(a => /new tab/.test(a.textContent)), "new-tab links say so");
     });
   }
 
