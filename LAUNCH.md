@@ -17,7 +17,7 @@ The site and the GitHub discussion need to link to each other, so the order matt
 
 ## 2. File the feature request
 - [ ] Go to github.com/orgs/community/discussions → New discussion. Choose the current product-feedback category.
-- [ ] Paste `request/feature-request.md`, replace `SITE_URL`, delete the HTML comments, and drag the four numbered PNGs from `mockups/` into the marked spots.
+- [ ] Paste `request/feature-request.md`, delete the HTML comment at the top, and add a link to the site at the end.
 - [ ] Post it. Write down the discussion URL (**REQUEST_URL**).
 
 ## 3. Connect the site to the request

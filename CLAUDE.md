@@ -27,12 +27,12 @@
 
 ## What this is
 
-Matt is asking GitHub for a feature: let a credential (PAT, OAuth grant, GitHub App user token, `gh` login) be marked for **agent attribution**. Anything created with it shows an `agent` tag next to the user's name, so readers can tell what the person actually reviewed from what an agent posted on their behalf without review.
+Matt is asking GitHub to **allow well-behaved agents to self identify**: a standard way for an agent to say "an agent sent this request" (the smallest version: a request header such as `X-GitHub-Agent`, sent on every API call, which GitHub records with whatever the request creates). What GitHub does with the signal (a label by the name, an API field, filters) is GitHub's call.
 
 The goal is to keep a person's name meaningful on GitHub while agents post with their credentials. The question that matters is not "did a machine type this?" but "did the person named here look at this?"
 
 This repo holds everything for the launch campaign:
-1. **Feature request.** A GitHub Community discussion post with mockups.
+1. **Feature request.** A GitHub Community discussion post: the problem, the evidence, one small ask.
 2. **Demo site.** A friendly overview with an interactive demo and a call to action to support the request.
 3. **Outreach.** A Reddit post for r/ClaudeAI (titled "A simple request to GitHub") and optional extra channels.
 
@@ -40,30 +40,28 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 
 ## The proposal (settled decisions)
 
-- **The credential carries the attribution.** Personal (the default) or Agent, fixed when the credential is created, so the client can't remove the tag. A label the client applies to itself is not reliable.
-- **An `agent` tag next to the user's own name,** in the same family as the existing `bot` label. It stays the same account and the same responsibility. Hovering explains the tag. "via <agent name>" shows the name the user gave the agent.
-- **Endorse as mine.** The user reviews an item and endorses it. The tag is removed and the timeline records the endorsement.
-- **Filters.** Readers and maintainers can show, collapse, or hide unreviewed agent activity, with matching notification filters and an API field (similar to `performed_via_github_app`).
-- **Tag style options:** A grey (like `bot`), B purple with a robot glyph (planned lead recommendation), C user-chosen color and suffix. In C the glyph, the word "agent", and the shape are fixed, and green isn't offered so the tag can't look like a "verified" badge.
+- **Lead with the problem, not a solution.** Product managers and programmers both push back on being handed a finished design. The request describes the problem and the evidence, then makes one small ask. No screenshots, no UI design, no tag styles, no endorse flow in the request.
+- **The ask is a header, not a credential setting.** For a well-behaved agent, a request header on all API calls is enough (`gh` or an SDK can add it). Earlier drafts proposed marking the credential so the client couldn't remove the tag; that's dropped. It's an honor system on purpose: it serves agents that want to behave well and have no way to today.
+- **The demo site still shows a possible UI** (the tag, Turbo). That's illustration, not part of the ask.
 - **The site is a foil for the proposal.** Its job is to make people care enough to star the request, so the demo shows **one problem, sharply**: another user's agent (`github-user-b`, a real GitHub user who agreed to stand in; see below) posts a confident, plausible, wrong fix with that user's own token and no attribution, and mweberxyz (the human, one comment) gives the real fix. The tag reveals which is which. No client is named on ozzie-dev's agent (so the slop isn't pinned on a real product), and everyone in the thread is a Member, so badges don't give the answer away. The opening line still speaks to the reader: "an agent using *your* token looks exactly like *you*. Same for everyone else in this thread."
 - **github-user-b appears with her permission.** She's a real person who agreed to be the stand-in whose agent posts the plausible-but-wrong fix. Keep her portrayal within that: her agent's comment is competent-sounding and wrong, never careless or mocking, and the copy never blames her personally. Ask Matt before changing how she's shown or using her anywhere else (the feature request, outreach, mockups).
 - **Two pieces, two tones (on purpose).** The landing page is the hook: punchy, playful, reader-centric ("Spot the slop."), allowed to provoke. The feature request is the case: professional, measured, written for GitHub staff. They don't need to match word for word. The demo thread and the request's mockups differ, and that's intended. Don't bring the request's tone into the site or the site's tone into the request.
 - **Non-goals:** AI detection, penalizing agent use, separate bot accounts.
 - **Evidence of demand:** five verified repos already have their own workarounds (footers, signature lines, labels, separate identities): drivecore/mycoder#368, kornia/kornia#6223, humlab-speech/visible-speech-deployment#259, Adam-S-Daniel/_agent-guidance#319, noahdgrant/nightshift#682. They are cited in the request (so they also appear on the site's full-request page) and in the Reddit post.
 
-- **The feature is called "agent attribution"** (not "agent sessions"). Use it in the request, mockups, site, and outreach: a credential has agent attribution turned on; content created with it is attributed to an agent; the API field is `agent_attribution`. The token setting is labeled "Attribution" (Personal or Agent).
-- **One name, one line.** Every title and preview uses the name *A simple request to GitHub* and the line *An agent using your token looks exactly like you.*, the same words the demo opens with. Landing tab: "Spot the slop · A simple request to GitHub". Preview and search text: "An agent using your token looks exactly like you. One small change would let GitHub tell you apart." The request page keeps the request's professional voice: tab "Agent sessions · Feature request". Change them together (a test checks they match).
+- **Name of the ask:** "Allow well-behaved agents to self identify" (the request's title). "Agent attribution" is no longer the feature's name.
+- **One name, one line.** Every title and preview uses the name *A simple request to GitHub* and the line *An agent using your token looks exactly like you.*, the same words the demo opens with. Landing tab: "Spot the slop · A simple request to GitHub". Preview and search text: "An agent using your token looks exactly like you. One small change would let GitHub tell you apart." The request page keeps the request's professional voice: tab "Allow well-behaved agents to self identify · Feature request". Change them together (a test checks they match).
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `request/feature-request.md` | GitHub discussion text. Has `SITE_URL` placeholder and image slots. |
+| `request/feature-request.md` | GitHub discussion text. No images. Add the site link at the end after launch. |
 | `site/index.html` | The landing page: one self-contained file with inline CSS and JS, light and dark themes. It **opens directly on the demo** (no hero): a GitHub-style thread with a "GitHub today | GitHub tomorrow" switch (no label above it), starting in "today" mode under the headline **"Spot the slop."** Visitors click the comment they think the agent wrote, then the page reveals the answer and switches to "GitHub tomorrow" (the agent tag, plus one tag-style control). **The thread must never move when switching today ↔ tomorrow or changing the tag style.** That's the point of the demo. To make that hold: the prompt is sized to its tallest message, the switch row is the same height in both modes (the tag-style control keeps its space while hidden in today; Turbo has no picker, it cycles looks on its own, and the issue body reserves the height of the tallest conversation so swaps never move the page), and on phones the comment headers stay on one line (short timestamps, no Member badge or "via", which moves into the tooltip). The only other control is **Boring | Turbo** (no label; screen readers get "Agent tag style"), at the right end of the switch row (its own line on phones), visible only in "tomorrow". Reset is next to the switch. The demo deliberately leaves out view-as, endorsing, and reader filters: they're in the full request, and in the demo they distracted from the puzzle. URLs and author are set in constants at the bottom of the file. |
 | `site/request.html` | "View the full feature request" page. Renders `site/request.md` in the browser on every load (marked from jsdelivr), turning the `<!-- attach X.png -->` slots into the mockup images. Linked from the reveal ("Read the proposal →", via `NEXT_URL`) and from "The full request" in the top bar of `index.html`. It stays a local page while Matt iterates on the request; at launch the reveal link switches to the GitHub discussion. |
 | `site/request.md`, `site/mockups` | **Symlinks** to `../request/feature-request.md` and `../mockups`. The request page always shows the current text and mockups, so edit the originals and never these. |
 | `site/og.png` | 1200×630 link-preview image, rendered from `mockups/og-card.html`. |
-| `mockups/*.html`, `mock.css` | Sources for the four mockup PNGs attached to the request. |
+| `mockups/*.html`, `mock.css` | `og-card.html` is the source of `site/og.png`. Mockups 1–4 are no longer used by the request (kept for now; they describe the old credential-based design). |
 | `outreach/reddit-post.md` | Reddit post plus notes for r/github, HN, and social media. |
 | `tests/demo.html`, `tests/run.sh` | Behavior tests for the site (see "Run the tests"). Not part of the deployed site. |
 | `LAUNCH.md` | Launch checklist, step by step. |
@@ -100,7 +98,7 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - `acme/http-client` repo in the mockups and demo (fictional, on purpose).
 - In `site/index.html`: `REQUEST_URL`, an absolute `og:image` URL, and the launch switch of `NEXT_URL`/`NEXT_LABEL` from the local request page to the GitHub discussion.
 - In `site/request.html`: `REQUEST_URL` (keep it the same as in index.html) and an absolute `og:image` URL.
-- `SITE_URL` in `request/feature-request.md`; `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
+- Site link at the end of `request/feature-request.md` (after launch); `SITE_URL` and `REQUEST_URL` in `outreach/reddit-post.md`.
 
 ## Progress
 
@@ -165,3 +163,4 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **2026-11-06:** Accessibility pass. Guessing works by keyboard: each reply has a real "I think an agent wrote this" button (the old hover pill), and a keyboard guess moves focus to the revealed tag. The agent tag is a button named by its label and described by its tooltip; Escape hides the tooltip. Turbo has pause/play and previous/next controls in the window's top bar (it changes content on its own, so it needs a pause: WCAG 2.2.2), and it holds while focus is in the thread. The live prompt is only rewritten (and re-announced) when its text changes, not on every Turbo swap. Contrast: light-theme muted text darkened to 5:1 on both pages, and the Turbo rainbow uses darker stops in light mode and a lighter purple in dark mode (all at least 4.5:1). The Turbo wiggle stops after four nudges. Also: avatars hidden from screen readers, issue title is an h2, Reset's accessible name matches its text and it has a 32px target, visible focus rings, and new-tab links say so. Request page: mockups are figures with descriptive alt text separate from the captions. Tests: 86 checks.
 - **2026-11-06:** Made the titles and metadata consistent (see "One name, one line"). Replaced the generic tab titles ("Agent-Tagged Posts", "The Feature Request") and the first-person preview line ("Let me tell people when an agent posted for me") with the reader-facing line from the demo. Re-rendered og.png. Tests: 87 checks.
 - **2026-11-06:** Renamed the feature from "agent sessions" to **agent attribution** everywhere (Matt): request title and text, API field (`agent_attribution`), mockups 1 and 2 (tooltip, token setting labeled "Attribution"), site tooltip ("X turned on agent attribution for this token"), request page title, alt text and captions, Reddit draft, and this file. Re-rendered mockups 1 and 2. "Session" now only means a working session (Claude's or a browser's).
+- **2026-11-06:** Rewrote the feature request (Matt: tone it way down; nobody wants to be handed a solution). New title: "Allow well-behaved agents to self identify". Problem first, then the evidence (the five repos), then one small ask: a request header like `X-GitHub-Agent` that agents send on every API call, with one `gh api` example. Dropped all screenshots, the credential-level design, endorse, filters, tag styles, and the "existing mechanisms" table (one sentence on bot accounts and trailers stays). The site link comes after launch. The request page no longer handles image slots or `SITE_URL`. Mockups 1–4 are now unused.

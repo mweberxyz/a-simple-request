@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agent attribution · Feature request</title>
-<meta name="description" content="Mark what an agent posts with your credentials, so people can tell it from what you reviewed.">
+<title>Allow well-behaved agents to self identify · Feature request</title>
+<meta name="description" content="A request to GitHub: give agents a standard way to say they sent a request, so people can tell what a person actually looked at.">
 <meta property="og:title" content="A simple request to GitHub: the full proposal">
-<meta property="og:description" content="Mark what an agent posts with your credentials, so people can tell it from what you reviewed.">
+<meta property="og:description" content="A request to GitHub: give agents a standard way to say they sent a request, so people can tell what a person actually looked at.">
 <meta property="og:image" content="og.png">
 <style>
 :root {
@@ -81,19 +81,6 @@ const REQUEST_URL = "https://github.com/orgs/community/discussions/REPLACE_ME";
 const NEWTAB = '<span class="sr-only"> (opens in a new tab)</span>';
 document.querySelectorAll(".js-request").forEach(a => { a.href = REQUEST_URL; a.target = "_blank"; a.rel = "noopener"; a.insertAdjacentHTML("beforeend", NEWTAB); });
 
-// Alt text says what each mockup shows; the caption under it says what it's for.
-const ALTS = {
-  "1-comment-thread.png": "A GitHub issue thread. github-user-a's comment has a purple agent tag next to the name and \"via Claude Code\". A tooltip reads: Posted by an agent on github-user-a's behalf. github-user-a hasn't reviewed this comment. github-user-a turned on agent attribution for this token on Nov 4.",
-  "2-token-settings.png": "GitHub's new fine-grained token page with an Attribution choice: Personal (you review what's sent) or Agent (an automated agent acts for you without review, and everything it creates is tagged agent). An optional agent name is set to Claude Code, with a preview of a tagged comment.",
-  "3-pull-request.png": "A pull request opened by github-user-a with the agent tag. A banner only the author sees offers Review changes or Endorse as mine. A filter for unreviewed agent activity offers Show, Collapse, or Hide. Further down, collapsed agent activity, and a timeline entry saying github-user-a reviewed and endorsed the agent's changes.",
-  "4-tag-styles.png": "Three tag styles side by side: A, grey like the existing bot label; B, purple with a robot glyph; C, a style the user picks in profile settings, with a label suffix and a color from a fixed palette that leaves out green.",
-};
-const CAPTIONS = {
-  "1-comment-thread.png": "Mockup 1: the agent tag on a comment.",
-  "2-token-settings.png": "Mockup 2: turning on agent attribution when creating a token.",
-  "3-pull-request.png": "Mockup 3: endorsing an agent's PR, and filtering agent activity.",
-  "4-tag-styles.png": "Mockup 4: tag style options.",
-};
 
 (async () => {
   const doc = document.getElementById("doc");
@@ -102,9 +89,6 @@ const CAPTIONS = {
     if (!res.ok) throw new Error(res.status + " " + res.statusText);
     let md = await res.text();
     md = md.replace(/^\s*<!--[\s\S]*?-->\s*/, "");                       // posting notes at the top
-    md = md.replace(/<!--\s*attach\s+(\S+\.png)\s*-->/g, (_, f) =>        // image slots → images
-      `\n<figure><img src="mockups/${f}" alt="${ALTS[f] || ""}" loading="lazy"><figcaption class="cap">${CAPTIONS[f] || ""}</figcaption></figure>\n`);
-    md = md.replace(/SITE_URL/g, location.origin + location.pathname.replace(/request\.html$/, ""));
     doc.innerHTML = marked.parse(md);
     doc.querySelectorAll("table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.replaceWith(w); w.appendChild(t); });
     doc.querySelectorAll("a[href^='http']").forEach(a => { a.target = "_blank"; a.rel = "noopener"; a.insertAdjacentHTML("beforeend", NEWTAB); });
