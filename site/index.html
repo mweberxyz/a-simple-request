@@ -36,40 +36,53 @@ a { color: var(--brand); }
 @media (min-width: 720px) { .wrap { padding: 0 32px; } }
 code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: color-mix(in srgb, var(--ink) 8%, transparent); padding: .1em .35em; border-radius: 4px; }
 
-/* hero */
-header.hero { padding: 72px 0 40px; text-align: center; }
-.kicker { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); background: var(--brand-soft); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
-h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.05; letter-spacing: -.025em; margin: 0 auto 20px; max-width: 14em; }
-h1 em { font-style: normal; color: var(--brand); }
-.lede { font-size: clamp(17px, 2.2vw, 21px); color: var(--ink-2); max-width: 36em; margin: 0 auto 30px; }
-.ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+/* top bar */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; padding-bottom: 18px; flex-wrap: wrap; }
+.brand { font-weight: 700; font-size: 15px; letter-spacing: -.01em; margin: 0; }
+.brand span { color: var(--ink-3); font-weight: 500; }
+.top nav { display: flex; align-items: center; gap: 14px; }
+.top nav a.plain { color: var(--ink-2); text-decoration: none; font-weight: 600; font-size: 14px; }
+.top nav a.plain:hover { color: var(--ink); }
+@media (max-width: 560px) { .top { flex-wrap: nowrap; } .brand { font-size: 14px; } .brand span, .top nav a.plain { display: none; } }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 16px; text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: var(--surface); cursor: pointer; }
+.btn.sm { padding: 7px 14px; font-size: 14px; border-radius: 8px; }
 .btn.primary { background: var(--brand); color: var(--brand-ink); border-color: transparent; }
 .btn:hover { filter: brightness(1.05); }
 
-/* demo */
+/* stage: the page opens on the demo */
 section { padding: 56px 0; }
 .sec-head { max-width: 40em; margin-bottom: 28px; }
 .sec-head .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
 h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.015em; margin: 6px 0 12px; }
 .sec-head p { color: var(--ink-2); margin: 0; }
-.demo { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
-@media (min-width: 900px) { .demo { grid-template-columns: 280px 1fr; } }
-.controls { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
-@media (min-width: 900px) { .controls { position: sticky; top: 20px; } }
-.ctrl { margin-bottom: 18px; }
-.ctrl:last-child { margin-bottom: 0; }
-.ctrl > .lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; display: block; }
-.seg { display: flex; background: color-mix(in srgb, var(--ink) 6%, transparent); border-radius: 9px; padding: 3px; gap: 2px; }
-.seg button { flex: 1; border: 0; background: transparent; color: var(--ink-2); font: 600 13px/1 inherit; font-family: inherit; padding: 8px 6px; border-radius: 7px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
-.swatches { display: flex; gap: 8px; margin-top: 10px; }
-.swatches button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
+.stage { max-width: 880px; margin: 0 auto; padding: 12px 0 40px; display: flex; flex-direction: column; }
+@media (max-width: 720px) { .stage .toolbar { order: 3; margin: 16px 0 0; } .stage .more { order: 4; } .prompt { min-height: 0; margin-bottom: 16px; } .prompt h1 { font-size: 25px; } .prompt p { font-size: 15.5px; } }
+.prompt { margin: 8px 0 22px; min-height: 7.2em; }
+.prompt h1 { font-size: clamp(26px, 4.2vw, 40px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 10px; }
+.prompt p { margin: 0; color: var(--ink-2); font-size: clamp(16px, 2vw, 18px); }
+.prompt .again { background: none; border: 0; padding: 0; color: var(--brand); font: inherit; font-weight: 600; cursor: pointer; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; margin-bottom: 14px; }
+.toolbar .grp { display: flex; flex-direction: column; gap: 6px; }
+.toolbar .lbl { font-size: 12px; font-weight: 600; color: var(--ink-3); }
+.toolbar .grp[hidden] { display: none; }
+.seg { display: flex; background: color-mix(in srgb, var(--ink) 7%, transparent); border-radius: 9px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; color: var(--ink-2); font: 600 13px/1 inherit; font-family: inherit; padding: 8px 11px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.seg.mode button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
+.custom { display: flex; align-items: center; gap: 8px; }
+.custom[hidden] { display: none; }
+.swatches { display: flex; gap: 6px; }
+.swatches button { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
 .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
-.suffix { margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-3); }
-.suffix input { flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
-.hint { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; line-height: 1.45; }
-.reset { background: none; border: 0; color: var(--brand); font: inherit; font-size: 13px; cursor: pointer; padding: 0; }
+.suffix { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--ink-3); }
+.suffix input { width: 7.5em; font: inherit; font-size: 13px; padding: 5px 7px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.reset { background: none; border: 0; color: var(--ink-3); font: inherit; font-size: 13px; cursor: pointer; padding: 8px 0; margin-left: auto; }
+.reset:hover { color: var(--ink); }
+.pick { cursor: pointer; transition: box-shadow .15s, transform .15s; }
+.pick:hover { box-shadow: 0 0 0 3px var(--brand); transform: translateY(-1px); }
+.pick .hd::after { content: "← I think github-user-a wrote this"; margin-left: auto; color: var(--brand); font-weight: 600; font-size: 12px; opacity: 0; transition: opacity .15s; }
+.pick:hover .hd::after { opacity: 1; }
+.pick .role { margin-left: 8px; }
 
 /* github-ish window (always light, it's a screenshot) */
 .win { background: #fff; color: var(--gh-fg); border-radius: 14px; border: 1px solid #d8dde3; box-shadow: var(--shadow); overflow: hidden; font-size: 14px; line-height: 1.5; color-scheme: light; }
@@ -136,7 +149,6 @@ h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -.0
 .proof .ref { display: block; font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand); margin-bottom: 6px; overflow-wrap: anywhere; }
 
 .more { margin: 24px 0 0; display: flex; align-items: center; gap: 16px 24px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
-@media (min-width: 900px) { .more { margin-left: 300px; } }
 .more p { margin: 0; flex: 1 1 300px; color: var(--ink-2); font-size: 15.5px; }
 .more p b { color: var(--ink); display: block; font-size: 17px; }
 .more .btn { flex: none; }
@@ -154,57 +166,41 @@ footer { padding: 40px 0 56px; color: var(--ink-3); font-size: 14px; text-align:
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="gl" viewBox="0 0 16 16"><path d="M7.25 1h1.5v2h3A2.25 2.25 0 0 1 14 5.25v6.5A2.25 2.25 0 0 1 11.75 14h-7.5A2.25 2.25 0 0 1 2 11.75v-6.5A2.25 2.25 0 0 1 4.25 3h3V1ZM4.25 4.5a.75.75 0 0 0-.75.75v6.5c0 .41.34.75.75.75h7.5a.75.75 0 0 0 .75-.75v-6.5a.75.75 0 0 0-.75-.75h-7.5ZM6 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></symbol></svg>
 
-<header class="hero wrap">
-  <div class="kicker">A simple request to GitHub</div>
-  <h1>Let me tell people when <em>an agent</em> posted for me.</h1>
-  <p class="lede">More and more of what's posted under my name comes from agents. I can't review all of it, and you can't tell which parts I did review. A small tag next to my name would fix that.</p>
-  <div class="ctas">
-    <a class="btn primary js-request" href="#">Support the feature request ↗</a>
-    <a class="btn" href="#demo">Try the demo ↓</a>
-  </div>
+<header class="top wrap">
+  <p class="brand">A simple request to GitHub <span>· a proposal</span></p>
+  <nav><a class="plain" href="request.html">The full request</a><a class="btn sm primary js-request" href="#">Support it ↗</a></nav>
 </header>
 
-<section id="demo">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Interactive demo</div>
-      <h2>Same account, an honest tag.</h2>
-      <p>Hover the <b>agent</b> tag. Switch to <b>github-user-a's</b> view to endorse the agent's comment. Try the reader filter and the tag styles.</p>
-    </div>
-    <div class="demo">
-      <div class="controls" aria-label="Demo controls">
-        <div class="ctrl">
-          <span class="lbl">Looking at it as</span>
-          <div class="seg" data-key="viewer"><button data-v="reader" aria-pressed="true">A reader</button><button data-v="author" aria-pressed="false">github-user-a</button></div>
-        </div>
-        <div class="ctrl">
-          <span class="lbl">Unreviewed agent activity</span>
-          <div class="seg" data-key="filter"><button data-v="show" aria-pressed="true">Show</button><button data-v="collapse" aria-pressed="false">Collapse</button><button data-v="hide" aria-pressed="false">Hide</button></div>
-        </div>
-        <div class="ctrl">
-          <span class="lbl">Tag style</span>
-          <div class="seg" data-key="style"><button data-v="grey" aria-pressed="true">Grey</button><button data-v="purple" aria-pressed="false">Purple</button><button data-v="custom" aria-pressed="false">Mine</button></div>
-          <div id="customCtl" hidden>
-            <div class="swatches" id="swatches"></div>
-            <div class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></div>
-            <div class="hint">Your color and suffix. The glyph and the word "agent" always stay, so the tag is recognizable everywhere.</div>
-          </div>
-        </div>
-        <div class="ctrl"><button class="reset" id="reset">↺ Reset demo</button></div>
-      </div>
+<main id="demo" class="wrap">
+  <div class="stage">
+    <div class="prompt" id="prompt" aria-live="polite"></div>
 
-      <div class="win" role="img" aria-label="Mockup of a GitHub-style issue thread">
-        <div class="bar"><i></i><i></i><i></i>&nbsp; acme / <b>http-client</b> › Issues › #4182</div>
-        <div class="body">
-          <h3>Intermittent <code>ECONNRESET</code> when reusing keep-alive sockets <span>#4182</span></h3>
-          <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
-          <div id="thread"></div>
-        </div>
+    <div class="toolbar" aria-label="Demo controls">
+      <div class="grp"><span class="lbl">Show it as</span>
+        <div class="seg mode" data-key="mode"><button data-v="today">GitHub today</button><button data-v="proposal">With the proposal</button></div></div>
+      <div class="grp js-p"><span class="lbl">Looking at it as</span>
+        <div class="seg" data-key="viewer"><button data-v="reader">A reader</button><button data-v="author">github-user-a</button></div></div>
+      <div class="grp js-p"><span class="lbl">Unreviewed agent posts</span>
+        <div class="seg" data-key="filter"><button data-v="show">Show</button><button data-v="collapse">Collapse</button><button data-v="hide">Hide</button></div></div>
+      <div class="grp js-p"><span class="lbl">Tag style</span>
+        <div class="custom-row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div class="seg" data-key="style"><button data-v="grey">Grey</button><button data-v="purple">Purple</button><button data-v="custom">Mine</button></div>
+          <div class="custom" id="customCtl" hidden><div class="swatches" id="swatches"></div><label class="suffix">agent · <input id="suffix" maxlength="16" value="triage" aria-label="Tag suffix"></label></div>
+        </div></div>
+      <button class="reset" id="reset">↺ Start over</button>
+    </div>
+
+    <div class="win" role="region" aria-label="Mockup of a GitHub-style issue thread">
+      <div class="bar"><i></i><i></i><i></i>&nbsp; acme / <b>http-client</b> › Issues › #4182</div>
+      <div class="body">
+        <h3>Intermittent <code>ECONNRESET</code> when reusing keep-alive sockets <span>#4182</span></h3>
+        <div class="meta"><span class="state">● Open</span> <b>alice-dev</b> opened this issue yesterday</div>
+        <div id="thread"></div>
       </div>
     </div>
     <div class="more"><p><b>Like where this is going?</b>The full feature request covers how the credential sets the session type, the API, open questions, and how this compares to what exists today.</p><a class="btn primary" href="request.html">Read the full feature request →</a></div>
   </div>
-</section>
+</main>
 
 <section>
   <div class="wrap">
@@ -268,7 +264,7 @@ const COLORS = [
   { name: "yellow", fg: "#9a6700", bd: "#eac54f", bg: "#fff8c5" },
   { name: "red",    fg: "#cf222e", bd: "#ff8182", bg: "#ffebe9" },
 ];
-const initial = () => ({ viewer: "reader", filter: "show", style: "grey", color: 3, suffix: "triage", endorsed: false, expanded: false });
+const initial = () => ({ mode: "today", guess: null, viewer: "reader", filter: "show", style: "grey", color: 3, suffix: "triage", endorsed: false, expanded: false });
 let s = initial();
 try { const saved = JSON.parse(localStorage.getItem("agent-demo-style") || "null"); if (saved) { s.style = saved.style; s.color = saved.color; s.suffix = saved.suffix; } } catch (e) {}
 
@@ -287,9 +283,28 @@ function tagHTML() {
 
 const alice = `<div class="c"><div class="av" style="background:#bf3989">A</div><div class="box"><div class="hd"><b>alice-dev</b> commented yesterday</div><div class="bd"><p>After upgrading, about 1 in 200 requests fail with <code>ECONNRESET</code> when the pool reuses an idle socket. Repro attached.</p></div></div></div>`;
 const agentBody = `<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can be written to a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>`;
-const human = `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> commented 10 minutes ago <span class="role">Member</span></div><div class="bd"><p>I'd rather fix this by honoring the server's <code>Keep-Alive: timeout</code> header than by changing the default. I'm taking a look.</p></div></div></div>`;
+const humanBody = `<p>I'd rather fix this by honoring the server's <code>Keep-Alive: timeout</code> header than by changing the default. I'm taking a look.</p>`;
+const pickable = () => s.mode === "today" && !s.guess;
+const humanComment = () => `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="human"><div class="hd"><b>github-user-a</b> commented 10 minutes ago <span class="role">Member</span></div><div class="bd">${humanBody}</div></div></div>`;
+
+const PROMPTS = {
+  ask:     ["Two of these comments are from github-user-a. github-user-a never read one of them.", "That's GitHub today: an agent using github-user-a's token looks exactly like github-user-a. <b>Click the comment you think github-user-a actually wrote.</b>"],
+  right:   ["You picked the right one, but you had to guess.", "With this proposal, nobody has to. The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, then try the controls."],
+  wrong:   ["Nope. An agent posted that one with github-user-a's token.", "Nobody reviewed it, and today there's no way to tell. With this proposal, the token marks everything the agent posts, right next to github-user-a's name. Hover the tag, then try the controls."],
+  shown:   ["The same thread, with the proposal.", "The token the agent used marks everything it posts, right next to github-user-a's name. Hover the tag, switch to github-user-a's view to endorse it, or try the reader filter."],
+  back:    ["Back to today. Which one did the agent write?", "Nobody reading the thread can tell either. <button class=\"again\" data-go=\"proposal\">Show it with the proposal →</button>"],
+  endorsed:["Endorsed. Now it really is github-user-a's.", "github-user-a reviewed the agent's comment and took responsibility for it. The tag is gone, and the timeline records it."],
+};
+function promptKey() {
+  if (s.mode === "today") return s.guess ? "back" : "ask";
+  if (s.endorsed) return "endorsed";
+  return s.guess ? s.guess : "shown";
+}
 
 function agentComment() {
+  if (s.mode === "today") {
+    return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box${pickable() ? " pick" : ""}" data-pick="agent"><div class="hd"><b>github-user-a</b> commented 2 hours ago <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>`;
+  }
   if (s.endorsed) {
     return `<div class="c"><div class="av" style="background:#0969da">M</div><div class="box"><div class="hd"><b>github-user-a</b> commented 2 hours ago <span class="role">Member</span></div><div class="bd">${agentBody}</div></div></div>
       <div class="event"><span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#1a7f37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg></span><span><b>github-user-a</b> reviewed and endorsed the agent's comment above · just now</span></div>`;
@@ -304,7 +319,11 @@ function agentComment() {
 }
 
 function render() {
-  document.getElementById("thread").innerHTML = alice + agentComment() + human;
+  document.getElementById("thread").innerHTML = alice + agentComment() + humanComment();
+  const [h, sub] = PROMPTS[promptKey()];
+  const touch = matchMedia("(hover: none)").matches;
+  document.getElementById("prompt").innerHTML = `<h1>${h}</h1><p>${touch ? sub.replace(/Hover the tag/g, "Tap the tag") : sub}</p>`;
+  document.querySelectorAll(".js-p").forEach(g => g.hidden = s.mode !== "proposal");
   document.querySelectorAll(".seg").forEach(seg => {
     const key = seg.dataset.key;
     seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === s[key])));
@@ -324,6 +343,15 @@ document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", e
 }));
 const sfx = document.getElementById("suffix"); sfx.value = s.suffix;
 sfx.addEventListener("input", () => { s.suffix = sfx.value; render(); });
+document.getElementById("thread").addEventListener("click", ev => {
+  const box = ev.target.closest(".pick"); if (!box) return;
+  s.guess = box.dataset.pick === "human" ? "right" : "wrong"; s.mode = "proposal"; render();
+  const tag = document.querySelector("#thread .tag");
+  if (tag) { const r = tag.getBoundingClientRect(); if (r.bottom > innerHeight - 40 || r.top < 0) tag.closest(".c").scrollIntoView({ behavior: "smooth", block: "end" }); }
+});
+document.getElementById("prompt").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-go]"); if (!b) return; s.mode = b.dataset.go; render();
+});
 document.getElementById("reset").onclick = () => { s = initial(); sfx.value = s.suffix; render(); };
 render();
 </script>
