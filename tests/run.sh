@@ -12,9 +12,16 @@ SERVER=$!
 trap 'kill "$SERVER" 2>/dev/null || true' EXIT
 for _ in $(seq 1 50); do curl -s -o /dev/null "http://localhost:$PORT/" && break; sleep 0.1; done
 
-"$CHROME" --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=20000 \
-  --dump-dom "http://localhost:$PORT/tests/demo.html" 2>/dev/null |
-python3 -c '
+# Run every test twice: once in light mode, once in dark. Headless Chrome otherwise follows the
+# machine's system theme, so pin it explicitly (preferredColorScheme: 1 = light, 0 = dark).
+STATUS=0
+for SCHEME in light dark; do
+  [ "$SCHEME" = light ] && PCS=1 || PCS=0
+  echo "== $SCHEME mode"
+  "$CHROME" --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=20000 \
+    --blink-settings=preferredColorScheme=$PCS \
+    --dump-dom "http://localhost:$PORT/tests/demo.html" 2>/dev/null |
+  python3 -c '
 import html, json, re, sys
 dom = sys.stdin.read()
 m = re.search(r"<pre id=\"results\"[^>]*>(.*?)</pre>", dom, re.S)
@@ -26,4 +33,7 @@ for r in results:
     print(("  ok   " if r["ok"] else "  FAIL ") + r["name"] + ("" if r["ok"] else "\n         " + r["error"]))
 print(f"\n{len(results) - len(failed)} passed, {len(failed)} failed")
 sys.exit(1 if failed else 0)
-'
+' || STATUS=1
+  echo
+done
+exit $STATUS
