@@ -23,7 +23,7 @@ The site and the GitHub discussion need to link to each other, so the order matt
 - [ ] Reply in the pinned discussion "Which maintainer improvements would help you most?" (same category, started by GitHub staff) with a short note in your own words linking to the request. Don't paste the request there.
 
 ## 3. Connect the site to the request
-- [ ] Set `REQUEST_URL` in `site/index.html`, and point the post-reveal link at it: `NEXT_URL = REQUEST_URL` and `NEXT_LABEL = "Join the discussion ↗"` (both next to `PROMPTS`). Redeploy.
+- [ ] Set `REQUEST_URL` in `site/index.html`. Redeploy.
 - [ ] Open the live site and click both "Add your 👍" buttons to confirm they open the discussion.
 - [ ] Paste SITE_URL into a link-preview checker to confirm the image and title appear.
 
