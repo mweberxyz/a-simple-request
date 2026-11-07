@@ -54,6 +54,8 @@ Everything is prepared first and launched together. See `LAUNCH.md` for the orde
 - **Name of the ask:** "Allow well-behaved agents to self identify" (the request's title). "Agent attribution" is no longer the feature's name.
 - **One name, one line.** Every title and preview uses the name *A simple request to GitHub* and the line *An agent using your token looks exactly like you.*, the same words the demo opens with. Landing tab: "Spot the slop · A simple request to GitHub". Preview and search text: "An agent using your token looks exactly like you. One small change would let GitHub tell you apart." The request page keeps the request's professional voice: tab "Allow well-behaved agents to self identify · Feature request". Change them together (a test checks they match).
 
+- **License: CC0 1.0** (public domain dedication, `LICENSE` at the root), covering the code, the writing, and the images. Matt wants the idea copied freely.
+
 ## Layout
 
 | Path | What |
@@ -196,3 +198,4 @@ Then Settings → Pages → Deploy from a branch → `main`, `/docs`. After that
 - **2026-11-07:** Hosting is GitHub Pages (Matt). Renamed `site/` to `docs/` (Pages serves only the root or `/docs`), set `og:image` and `og:url` to the full https://mweberxyz.github.io/a-simple-request/ URLs, and added a test that `og:image` is a full URL. LAUNCH.md step 1 now covers creating the repo, pushing, and turning on Pages.
 - **2026-11-07:** Duplicate check before launch found community discussion #203213, "First-class agent identities linked to user accounts" (same category, 11 votes, July 2026): same problem, bigger fix (agent personas with their own name and avatar). Nothing shipped in the changelog. Matt chose to file ours anyway and link it: the request now says it's "a smaller first step toward" #203213. Related but further off: #208426 (AI sub-accounts), #189554 (sub-bots for GitHub Apps).
 - **2026-11-07:** Matt decided not to reference #203213 after all. Removed the sentence from the request; the duplicate-check findings above stay for context.
+- **2026-11-07:** Added `LICENSE`: CC0 1.0 Universal, Matt's choice, from the official Creative Commons plain-text copy.
