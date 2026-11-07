@@ -195,8 +195,8 @@ const positions = w => [$(w, ".win"), ...$$(w, "#thread .box")].map(el => (el.ge
     await test(`the switch has three steps, and example chips show only in the third ${tag}`, async () => {
       reset(w);
       for (const k of ["viewer", "filter", "style"]) assert(!$(w, `[data-key=${k}]`), `${k} control should be gone`);
-      const labels = $$(w, ".seg.mode button").map(b => [...b.children].find(c => w.getComputedStyle(c).display !== "none").textContent);
-      eq(labels.join("|"), width <= 560 ? "Today|Tomorrow|The future 🔥" : "GitHub today|GitHub tomorrow|What you could build", "switch labels");
+      const labels = $$(w, ".seg.mode button").map(b => b.children.length ? [...b.children].find(c => w.getComputedStyle(c).display !== "none").textContent : b.textContent);
+      eq(labels.join("|"), width <= 560 ? "Today|Tomorrow|The future 🔥" : "GitHub today|GitHub tomorrow|The future 🔥", "switch labels");
       eq($$(w, ".seg.mode button").map(b => b.dataset.v).join("|"), "today|proposal|build", "steps");
       mode(w, "build");
       const ex = $(w, "#examples");

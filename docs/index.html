@@ -162,7 +162,7 @@ main.wrap { max-width: 1140px; }
     <div class="prompt" id="prompt" aria-live="polite"></div>
 
     <div class="switch">
-      <div class="seg mode still" data-key="mode" role="group" aria-label="Show GitHub today, tomorrow, or what you could build"><span class="thumb" aria-hidden="true"></span><button data-v="today"><span class="long">GitHub today</span><span class="short">Today</span></button><button data-v="proposal"><span class="long">GitHub tomorrow</span><span class="short">Tomorrow</span></button><button data-v="build"><span class="long">What you could build</span><span class="short">The future 🔥</span></button></div>
+      <div class="seg mode still" data-key="mode" role="group" aria-label="Show GitHub today, tomorrow, or the future"><span class="thumb" aria-hidden="true"></span><button data-v="today"><span class="long">GitHub today</span><span class="short">Today</span></button><button data-v="proposal"><span class="long">GitHub tomorrow</span><span class="short">Tomorrow</span></button><button data-v="build">The future 🔥</button></div>
       <div class="examples off" id="examples" role="group" aria-label="Examples"></div>
     </div>
 
@@ -191,7 +191,7 @@ const MAIN = {
   human: "<p>Changing the default timeout won't fix this. Idle timeouts vary by server and by every proxy in between, so any fixed value loses this race somewhere. Your server sends <code>Keep-Alive: timeout=5</code>: the pool should honor that header, and retry idempotent requests that hit <code>ECONNRESET</code> on a reused socket.</p>",
   agent: "<p>I reproduced this with the attached script. The server closes idle sockets at 5s, but the pool's keep-alive timeout defaults to 4.9s, so under load a request can go out on a socket the server is already closing.</p><p>Lowering <code>keepAliveTimeout</code> to 4s gives 0 failures in 20,000 requests locally. A draft fix is in #4190.</p>",
 };
-// "What you could build": each example is one thing someone could build on the agent marker,
+// "The future": each example is one thing someone could build on the agent marker,
 // with a conversation where that kind of agent makes sense and a caption that says what it enables.
 // No green (it reads as "verified").
 const EXAMPLES = [
@@ -289,7 +289,7 @@ function fillIssue() {
   document.getElementById("title").innerHTML = `${sc.title} <span>#${sc.num}</span>`;
   document.getElementById("thread").innerHTML = aliceComment() + humanComment() + agentComment();
 }
-// The example chips: one per example, colored like the tag it switches to. Shown only in "What you could build".
+// The example chips: one per example, colored like the tag it switches to. Shown only in "The future".
 const exEl = document.getElementById("examples");
 exEl.innerHTML = EXAMPLES.map((e, i) => `<button type="button" data-i="${i}" style="--fg:${e.fg};--bd:${e.bd};--bg-c:${e.bg}">${e.name}</button>`).join("");
 exEl.addEventListener("click", ev => { const b = ev.target.closest("[data-i]"); if (b) showExample(+b.dataset.i); });
